@@ -17,6 +17,9 @@ class CreateSubjectsTable extends Migration
             $table->id();
             $table->string('name');
             $table->string('grade');
+            $table->string('type')->nullable();
+            $table->string('author')->nullable();
+            $table->longtext('details')->nullable();
             $table->timestamps();
         });
     }

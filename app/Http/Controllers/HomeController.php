@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-
+use AUth;
 class HomeController extends Controller
 {
     /**
@@ -21,8 +21,22 @@ class HomeController extends Controller
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
+
     public function index()
     {
-        return view('welcome');
+        if (Auth::user()->role_id == 1) {
+            return redirect('/admin');
+        }
+        else if(Auth::user()->role_id == 2) {
+            return redirect('/teacher');
+        }
+        else if(Auth::user()->role_id ==3) {
+            return redirect('/student');
+            
+        }
+        else{
+            session(['url.intended' => '/login']); 
+        }
     }
+  
 }
