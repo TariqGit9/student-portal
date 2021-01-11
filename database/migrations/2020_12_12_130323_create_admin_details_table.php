@@ -15,6 +15,7 @@ class CreateAdminDetailsTable extends Migration
     {
         Schema::create('admin_details', function (Blueprint $table) {
             $table->id();
+            $table->softDeletes();
             $table->timestamps();
         });
     }

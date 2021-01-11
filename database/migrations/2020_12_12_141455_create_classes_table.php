@@ -16,6 +16,9 @@ class CreateClassesTable extends Migration
         Schema::create('classes', function (Blueprint $table) {
             $table->id();
             $table->string('name');
+            $table->unsignedBigInteger('grade_id')->nullable();
+            $table->foreign('grade_id')->references('id')->on('class_grades')->onDelete('cascade');
+            $table->softDeletes();
             $table->timestamps();
         });
     }

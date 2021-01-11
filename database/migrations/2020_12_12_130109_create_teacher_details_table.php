@@ -22,8 +22,8 @@ class CreateTeacherDetailsTable extends Migration
             $table->string('address_line_main');
             $table->string('address_line_secondary')->nullable();
             $table->integer('display_info_status')->default(1);
-            $table->string('subject_specialities')->nullable();
-            
+            $table->longtext('subject_specialities')->nullable();
+            $table->softDeletes();
             $table->timestamps();
         });
     }

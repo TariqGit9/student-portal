@@ -16,10 +16,12 @@ class CreateSubjectsTable extends Migration
         Schema::create('subjects', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->string('grade');
+            $table->unsignedBigInteger('grade_id')->nullable();
+            $table->foreign('grade_id')->references('id')->on('class_grades')->onDelete('cascade');
             $table->string('type')->nullable();
             $table->string('author')->nullable();
             $table->longtext('details')->nullable();
+            $table->softDeletes();
             $table->timestamps();
         });
     }

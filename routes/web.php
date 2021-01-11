@@ -27,12 +27,56 @@ Auth::routes(['register' => false, 'password.request' => false, 'reset' => false
         Route::post('add-class', 'AdminController@addClass')->name('add-class');
         Route::get('/get-classes', 'AdminController@getClasses')->name('get-classes');
         Route::post('del-class', 'AdminController@deleteClass')->name('del-class');
+        //class Subjects
+        Route::get('/class-subjects/{id}','AdminController@classSubjects')->name('class-subjects');
+        
         //subjects
         Route::get('subjects', 'AdminController@subjects')->name('subjects');
         Route::post('add-subject', 'AdminController@addSubject')->name('add-subject');
-        Route::get('/get-subject', 'AdminController@getSubjects')->name('get-subject');
+        Route::any('/get-subject', 'AdminController@getSubjects')->name('get-subject');
         Route::post('edit-subject', 'AdminController@editSubject')->name('edit-subject');
         Route::post('del-subject', 'AdminController@deleteSubject')->name('del-subject');
+        Route::post('get-subject-detail', 'AdminController@getSubjectDetail')->name('get-subject-detail');
+    //grades
+        Route::get('grades', 'AdminController@grades')->name('grades');
+        Route::get('/get-grades', 'AdminController@getGrades')->name('get-grades');
+        Route::post('add-grade', 'AdminController@addGrade')->name('add-grade');
+        Route::post('del-grade', 'AdminController@deleteGrade')->name('del-grade');
+    //teachers
+        Route::get('all-teachers', 'AdminController@teachers')->name('all-teachers');
+        Route::post('add-teacher', 'AdminController@addTeacher')->name('add-teacher');
+        Route::get('/get-teachers', 'AdminController@getTeachers')->name('get-teachers');
+        Route::post('del-teacher', 'AdminController@deleteTeacher')->name('del-teacher');
+        Route::post('edit-teacher', 'AdminController@editTeacher')->name('edit-teacher');
+        Route::post('get-teacher-detail', 'AdminController@getTeacherDetail')->name('get-teacher-detail');
+    //deletd Teachers
+        Route::get('/get-deleted-teachers', 'AdminController@getDeletedTeachers')->name('get-deleted-teachers');
+        Route::get('deleted-teachers', 'AdminController@deletedTeachers')->name('deleted-teachers');
+        Route::post('/get-deleted-teacher-detail', 'AdminController@getDeletedTeachers')->name('get-deleted-teacher-detail');
+        Route::post('activate-teacher', 'AdminController@activateTeacher')->name('activate-teacher');
+     
+        //students
+        Route::get('all-students', 'AdminController@students')->name('all-students');
+        Route::post('add-student', 'AdminController@addStudent')->name('add-student');
+        Route::any('/get-students', 'AdminController@getStudents')->name('get-students');
+        Route::post('del-student', 'AdminController@deleteStudent')->name('del-student');
+        Route::post('edit-student', 'AdminController@editStudent')->name('edit-student');
+        Route::post('get-student-detail', 'AdminController@getStudentDetail')->name('get-student-detail');
+        //deletd Students
+        Route::get('/get-deleted-students', 'AdminController@getDeletedStudents')->name('get-deleted-students');
+        Route::get('deleted-students', 'AdminController@deletedStudents')->name('deleted-students');
+        Route::post('/get-deleted-student-detail', 'AdminController@getDeletedStudents')->name('get-deleted-student-detail');
+        Route::post('activate-student', 'AdminController@activateStudent')->name('activate-student');
+        //class Teachers
+        Route::get('/class-teachers/{id}','AdminController@classTeachers')->name('class-teachers');
+        Route::get('/get-subject-teacher', 'AdminController@getSubjectTeachers')->name('get-subject-teacher');
+        //class Students
+        Route::get('/class-students/{id}','AdminController@classStudents')->name('class-students');
+        Route::post('/get-class-students', 'AdminController@getClassStudents')->name('get-class-students');
+        //assignteacherToSubjectOfClass
+        Route::post('assign-teacher-to-subject', 'AdminController@assignTeacherToSubject')->name('assign-teacher-to-subject');
+       
+    
     });
 
         Route::group(['namespace' => 'Student', 'prefix' => 'student','middleware' => 'checkStudent'], function () {
@@ -46,5 +90,5 @@ Auth::routes(['register' => false, 'password.request' => false, 'reset' => false
 
             });
 });
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
-Route::get('/', [App\Http\Controllers\HomeController::class, 'index']);
+// Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+// Route::get('/', [App\Http\Controllers\HomeController::class, 'index']);

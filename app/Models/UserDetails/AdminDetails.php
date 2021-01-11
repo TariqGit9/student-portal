@@ -7,5 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class AdminDetails extends Model
 {
+
+    
     use HasFactory;
 }

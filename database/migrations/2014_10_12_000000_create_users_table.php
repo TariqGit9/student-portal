@@ -23,6 +23,7 @@ class CreateUsersTable extends Migration
             $table->string('avatar');
             $table->integer('role_id');
             $table->integer('status')->default(1);
+            $table->softDeletes();
             $table->rememberToken();
             $table->timestamps();
         });
