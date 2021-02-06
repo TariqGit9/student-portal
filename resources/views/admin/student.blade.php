@@ -517,7 +517,18 @@ $(document).on('click', '.addstudent', function() {
       toastr.success('Success!', 'Student added Successfully',{
               "positionClass": "toast-bottom-right"
           })      
-      
+          $("#email").val(""); 
+          $("#name").val(""); 
+          $("#user_name").val(""); 
+          $("#phone").val(""); 
+          $("#address_line_main").val(""); 
+          $("#address_line_secondary").val(""); 
+          $("#emergency_phone").val(""); 
+          $("#password").val(""); 
+          $("#phone").val(""); 
+          $(".selectpicker").val('default');
+          $(".selectpicker").selectpicker("refresh");
+          $(".summernote").summernote("code", "");
       datatable.draw();
 
     }
@@ -696,7 +707,7 @@ $(document).on('click', '.editTeacherInfo', function() {
           })      
       
       datatable.draw();
-
+      $(".summernote").summernote("code", "");
     }
     else{
 

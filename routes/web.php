@@ -13,9 +13,8 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-// Route::get('/', function () {
-//     return view('welcome');
-// });
+Route::get('/', 'HomeController@index')->name('home');
+Route::get('/home', 'HomeController@index')->name('home');
 
 Auth::routes();
 Auth::routes(['register' => false, 'password.request' => false, 'reset' => false]);
@@ -87,7 +86,16 @@ Auth::routes(['register' => false, 'password.request' => false, 'reset' => false
 
             Route::group(['namespace' => 'Teacher', 'prefix' => 'teacher','middleware' => 'checkTeacher'], function () {
                 Route::get('/', 'TeacherController@teacher')->name('home');
-
+                Route::get('teacher-classes', 'TeacherController@teacherClass')->name('teacher-classes');
+                Route::get('get-teacher-classes', 'TeacherController@getTeacherClass')->name('get-teacher-classes');
+                Route::post('/get-teacher-class-students', 'TeacherController@getTeacherClassStudent')->name('get-teacher-class-students');
+                Route::post('/teacher-class-students', 'TeacherController@teacherClassStudent')->name('teacher-class-students');
+                Route::post('get-student-detail', 'TeacherController@getStudentDetail')->name('get-student-detail');
+                Route::post('/teacher-insert-student-marks', 'TeacherController@teacherInsertStudentMarks')->name('teacher-insert-student-marks');
+                Route::post('add-student-result', 'TeacherController@addStudentResult')->name('add-student-result');
+           
+            
+            
             });
 });
 // Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');

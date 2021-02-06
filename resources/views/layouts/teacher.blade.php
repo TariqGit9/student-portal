@@ -1,498 +1,377 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="utf-8" />
-  <link rel="apple-touch-icon" sizes="76x76" href="{{asset('assets/img/apple-icon.png')}}">
-  <link rel="icon" type="image/png" href="{{asset('assets/img/favicon.png')}}">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
-  <title>
-    Dashboard
-  </title>
-  @stack('styles')
-  <meta content='width=device-width, initial-scale=1.0, shrink-to-fit=no' name='viewport' />
-  <!--     Fonts and icons     -->
-  <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700|Roboto+Slab:400,700|Material+Icons" />
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/latest/css/font-awesome.min.css">
-  <!-- CSS Files -->
-  <link href="{{asset('assets/css/material-dashboard.css?v=2.1.2')}}" rel="stylesheet" />
-  <!-- CSS Just for demo purpose, don't include it in your project -->
-  <link href="{{asset('assets/demo/demo.css')}}" rel="stylesheet" />
-</head>
+<html lang="en" dir="ltr">
+	<head>
 
-<body class="">
-  <div class="wrapper ">
-    <div class="sidebar" data-color="purple" data-background-color="white" data-image="{{asset('/assets/img/sidebar-1.jpg')}}">
-      <!--
-        Tip 1: You can change the color of the sidebar using: data-color="purple | azure | green | orange | danger"
+		<meta charset="UTF-8">
+		<meta name='viewport' content='width=device-width, initial-scale=1.0, user-scalable=0'>
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="Description" content="Bootstrap Responsive Admin Web Dashboard HTML5 Template">
+		<meta name="Author" content="Spruko Technologies Private Limited">
+		<meta name="Keywords" content="admin,admin dashboard,admin dashboard template,admin panel template,admin template,admin theme,bootstrap 4 admin template,bootstrap 4 dashboard,bootstrap admin,bootstrap admin dashboard,bootstrap admin panel,bootstrap admin template,bootstrap admin theme,bootstrap dashboard,bootstrap form template,bootstrap panel,bootstrap ui kit,dashboard bootstrap 4,dashboard design,dashboard html,dashboard template,dashboard ui kit,envato templates,flat ui,html,html and css templates,html dashboard template,html5,jquery html,premium,premium quality,sidebar bootstrap 4,template admin bootstrap 4"/>
+		@stack('styles')
+		<style>
+			.white-icon {
+			 
+			  color:white;
+			}
+		
+			.form-required:after {
+			  content:"*";
+			  color:red;
+			}
+		
+			#toast-container > .toast-success {
+				
+				background-color: #4BB543;
+				color: white;
+			}
+		
+			#toast-container > .toast-warning {
+				
+				background-color: #ff9900;
+				color: white;
+			}
+			
+			#toast-container > .toast-error {
+				
+				background-color: #F32013;
+				color: white;
+			}
+		
+		</style>
+		<!-- Title -->
+		<title> {{$school_info->name}} Student Portal </title>
 
-        Tip 2: you can also add an image using data-image tag
-    -->
-      <div class="logo"><a href="http://www.creative-tim.com" class="simple-text logo-normal">
-          Creative Tim
-        </a></div>
-      <div class="sidebar-wrapper">
-        <ul class="nav">
-          <li class="nav-item active  ">
-            <a class="nav-link" href="./dashboard.html">
-              <i class="material-icons">dashboard</i>
-              <p>Home</p>
-            </a>
-          </li>
-          <li class="nav-item ">
-            <a class="nav-link" href="./user.html">
-              <i class="material-icons">content_paste</i>
-              <p>My Courses</p>
-            </a>
-          </li>
-          <li class="nav-item ">
-            <a class="nav-link" href="./tables.html">
-              <i class="material-icons">person</i>
-              <p>Student Details </p>
-            </a>
-          </li>
-          <li class="nav-item ">
-            <a class="nav-link" href="./typography.html">
-              <i class="material-icons">library_books</i>
-              <p>Upload Marks </p>
-            </a>
-          </li>
-          {{-- <li class="nav-item ">
-            <a class="nav-link" href="./icons.html">
-              <i class="material-icons">bubble_chart</i>
-              <p>Icons</p>
-            </a>
-          </li>
-          <li class="nav-item ">
-            <a class="nav-link" href="./map.html">
-              <i class="material-icons">location_ons</i>
-              <p>Maps</p>
-            </a>
-          </li>
-          <li class="nav-item ">
-            <a class="nav-link" href="./notifications.html">
-              <i class="material-icons">notifications</i>
-              <p>Notifications</p>
-            </a>
-          </li>
-          <li class="nav-item ">
-            <a class="nav-link" href="./rtl.html">
-              <i class="material-icons">language</i>
-              <p>RTL Support</p>
-            </a>
-          </li>
-          <li class="nav-item active-pro ">
-            <a class="nav-link" href="./upgrade.html">
-              <i class="material-icons">unarchive</i>
-              <p>Upgrade to PRO</p>
-            </a>
-          </li> --}}
-        </ul>
-      </div>
-    </div>
-    <div class="main-panel">
-      <!-- Navbar -->
-      <nav class="navbar navbar-expand-lg navbar-transparent navbar-absolute fixed-top ">
-        <div class="container-fluid">
-          <div class="navbar-wrapper">
-            <a class="navbar-brand" href="javascript:;">Dashboard</a>
-          </div>
-          <button class="navbar-toggler" type="button" data-toggle="collapse" aria-controls="navigation-index" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="sr-only">Toggle navigation</span>
-            <span class="navbar-toggler-icon icon-bar"></span>
-            <span class="navbar-toggler-icon icon-bar"></span>
-            <span class="navbar-toggler-icon icon-bar"></span>
-          </button>
-          <div class="collapse navbar-collapse justify-content-end">
-            {{-- <form class="navbar-form">
-              <div class="input-group no-border">
-                <input type="text" value="" class="form-control" placeholder="Search...">
-                <button type="submit" class="btn btn-white btn-round btn-just-icon">
-                  <i class="material-icons">search</i>
-                  <div class="ripple-container"></div>
-                </button>
-              </div>
-            </form> --}}
-            <ul class="navbar-nav">
-              {{-- <li class="nav-item">
-                <a class="nav-link" href="javascript:;">
-                  <i class="material-icons">dashboard</i>
-                  <p class="d-lg-none d-md-block">
-                    Stats
-                  </p>
-                </a>
-              </li> --}}
-              {{-- <li class="nav-item dropdown">
-                <a class="nav-link" href="http://example.com" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                  <i class="material-icons">notifications</i>
-                  <span class="notification">5</span>
-                  <p class="d-lg-none d-md-block">
-                    Some Actions
-                  </p>
-                </a>
-                <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownMenuLink">
-                  <a class="dropdown-item" href="#">Mike John responded to your email</a>
-                  <a class="dropdown-item" href="#">You have 5 new tasks</a>
-                  <a class="dropdown-item" href="#">You're now friend with Andrew</a>
-                  <a class="dropdown-item" href="#">Another Notification</a>
-                  <a class="dropdown-item" href="#">Another One</a>
-                </div>
-              </li> --}}
-              <li class="nav-item dropdown">
-                <a class="nav-link" href="javascript:;" id="navbarDropdownProfile" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                  <i class="material-icons">person</i>
-                  <p class="d-lg-none d-md-block">
-                    Account
-                  </p>
-                </a>
-                <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownProfile">
-                  <a class="dropdown-item" href="#">Profile</a>
-                  <a class="dropdown-item" href="#">Settings</a>
-                  <div class="dropdown-divider"></div>
-                  <a class="dropdown-item" href="{{ route('logout') }} href="{{ route('logout') }}"
-                  onclick="event.preventDefault();
-                                document.getElementById('logout-form').submit();">Logout</a>
-<form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
-@csrf
-</form>
-                </div>
-              </li>
-            </ul>
-          </div>
-        </div>
-      </nav>
-      <!-- End Navbar -->
-      <div class="content">
-        @yield('content')
-      </div>
-      <footer class="footer">
-        <div class="container-fluid">
-          <nav class="float-left">
-            <ul>
-              <li>
-                <a href="https://www.creative-tim.com">
-                  Creative Tim
-                </a>
-              </li>
-              <li>
-                <a href="https://creative-tim.com/presentation">
-                  About Us
-                </a>
-              </li>
-              <li>
-                <a href="http://blog.creative-tim.com">
-                  Blog
-                </a>
-              </li>
-              <li>
-                <a href="https://www.creative-tim.com/license">
-                  Licenses
-                </a>
-              </li>
-            </ul>
-          </nav>
-          <div class="copyright float-right">
-            &copy;
-            <script>
-              document.write(new Date().getFullYear())
-            </script>, made with <i class="material-icons">favorite</i> by
-            <a href="https://www.creative-tim.com" target="_blank">Creative Tim</a> for a better web.
-          </div>
-        </div>
-      </footer>
-    </div>
-  </div>
-  <div class="fixed-plugin">
-    <div class="dropdown show-dropdown">
-      <a href="#" data-toggle="dropdown">
-        <i class="fa fa-cog fa-2x"> </i>
-      </a>
-      <ul class="dropdown-menu">
-        <li class="header-title"> Sidebar Filters</li>
-        <li class="adjustments-line">
-          <a href="javascript:void(0)" class="switch-trigger active-color">
-            <div class="badge-colors ml-auto mr-auto">
-              <span class="badge filter badge-purple" data-color="purple"></span>
-              <span class="badge filter badge-azure" data-color="azure"></span>
-              <span class="badge filter badge-green" data-color="green"></span>
-              <span class="badge filter badge-warning" data-color="orange"></span>
-              <span class="badge filter badge-danger" data-color="danger"></span>
-              <span class="badge filter badge-rose active" data-color="rose"></span>
-            </div>
-            <div class="clearfix"></div>
-          </a>
-        </li>
-        <li class="header-title">Images</li>
-        <li class="active">
-          <a class="img-holder switch-trigger" href="javascript:void(0)">
-            <img src="{{asset('/assets/img/sidebar-1.jpg')}}"alt="">
-          </a>
-        </li>
-        <li>
-          <a class="img-holder switch-trigger" href="javascript:void(0)">
-            <img src="{{asset('assets/img/sidebar-2.jpg')}}" alt="">
-          </a>
-        </li>
-        <li>
-          <a class="img-holder switch-trigger" href="javascript:void(0)">
-            <img src="{{asset('assets/img/sidebar-3.jpg')}}"ssets/img/sidebar-3.jpg" alt="">
-          </a>
-        </li>
-        <li>
-          <a class="img-holder switch-trigger" href="javascript:void(0)">
-            <img src="{{asset('assets/img/sidebar-4.jpg')}}" alt="">
-          </a>
-        </li>
-        <li class="button-container">
-          <a href="https://www.creative-tim.com/product/material-dashboard" target="_blank" class="btn btn-primary btn-block">Free Download</a>
-        </li>
-        <!-- <li class="header-title">Want more components?</li>
-            <li class="button-container">
-                <a href="https://www.creative-tim.com/product/material-dashboard-pro" target="_blank" class="btn btn-warning btn-block">
-                  Get the pro version
-                </a>
-            </li> -->
-        <li class="button-container">
-          <a href="https://demos.creative-tim.com/material-dashboard/docs/2.1/getting-started/introduction.html" target="_blank" class="btn btn-default btn-block">
-            View Documentation
-          </a>
-        </li>
-        <li class="button-container github-star">
-          <a class="github-button" href="https://github.com/creativetimofficial/material-dashboard" data-icon="octicon-star" data-size="large" data-show-count="true" aria-label="Star ntkme/github-buttons on GitHub">Star</a>
-        </li>
-        <li class="header-title">Thank you for 95 shares!</li>
-        <li class="button-container text-center">
-          <button id="twitter" class="btn btn-round btn-twitter"><i class="fa fa-twitter"></i> &middot; 45</button>
-          <button id="facebook" class="btn btn-round btn-facebook"><i class="fa fa-facebook-f"></i> &middot; 50</button>
-          <br>
-          <br>
-        </li>
-      </ul>
-    </div>
-  </div>
-  <!--   Core JS Files   -->
-  <script src="{{asset('assets/js/core/jquery.min.js')}}"></script>
-  <script src="{{asset('assets/js/core/popper.min.js')}}"></script>
-  <script src="{{asset('assets/js/core/bootstrap-material-design.min.js')}}"></script>
-  <script src="{{asset('assets/js/plugins/perfect-scrollbar.jquery.min.js')}}"></script>
-  <!-- Plugin for the momentJs  -->
-  <script src="{{asset('assets/js/plugins/moment.min.js')}}"></script>
-  <!--  Plugin for Sweet Alert -->
-  <script src="{{asset('assets/js/plugins/sweetalert2.js')}}"></script>
-  <!-- Forms Validations Plugin -->
-  <script src="{{asset('assets/js/plugins/jquery.validate.min.js')}}"></script>
-  <!-- Plugin for the Wizard, full documentation here: https://github.com/VinceG/twitter-bootstrap-wizard -->
-  <script src="{{asset('assets/js/plugins/jquery.bootstrap-wizard.js')}}"></script>
-  <!--	Plugin for Select, full documentation here: http://silviomoreto.github.io/bootstrap-select -->
-  <script src="{{asset('assets/js/plugins/bootstrap-selectpicker.js')}}"></script>
-  <!--  Plugin for the DateTimePicker, full documentation here: https://eonasdan.github.io/bootstrap-datetimepicker/ -->
-  <script src="{{asset('assets/js/plugins/bootstrap-datetimepicker.min.js')}}"></script>
-  <!--  DataTables.net Plugin, full documentation here: https://datatables.net/  -->
-  <script src="{{asset('assets/js/plugins/jquery.dataTables.min.js')}}"></script>
-  <!--	Plugin for Tags, full documentation here: https://github.com/bootstrap-tagsinput/bootstrap-tagsinputs  -->
-  <script src="{{asset('assets/js/plugins/bootstrap-tagsinput.js')}}"></script>
-  <!-- Plugin for Fileupload, full documentation here: http://www.jasny.net/bootstrap/javascript/#fileinput -->
-  <script src="{{asset('assets/js/plugins/jasny-bootstrap.min.js')}}"></script>
-  <!--  Full Calendar Plugin, full documentation here: https://github.com/fullcalendar/fullcalendar    -->
-  <script src="{{asset('assets/js/plugins/fullcalendar.min.js')}}"></script>
-  <!-- Vector Map plugin, full documentation here: http://jvectormap.com/documentation/ -->
-  {{-- <script src="{{asset('assets/js/plugins/jquery-jvectormap.js')}}"></script> --}}
-  <!--  Plugin for the Sliders, full documentation here: http://refreshless.com/nouislider/ -->
-  <script src="{{asset('assets/js/plugins/nouislider.min.js')}}"></script>
-  <!-- Include a polyfill for ES6 Promises (optional) for IE11, UC Browser and Android browser support SweetAlert -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/core-js/2.4.1/core.js"></script>
-  <!-- Library for adding dinamically elements -->
-  <script src="{{asset('assets/js/plugins/arrive.min.js')}}"></script>
-  <!--  Google Maps Plugin    -->
-  {{-- <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_KEY_HERE"></script> --}}
-  <!-- Chartist JS -->
-  <script src="{{asset('assets/js/plugins/chartist.min.js')}}"></script>
-  <!--  Notifications Plugin    -->
-  <script src="{{asset('assets/js/plugins/bootstrap-notify.js')}}"></script>
-  <!-- Control Center for Material Dashboard: parallax effects, scripts for the example pages etc -->
-  <script src="{{asset('assets/js/material-dashboard.js?v=2.1.2')}}" type="text/javascript"></script>
-  <!-- Material Dashboard DEMO methods, don't include it in your project! -->
-  <script src="{{asset('assets/demo/demo.js')}}"></script>
-  <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
-  {{-- <script src="{{asset('assets/js/axios.js')}}"></script> --}}
- <script>
-    $(document).ready(function() {
-      $().ready(function() {
-        $sidebar = $('.sidebar');
+		<!-- Favicon -->
+		<link rel="icon" href="{{asset('assets/img/brand/favicon.png')}}" type="image/x-icon"/>
 
-        $sidebar_img_container = $sidebar.find('.sidebar-background');
+		<!-- Icons css -->
+		<link href="{{asset('assets/css/icons.css')}}" rel="stylesheet">
 
-        $full_page = $('.full-page');
+		<!--  Right-sidemenu css -->
+		<link href="{{asset('assets/plugins/sidebar/sidebar.css')}}" rel="stylesheet">
+{{-- datatables --}}
+		<link href="{{asset('/assets/plugins/datatable/css/dataTables.bootstrap4.min.css')}}" rel="stylesheet">
+	
+		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.14/dist/css/bootstrap-select.min.css">
+		<link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.css" rel="stylesheet">
+	  	<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
+		
+		<!-- P-scroll bar css-->
+		<link href="{{asset('assets/plugins/perfect-scrollbar/p-scrollbar.css')}}" rel="stylesheet" />
 
-        $sidebar_responsive = $('body > .navbar-collapse');
+		<!--  Left-Sidebar css -->
+		<link rel="stylesheet" href="{{asset('assets/css/sidemenu.css')}}">
 
-        window_width = $(window).width();
+		<!--- Style css --->
+		<link href="{{asset('assets/css/style.css')}}" rel="stylesheet">
 
-        fixed_plugin_open = $('.sidebar .sidebar-wrapper .nav li.active a p').html();
+		<!--- Dark-mode css --->
+		<link href="{{asset('assets/css/style-dark.css')}}" rel="stylesheet">
 
-        if (window_width > 767 && fixed_plugin_open == 'Dashboard') {
-          if ($('.fixed-plugin .dropdown').hasClass('show-dropdown')) {
-            $('.fixed-plugin .dropdown').addClass('open');
-          }
+		<!---Skinmodes css-->
+		<link href="{{asset('assets/css/skin-modes.css')}}" rel="stylesheet" />
 
-        }
+		<!--- Animations css-->
+		<link href="{{asset('assets/css/animate.css')}}" rel="stylesheet">
 
-        $('.fixed-plugin a').click(function(event) {
-          // Alex if we click on switch, stop propagation of the event, so the dropdown will not be hide, otherwise we set the  section active
-          if ($(this).hasClass('switch-trigger')) {
-            if (event.stopPropagation) {
-              event.stopPropagation();
-            } else if (window.event) {
-              window.event.cancelBubble = true;
-            }
-          }
-        });
+	</head>
 
-        $('.fixed-plugin .active-color span').click(function() {
-          $full_page_background = $('.full-page-background');
+	<body class="main-body app sidebar-mini">
 
-          $(this).siblings().removeClass('active');
-          $(this).addClass('active');
+		<!-- Loader -->
+		<div id="global-loader">
+			<img src="{{asset('assets/img/loader.svg')}}" class="loader-img" alt="Loader">
+		</div>
+		<!-- /Loader -->
 
-          var new_color = $(this).data('color');
+		<!-- Page -->
+		<div class="page">
 
-          if ($sidebar.length != 0) {
-            $sidebar.attr('data-color', new_color);
-          }
+			<!-- main-sidebar -->
+			<div class="app-sidebar__overlay" data-toggle="sidebar"></div>
+			<aside class="app-sidebar sidebar-scroll">
+				<div class="main-sidebar-header active">
+					<a class="desktop-logo logo-light active" href="index.html"><img src="{{asset('assets/img/brand/logo.png')}}" class="main-logo" alt="logo"></a>
+					<a class="desktop-logo logo-dark active" href="index.html"><img src="{{asset('assets/img/brand/logo-white.png')}}" class="main-logo dark-theme" alt="logo"></a>
+					<a class="logo-icon mobile-logo icon-light active" href="index.html"><img src="{{asset('assets/img/brand/favicon.png')}}" class="logo-icon" alt="logo"></a>
+					<a class="logo-icon mobile-logo icon-dark active" href="index.html"><img src="{{asset('assets/img/brand/favicon-white.png')}}" class="logo-icon dark-theme" alt="logo"></a>
+				</div>
+				<div class="main-sidemenu">
+					<div class="app-sidebar__user clearfix">
+						<div class="dropdown user-pro-body">
+							<div class="">
+								<img alt="user-img" class="avatar avatar-xl brround" src="{{asset('uploads/teacher_avatars/').'/'.Auth::user()->avatar}}"><span class="avatar-status profile-status bg-green"></span>
+							</div>
+							<div class="user-info">
+								<h4 class="font-weight-semibold mt-3 mb-0 text-capitalize	">{{Auth::user()->name}}</h4>
+								<span class="mb-0 text-muted">Teacher</span>
+							</div>
+						</div>
+					</div>
+					<ul class="side-menu">
+						<li class="side-item side-item-category">Main</li>
+						<li class="slide">
+							<a class="side-menu__item" href="{{route('home')}}"><svg xmlns="http://www.w3.org/2000/svg" class="side-menu__icon" viewBox="0 0 24 24" ><path d="M0 0h24v24H0V0z" fill="none"/><path d="M5 5h4v6H5zm10 8h4v6h-4zM5 17h4v2H5zM15 5h4v2h-4z" opacity=".3"/><path d="M3 13h8V3H3v10zm2-8h4v6H5V5zm8 16h8V11h-8v10zm2-8h4v6h-4v-6zM13 3v6h8V3h-8zm6 4h-4V5h4v2zM3 21h8v-6H3v6zm2-4h4v2H5v-2z"/></svg><span class="side-menu__label">Index</span></a>
+						</li>
+						<li class="side-item side-item-category">Manegment</li>
+						<li class="slide">
+							<a class="side-menu__item" href="{{route('teacher-classes')}}"><svg xmlns="http://www.w3.org/2000/svg" class="side-menu__icon" viewBox="0 0 24 24" ><path d="M0 0h24v24H0V0z" fill="none"/><path d="M5 9h14V5H5v4zm2-3.5c.83 0 1.5.67 1.5 1.5S7.83 8.5 7 8.5 5.5 7.83 5.5 7 6.17 5.5 7 5.5zM5 19h14v-4H5v4zm2-3.5c.83 0 1.5.67 1.5 1.5s-.67 1.5-1.5 1.5-1.5-.67-1.5-1.5.67-1.5 1.5-1.5z" opacity=".3"/><path d="M20 13H4c-.55 0-1 .45-1 1v6c0 .55.45 1 1 1h16c.55 0 1-.45 1-1v-6c0-.55-.45-1-1-1zm-1 6H5v-4h14v4zm-12-.5c.83 0 1.5-.67 1.5-1.5s-.67-1.5-1.5-1.5-1.5.67-1.5 1.5.67 1.5 1.5 1.5zM20 3H4c-.55 0-1 .45-1 1v6c0 .55.45 1 1 1h16c.55 0 1-.45 1-1V4c0-.55-.45-1-1-1zm-1 6H5V5h14v4zM7 8.5c.83 0 1.5-.67 1.5-1.5S7.83 5.5 7 5.5 5.5 6.17 5.5 7 6.17 8.5 7 8.5z"/></svg><span class="side-menu__label">My Classes</span></a>
+						</li>
+						
+					</ul>
+				</div>
+			</aside>
+			<!-- main-sidebar -->
 
-          if ($full_page.length != 0) {
-            $full_page.attr('filter-color', new_color);
-          }
+			<!-- main-content -->
+			<div class="main-content app-content">
 
-          if ($sidebar_responsive.length != 0) {
-            $sidebar_responsive.attr('data-color', new_color);
-          }
-        });
+				<!-- main-header -->
+				<div class="main-header sticky side-header nav nav-item">
+					<div class="container-fluid">
+						<div class="main-header-left ">
+							<div class="responsive-logo">
+								<a href="index.html"><img src="{{asset('assets/img/brand/logo.png')}}" class="logo-1" alt="logo"></a>
+								<a href="index.html"><img src="{{asset('assets/img/brand/logo-white.png')}}" class="dark-logo-1" alt="logo"></a>
+								<a href="index.html"><img src="{{asset('assets/img/brand/favicon.png')}}" class="logo-2" alt="logo"></a>
+								<a href="index.html"><img src="{{asset('assets/img/brand/favicon.png')}}" class="dark-logo-2" alt="logo"></a>
+							</div>
+							<div class="app-sidebar__toggle" data-toggle="sidebar">
+								<a class="open-toggle" href="#"><i class="header-icon fe fe-align-left" ></i></a>
+								<a class="close-toggle" href="#"><i class="header-icons fe fe-x"></i></a>
+							</div>
+							<div class="main-header-center ml-3 d-sm-none d-md-none d-lg-block">
+								<input class="form-control" placeholder="Search for anything..." type="search"> <button class="btn"><i class="fas fa-search d-none d-md-block"></i></button>
+							</div>
+						</div>
+						<div class="main-header-right">
+						
+							<div class="nav nav-item  navbar-nav-right ml-auto">
+								<div class="nav-link" id="bs-example-navbar-collapse-1">
+									<form class="navbar-form" role="search">
+										<div class="input-group">
+											<input type="text" class="form-control" placeholder="Search">
+											<span class="input-group-btn">
+												<button type="reset" class="btn btn-default">
+													<i class="fas fa-times"></i>
+												</button>
+												<button type="submit" class="btn btn-default nav-link resp-btn">
+													<svg xmlns="http://www.w3.org/2000/svg" class="header-icon-svgs" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-search"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+												</button>
+											</span>
+										</div>
+									</form>
+								</div>
+								
+								<div class="dropdown nav-item main-header-notification">
+									<a class="new nav-link" href="#">
+									<svg xmlns="http://www.w3.org/2000/svg" class="header-icon-svgs" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-bell"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg><span class=" pulse"></span></a>
+									<div class="dropdown-menu">
+										<div class="menu-header-content bg-primary text-left">
+											<div class="d-flex">
+												<h6 class="dropdown-title mb-1 tx-15 text-white font-weight-semibold">Notifications</h6>
+												<span class="badge badge-pill badge-warning ml-auto my-auto float-right">Mark All Read</span>
+											</div>
+											<p class="dropdown-title-text subtext mb-0 text-white op-6 pb-0 tx-12 ">You have 4 unread Notifications</p>
+										</div>
+										<div class="main-notification-list Notification-scroll">
+											<a class="d-flex p-3 border-bottom" href="#">
+												<div class="notifyimg bg-pink">
+													<i class="la la-file-alt text-white"></i>
+												</div>
+												<div class="ml-3">
+													<h5 class="notification-label mb-1">New files available</h5>
+													<div class="notification-subtext">10 hour ago</div>
+												</div>
+												<div class="ml-auto" >
+													<i class="las la-angle-right text-right text-muted"></i>
+												</div>
+											</a>
+											<a class="d-flex p-3" href="#">
+												<div class="notifyimg bg-purple">
+													<i class="la la-gem text-white"></i>
+												</div>
+												<div class="ml-3">
+													<h5 class="notification-label mb-1">Updates Available</h5>
+													<div class="notification-subtext">2 days ago</div>
+												</div>
+												<div class="ml-auto" >
+													<i class="las la-angle-right text-right text-muted"></i>
+												</div>
+											</a>
+											<a class="d-flex p-3 border-bottom" href="#">
+												<div class="notifyimg bg-success">
+													<i class="la la-shopping-basket text-white"></i>
+												</div>
+												<div class="ml-3">
+													<h5 class="notification-label mb-1">New Order Received</h5>
+													<div class="notification-subtext">1 hour ago</div>
+												</div>
+												<div class="ml-auto" >
+													<i class="las la-angle-right text-right text-muted"></i>
+												</div>
+											</a>
+											<a class="d-flex p-3 border-bottom" href="#">
+												<div class="notifyimg bg-warning">
+													<i class="la la-envelope-open text-white"></i>
+												</div>
+												<div class="ml-3">
+													<h5 class="notification-label mb-1">New review received</h5>
+													<div class="notification-subtext">1 day ago</div>
+												</div>
+												<div class="ml-auto" >
+													<i class="las la-angle-right text-right text-muted"></i>
+												</div>
+											</a>
+											<a class="d-flex p-3 border-bottom" href="#">
+												<div class="notifyimg bg-danger">
+													<i class="la la-user-check text-white"></i>
+												</div>
+												<div class="ml-3">
+													<h5 class="notification-label mb-1">22 verified registrations</h5>
+													<div class="notification-subtext">2 hour ago</div>
+												</div>
+												<div class="ml-auto" >
+													<i class="las la-angle-right text-right text-muted"></i>
+												</div>
+											</a>
+											<a class="d-flex p-3 border-bottom" href="#">
+												<div class="notifyimg bg-primary">
+													<i class="la la-check-circle text-white"></i>
+												</div>
+												<div class="ml-3">
+													<h5 class="notification-label mb-1">Project has been approved</h5>
+													<div class="notification-subtext">4 hour ago</div>
+												</div>
+												<div class="ml-auto" >
+													<i class="las la-angle-right text-right text-muted"></i>
+												</div>
+											</a>
+										</div>
+										<div class="dropdown-footer">
+											<a href="">VIEW ALL</a>
+										</div>
+									</div>
+								</div>
+								<div class="nav-item full-screen fullscreen-button">
+									<a class="new nav-link full-screen-link" href="#"><svg xmlns="http://www.w3.org/2000/svg" class="header-icon-svgs" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-maximize"><path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"></path></svg></a>
+								</div>
+								<div class="dropdown main-profile-menu nav nav-item nav-link">
+									<a class="nav-link pr-0" data-toggle="sidebar-right" data-target=".sidebar-right">
+										<svg xmlns="http://www.w3.org/2000/svg" class="header-icon-svgs" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-menu"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+									</a>
+									<div class="dropdown-menu">
+										<div class="main-header-profile bg-primary p-3">
+											<div class="d-flex wd-100p">
+												<div class="main-img-user"><img alt="" src="{{asset('uploads/teacher_avatars/').'/'.Auth::user()->avatar}}" class=""></div>
+												<div class="ml-3 my-auto">
+													<h6>{{Auth::user()->name}}</h6><span>Teacher</span>
+												</div>
+											</div>
+										</div>
+				
+										<a class="dropdown-item" href="{{ route('logout') }}"
+										onclick="event.preventDefault();
+													  document.getElementById('logout-form').submit();">Logout</a>
+									</div>
+								</div>
+								<form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
+									@csrf
+									</form>
+							
+							</div>
+						</div>
+					</div>
+				</div>
+				<!-- /main-header -->
 
-        $('.fixed-plugin .background-color .badge').click(function() {
-          $(this).siblings().removeClass('active');
-          $(this).addClass('active');
+				<!-- container -->
+				<div class="container-fluid">
 
-          var new_color = $(this).data('background-color');
+					<!-- row -->
+					
+            @yield('content')
+										<!-- row closed -->
+				</div>
+				<!-- Container closed -->
+			</div>
+			<!-- main-content closed -->
 
-          if ($sidebar.length != 0) {
-            $sidebar.attr('data-background-color', new_color);
-          }
-        });
+			<!-- Footer opened -->
+			<div class="main-footer ht-40">
+				<div class="container-fluid pd-t-0-f ht-100p">
+					<span>Copyright © 2020 <a href="#">Valex</a>. Designed by <a href="https://www.spruko.com/">Spruko</a> All rights reserved.</span>
+				</div>
+			</div>
+			<!-- Footer closed -->
 
-        $('.fixed-plugin .img-holder').click(function() {
-          $full_page_background = $('.full-page-background');
+		</div>
+		<!-- End Page -->
 
-          $(this).parent('li').siblings().removeClass('active');
-          $(this).parent('li').addClass('active');
+		<!-- Back-to-top -->
+		<a href="#top" id="back-to-top"><i class="las la-angle-double-up"></i></a>
+
+		<!-- JQuery min js -->
+		<script src="{{asset('assets/plugins/jquery/jquery.min.js')}}"></script>
+
+		<!-- Bootstrap Bundle js -->
+		<script src="{{asset('assets/plugins/bootstrap/js/bootstrap.bundle.min.js')}}"></script>
+
+		<!-- Ionicons js -->
+		<script src="{{asset('assets/plugins/ionicons/ionicons.js')}}"></script>
+
+		<!-- Moment js -->
+		<script src="{{asset('assets/plugins/moment/moment.js')}}"></script>
+
+		<!-- P-scroll js -->
+		<script src="{{asset('assets/plugins/perfect-scrollbar/perfect-scrollbar.min.js')}}"></script>
+		<script src="{{asset('assets/plugins/perfect-scrollbar/p-scroll.js')}}"></script>
+
+		<!-- Sticky js -->
+		<script src="{{asset('assets/js/sticky.js')}}"></script>
+
+		<!-- eva-icons js -->
+		<script src="{{asset('assets/js/eva-icons.min.js')}}"></script>
+
+		<!-- Rating js-->
+		<script src="{{asset('assets/plugins/rating/jquery.rating-stars.js')}}"></script>
+		<script src="{{asset('assets/plugins/rating/jquery.barrating.js')}}"></script>
+
+		<!-- Sidebar js -->
+		<script src="{{asset('assets/plugins/side-menu/sidemenu.js')}}"></script>
+
+		<!-- Right-sidebar js -->
+		<script src="{{asset('assets/plugins/sidebar/sidebar.js')}}"></script>
+		<script src="{{asset('assets/plugins/sidebar/sidebar-custom.js')}}"></script>
+
+		<!-- custom js -->
+		<script src="{{asset('assets/js/custom.js')}}"></script>
+
+		{{-- axios --}}
+		<script src="{{asset('assets/js/axios.min.js')}}"></script>
+	
+		<script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+		{{-- <script src="https://unpkg.com/axios/dist/axios.min.js"></script> --}}
+		<script src="{{asset('assets/plugins/datatable/js/jquery.dataTables.min.js')}}"></script>
+		<script src="{{asset('assets/plugins/datatable/js/dataTables.bootstrap4.js')}}"></script>
+		<script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.js"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+		<script src="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.14/dist/js/bootstrap-select.min.js"></script>
+	  <script>
+	$(document).ready(function() {
+		$('.summernote').summernote({
+		height: 200,
+		codemirror: { // codemirror options
+			theme: 'monokai'
+		}
+		});
+	});
+	
+	</script>
 
 
-          var new_image = $(this).find("img").attr('src');
 
-          if ($sidebar_img_container.length != 0 && $('.switch-sidebar-image input:checked').length != 0) {
-            $sidebar_img_container.fadeOut('fast', function() {
-              $sidebar_img_container.css('background-image', 'url("' + new_image + '")');
-              $sidebar_img_container.fadeIn('fast');
-            });
-          }
-
-          if ($full_page_background.length != 0 && $('.switch-sidebar-image input:checked').length != 0) {
-            var new_image_full_page = $('.fixed-plugin li.active .img-holder').find('img').data('src');
-
-            $full_page_background.fadeOut('fast', function() {
-              $full_page_background.css('background-image', 'url("' + new_image_full_page + '")');
-              $full_page_background.fadeIn('fast');
-            });
-          }
-
-          if ($('.switch-sidebar-image input:checked').length == 0) {
-            var new_image = $('.fixed-plugin li.active .img-holder').find("img").attr('src');
-            var new_image_full_page = $('.fixed-plugin li.active .img-holder').find('img').data('src');
-
-            $sidebar_img_container.css('background-image', 'url("' + new_image + '")');
-            $full_page_background.css('background-image', 'url("' + new_image_full_page + '")');
-          }
-
-          if ($sidebar_responsive.length != 0) {
-            $sidebar_responsive.css('background-image', 'url("' + new_image + '")');
-          }
-        });
-
-        $('.switch-sidebar-image input').change(function() {
-          $full_page_background = $('.full-page-background');
-
-          $input = $(this);
-
-          if ($input.is(':checked')) {
-            if ($sidebar_img_container.length != 0) {
-              $sidebar_img_container.fadeIn('fast');
-              $sidebar.attr('data-image', '#');
-            }
-
-            if ($full_page_background.length != 0) {
-              $full_page_background.fadeIn('fast');
-              $full_page.attr('data-image', '#');
-            }
-
-            background_image = true;
-          } else {
-            if ($sidebar_img_container.length != 0) {
-              $sidebar.removeAttr('data-image');
-              $sidebar_img_container.fadeOut('fast');
-            }
-
-            if ($full_page_background.length != 0) {
-              $full_page.removeAttr('data-image', '#');
-              $full_page_background.fadeOut('fast');
-            }
-
-            background_image = false;
-          }
-        });
-
-        $('.switch-sidebar-mini input').change(function() {
-          $body = $('body');
-
-          $input = $(this);
-
-          if (md.misc.sidebar_mini_active == true) {
-            $('body').removeClass('sidebar-mini');
-            md.misc.sidebar_mini_active = false;
-
-            $('.sidebar .sidebar-wrapper, .main-panel').perfectScrollbar();
-
-          } else {
-
-            $('.sidebar .sidebar-wrapper, .main-panel').perfectScrollbar('destroy');
-
-            setTimeout(function() {
-              $('body').addClass('sidebar-mini');
-
-              md.misc.sidebar_mini_active = true;
-            }, 300);
-          }
-
-          // we simulate the window Resize so the charts will get updated in realtime.
-          var simulateWindowResize = setInterval(function() {
-            window.dispatchEvent(new Event('resize'));
-          }, 180);
-
-          // we stop the simulation of Window Resize after the animations are completed
-          setTimeout(function() {
-            clearInterval(simulateWindowResize);
-          }, 1000);
-
-        });
-      });
-    });
-  </script>
-  <script>
-    $(document).ready(function() {
-      // Javascript method's body can be found in assets/js/demos.js
-      md.initDashboardPageCharts();
-
-    });
-  </script>
-  @stack('javascript');
-</body>
-
+		@stack('javascript');
+	</body>
 </html>

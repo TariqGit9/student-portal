@@ -606,12 +606,14 @@ class AdminController extends Controller
         }
       //  dd($request->all());
      // where('email', $request->email) ->or
-        $user = User::where('user_name', $request->user_name)->first();
+        $user = User::withTrashed()->where('user_name', $request->user_name)->first();
+      
        if( $user){
-            if ($user->user_name==$request->user_name) {
+       
+        if ($user->user_name==$request->user_name) {
                 return response()->json([
                     'success' => false,
-                    'error' => "User Name already Exists.",
+                    'error' => "User Name already Exists.(if you dont find it in active students please look in Deleted Students)",
                 ]);
             }
             if ($user->email==$request->email) {
@@ -879,7 +881,9 @@ class AdminController extends Controller
     public function getSubjectTeachers(Request $request)
     {
         $class = Classes::find($request->id); 
+      //Wrong query
         $data =   $class->grade->subjects;
+        
         //dd($subjects);
         return DataTables::of($data)
         ->addColumn('action', function ($data) {
@@ -889,14 +893,20 @@ class AdminController extends Controller
                 return $button;
                 
         })
-        ->addColumn('teacher', function ($data) {
-          
-            if($data->teacher_subject){
-               return $data->teacher_subject->teacher_details->name;
+        ->addColumn('teacher', function ($data) use ($class){
+            $teacher =$data->teacher_subject->where([['class_id',$class->id],['grade_id',$class->grade_id],['subject_id',$data->id]])->first();
+            if($teacher){
+               return $teacher->teacher_details->name;
             }
             else{
                 return "No Teacher assigned";
             }
+            // if($data->teacher_subject){
+            //    return $data->teacher_subject->teacher_details->name;
+            // }
+            // else{
+            //     return "No Teacher assigned";
+            // }
           
             
     })

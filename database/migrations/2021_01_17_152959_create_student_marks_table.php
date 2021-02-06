@@ -15,16 +15,12 @@ class CreateStudentMarksTable extends Migration
     {
         Schema::create('student_marks', function (Blueprint $table) {
             $table->id();
-            $table->float('total_marks')->dafault(0);
-            $table->float('obtained_marks')->dafault(0);
-            $table->unsignedBigInteger('student_id')->nullable();
+            $table->unsignedBigInteger('assesment_id');
+            $table->foreign('assesment_id')->references('id')->on('student_assessments')->onDelete('cascade');
+            $table->unsignedBigInteger('student_id');
             $table->foreign('student_id')->references('id')->on('users')->onDelete('cascade');
-            $table->unsignedBigInteger('teacher_id')->nullable();
-            $table->foreign('teacher_id')->references('id')->on('users')->onDelete('cascade');
-            $table->unsignedBigInteger('class_id')->nullable();
-            $table->foreign('class_id')->references('id')->on('classes')->onDelete('cascade');
-            $table->unsignedBigInteger('subject_id')->nullable();
-            $table->foreign('subject_id')->references('id')->on('subjects')->onDelete('cascade');
+            $table->float('obtained_marks')->dafault(0);
+            
             $table->softDeletes();
             $table->timestamps();
         });

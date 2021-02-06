@@ -18,6 +18,10 @@ class DatabaseSeeder extends Seeder
             ClassGradeSeeder::class,
             UserRoles::class,
             DummySubjectsSeeder::class,
+            DummySchoolSeeder::class,
+            DummyResultTypesSeeder::class,
+
+            //DummyResultTypesSeeder
         ]);
     }
 }

@@ -21,7 +21,7 @@ class AdminDetails extends Seeder
             [
            'id' => '1',
             'name' => 'admin',
-            'user_name' => 'support_admin',
+            'user_name' => 'admin',
             'email' => 'support@pkteam.com',
             'avatar' => 'default.webp',
             'password' => Hash::make('sdassdas'),

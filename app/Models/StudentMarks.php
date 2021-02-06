@@ -11,4 +11,8 @@ class StudentMarks extends Model
     use SoftDeletes;
 
     protected $guarded = [];
+    public function student()
+    {
+        return $this->belongsTo('App\Models\User', 'user_id', 'id')->withTrashed();
+    }
 }

@@ -10,7 +10,8 @@
         @csrf
 
         <div class="wrap-input100 validate-input" data-validate = "Enter username">
-            <input id="email" type="email" class="input100 @error('email') is-invalid @enderror"placeholder="User Name" name="email" value="{{ old('email') }}" required autocomplete="email" autofocus>
+            <input id="email" type="text" class="input100{{ $errors->has('username') || $errors->has('email') ? ' is-invalid' : '' }}"
+            name="login" value="{{ old('user_name') ?: old('email') }}" required autofocus>
             <span class="focus-input100" data-placeholder="&#xe82a;"></span>
         
         </div>

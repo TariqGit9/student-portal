@@ -6,14 +6,14 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class TeacherSubject extends Model
+class StudentAssessment extends Model
 {
     use SoftDeletes;
     use HasFactory;
     protected $guarded = [];
-    public function teacher_details()
+    public function student_marks()
     {
-        return $this->belongsTo('App\Models\User', 'user_id', 'id')->withTrashed();
+        return $this->hasMany('App\Models\StudentMarks', 'assesment_id', 'id');
     }
     public function subject_details()
     {
@@ -23,4 +23,5 @@ class TeacherSubject extends Model
     {
         return $this->belongsTo('App\Models\Classes', 'class_id', 'id')->withTrashed();
     }
+
 }

@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateSchoolInformationTable extends Migration
+class CreateResultTypesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,15 +13,10 @@ class CreateSchoolInformationTable extends Migration
      */
     public function up()
     {
-        Schema::create('school_information', function (Blueprint $table) {
+        Schema::create('result_types', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->string('abrevation');
-            $table->string('phone');
-            $table->string('phone2');
-            $table->string('address');
-            $table->longtext('details');
-            $table->softDeletes();
+            $table->string('status')->nullable();
             $table->timestamps();
         });
     }
@@ -33,6 +28,6 @@ class CreateSchoolInformationTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('school_information');
+        Schema::dropIfExists('result_types');
     }
 }

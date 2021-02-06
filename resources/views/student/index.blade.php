@@ -2,12 +2,18 @@
 @push('styles')
 @endpush
 @section('content')
-<div class="card-header card-header-primary">
-    <h4 class="card-title">Welcome Admin ...</h4>
-    {{-- <p class="card-category">Handcrafted by our friends from
-      <a target="_blank" href="https://design.google.com/icons/">Google</a>
-    </p> --}}
+<!-- breadcrumb -->
+<div class="breadcrumb-header justify-content-between">
+  <div class="my-auto">
+    <div class="d-flex">
+      <h4 class="content-title mb-0 my-auto">Welcome Student ...</h4>
+    </div>
   </div>
+</div>
+
+
+
+
 
 @push('javascript')
 @endpush

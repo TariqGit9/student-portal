@@ -119,6 +119,10 @@ $(document).on('click', '.addClass', function() {
             })
         
         $("#name").val(""); 
+        $(".selectpicker").val('default');
+        $(".selectpicker").selectpicker("refresh");
+     
+        
         datatable.draw();
     });
 

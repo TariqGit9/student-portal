@@ -15,4 +15,8 @@ class Classes extends Model
     {
         return $this->belongsTo('App\Models\ClassGrade');
     }
+    public function class()
+    {
+        return $this->belongsTo('App\Models\ClassGrade', 'grade_id', 'id');
+    }
 }

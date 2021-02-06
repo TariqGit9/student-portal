@@ -283,6 +283,10 @@ $(document).on('click', '.editSubject', function() {
             "positionClass": "toast-bottom-right"
         });
         $("#name").val(""); 
+        $(".selectpicker").val('default');
+        $(".selectpicker").selectpicker("refresh");
+        $(".summernote").summernote("code", "");
+
         datatable.draw();
     });
 
@@ -313,6 +317,12 @@ $(document).on('click', '.addSubject', function() {
             "positionClass": "toast-bottom-right"
         });
         $("#name").val(""); 
+        $("#grade").val("");
+        $("#author").val("");
+        $("#type").val("");
+        $(".summernote").summernote("code", "");
+        $(".selectpicker").val('default');
+        $(".selectpicker").selectpicker("refresh");
         datatable.draw();
     });
 
