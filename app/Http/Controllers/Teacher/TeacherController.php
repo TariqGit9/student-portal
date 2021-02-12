@@ -44,7 +44,9 @@ class TeacherController extends Controller
                 
            $button= '<a  class="btn btn-success  btn-sm class_students"title="Class Students" data-class_id ="'. $data->class_id.'" style="color:white;"><i class="fa fa-users"></i></a>&nbsp;&nbsp;';  
            $button.= '<a class="btn btn-info btn-sm upload_student_marks"title="Upload Students Marks" data-class_id ="'. $data->class_id.'"data-subject_id ="'. $data->subject_id.'" style="color:white;"><i class="fa fa-list"></i></a>&nbsp;&nbsp;';  
-           
+           $button.= '<a  class="btn btn-info btn-sm class_student_marks"title="Class Students Marks" data-class_id ="'. $data->class_id.'"style="color:white;"><i class="fa fa-file" ></i></a>&nbsp;&nbsp;';  
+        
+           //class_student_marks  
            return $button;
                 
         })
@@ -180,4 +182,35 @@ class TeacherController extends Controller
             'msg' =>'Error',
         ], 200);
     }
+public function classStudentResults(Request $request)
+{
+    $class_id=$request->class_id;
+    $types = ResultType::all();
+    return view('teacher.class-student-results',compact('types','class_id'));
+}
+//getClassAssesments
+public function getClassAssesments(Request $request)
+{
+    $result = StudentAssessment::where([['class_id',$request->class_id],['type_id',$request->type]])->get(); 
+        return DataTables::of($result)
+        ->addColumn('action', function ($data) {
+                
+           $button= '';//'<a  class="btn btn-success  btn-sm class_students"title="Class Students" data-class_id ="'. $data->class_id.'" style="color:white;"><i class="fa fa-users"></i></a>&nbsp;&nbsp;';  
+        //    $button.= '<a class="btn btn-info btn-sm upload_student_marks"title="Upload Students Marks" data-class_id ="'. $data->class_id.'"data-subject_id ="'. $data->subject_id.'" style="color:white;"><i class="fa fa-list"></i></a>&nbsp;&nbsp;';  
+        //    $button.= '<a  class="btn btn-info btn-sm class_student_marks"title="Class Students Marks" data-class_id ="'. $data->class_id.'"style="color:white;"><i class="fa fa-file" ></i></a>&nbsp;&nbsp;';  
+        
+        //    //class_student_marks  
+           return $button;
+                
+        })
+        ->addColumn('total_marks', function ($data) {
+               return $data->total_marks;     
+        })
+        ->addColumn('description', function ($data) {
+            return $data->descrption;     
+        })
+                ->rawColumns(['action','class','subject'])
+                ->make(true);
+    
+}
 }

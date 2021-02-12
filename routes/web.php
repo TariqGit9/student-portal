@@ -93,6 +93,8 @@ Auth::routes(['register' => false, 'password.request' => false, 'reset' => false
                 Route::post('get-student-detail', 'TeacherController@getStudentDetail')->name('get-student-detail');
                 Route::post('/teacher-insert-student-marks', 'TeacherController@teacherInsertStudentMarks')->name('teacher-insert-student-marks');
                 Route::post('add-student-result', 'TeacherController@addStudentResult')->name('add-student-result');
+                Route::post('class-student-results', 'TeacherController@classStudentResults')->name('class-student-results');
+                Route::post('get-class-assesments', 'TeacherController@getClassAssesments')->name('get-class-assesments');
            
             
             

@@ -45,6 +45,13 @@
     <input id="class_id" class="class_id" name ="class_id" type="hidden" value="">
  
 </form >
+<form id="class_student_marks" method="post" action="class-student-results">
+  @csrf
+  <input id="class_id" class="class_id" name ="class_id" type="hidden" value="">
+
+</form >
+{{-- class-student-results --}}
+
 @push('javascript')
 <script>
         var datatable = $('#Table').DataTable({
@@ -92,7 +99,15 @@ $(document).on('click', '.class_students', function() {
  
  $('#class_students').submit();
 });
+//class_student_marks
 
+$(document).on('click', '.class_student_marks', function() {
+ 
+ var class_id = $(this).data('class_id');
+ $('.class_id').val(class_id);
+ 
+ $('#class_student_marks').submit();
+});
 </script>
 @endpush
 @endsection
