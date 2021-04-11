@@ -305,7 +305,18 @@
 				</div>
 			</div>
 			<!-- Footer closed -->
-
+			<div class="modal" id="please_wait">
+				<div class="modal-dialog modal-dialog-centered modal-sm" role="document">
+					<div class="modal-content tx-size-sm">
+						<div class="modal-body tx-center pd-y-20 pd-x-20">
+							{{-- <i class="  lh-1 mg-t-20 d-inline-block"></i> --}}
+							<img src="{{asset('assets/img/loader.svg')}}"  width="50" height="50" alt="Please wait">
+							<p class="mg-b-20 mg-x-20 mt-2"> </p>
+							<p class="mg-b-20 mg-x-20 mt-2"> Please Wait</p>
+						</div>
+					</div>
+				</div>
+			</div>
 		</div>
 		<!-- End Page -->
 

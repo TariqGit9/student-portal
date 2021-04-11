@@ -4,6 +4,8 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
 
+//run this
+//php artisan db:seed --class=DatabaseSeeder
 class DatabaseSeeder extends Seeder
 {
     /**

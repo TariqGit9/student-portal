@@ -26,12 +26,12 @@ class AdminController extends Controller
 {
     public function admin()
     {
-        return view('admin.index');
+        return view('admin.dashboard.index');
     }
     public function classes()
     {
         $grades = ClassGrade::all();
-        return view('admin.classes', compact('grades'));
+        return view('admin.class.classes', compact('grades'));
        
     }
     public function addClass(Request $request)
@@ -108,7 +108,7 @@ class AdminController extends Controller
     {
         //ClassGrade
         $grades = ClassGrade::all();
-        return view('admin.subjects', compact('grades'));
+        return view('admin.class.subjects', compact('grades'));
     }
     public function addSubject(Request $request)
     {
@@ -245,13 +245,13 @@ class AdminController extends Controller
     public function classSubjects($id)
     {
         //$class = Classes::find($id); , compact('class')
-        return view('admin.class-subjects', compact('id'));
+        return view('admin.class.class-subjects', compact('id'));
        
     }
     public function grades()
     {
      //   $grades = ClassGrade::all();
-        return view('admin.grades');
+        return view('admin.class.grades');
        
     }
     public function addGrade(Request $request)
@@ -405,7 +405,7 @@ class AdminController extends Controller
 //teachers
     public function teachers()
     {
-        return view('admin.teachers');
+        return view('admin.teacher.teachers');
     }
     public function getTeachers()
     {
@@ -524,7 +524,7 @@ class AdminController extends Controller
     //Delted Teachers
     public function deletedTeachers()
     {
-        return view('admin.deleted-teachers');
+        return view('admin.teacher.deleted-teachers');
     }
 
     public function getDeletedTeachers()
@@ -535,7 +535,7 @@ class AdminController extends Controller
         return DataTables::of($data)
         ->addColumn('action', function ($data) {
                 
-                 $button = '<a href="#" class="btn btn-success btn-sm   activateTeacher"title="Delete" data-id=' . $data->id . '><i class="fa fa-check"></i></a>&nbsp;&nbsp;';  
+                 $button = '<a href="#" class="btn btn-success btn-sm   activateTeacher"title="Restore" data-id=' . $data->id . '><i class="fa fa-check"></i></a>&nbsp;&nbsp;';  
         
                 return $button;
                 
@@ -571,7 +571,7 @@ class AdminController extends Controller
     public function students()
     {
        $classes= Classes::all();
-        return view('admin.student', compact('classes'));
+        return view('admin.student.student', compact('classes'));
     }
 
     public function addStudent(Request $request)
@@ -606,7 +606,12 @@ class AdminController extends Controller
         }
       //  dd($request->all());
      // where('email', $request->email) ->or
-        $user = User::withTrashed()->where('user_name', $request->user_name)->first();
+        if($request->email){
+            $user = User::where('email', $request->email) ->orWhere('user_name', $request->user_name)->first();
+        }
+        else{
+            $user = User::withTrashed()->where('user_name', $request->user_name)->first();
+        }
       
        if( $user){
        
@@ -692,7 +697,7 @@ class AdminController extends Controller
         ->addColumn('action', function ($data) {
                 
                 // $button = '<a href="#" class="btn btn-info btn-sm  editGrade "title="edit" data-id=' . $grades->id . '><i class="fa fa-edit"></i></a>&nbsp;&nbsp;';  
-                $button = '<a href="#" class="btn btn-info btn-sm  editStudent " data-toggle="modal" data-target="#editStudentModal"   data-id="' . $data->id . '" data-name="' . $data->name . '"data-avatar="' . $data->avatar . '"data-user_name="' . $data->user_name . '"data-phone="' . $data->student_details->phone .'"data-ephone="' . $data->student_details->emergency_phone .'"data-class="' . $data->student_details->class_id . '"data-address_main="' . $data->student_details->address_line_main .'"data-address_sec="' . $data->student_details->address_line_secondary .'"><i class="fa fa-edit"></i></a>&nbsp;&nbsp;';  
+                $button = '<a href="#" class="btn btn-info btn-sm  editStudent " data-toggle="modal" data-target="#editStudentModal" data-email="' . $data->email . '"  data-id="' . $data->id . '" data-name="' . $data->name . '"data-avatar="' . $data->avatar . '"data-user_name="' . $data->user_name . '"data-phone="' . $data->student_details->phone .'"data-ephone="' . $data->student_details->emergency_phone .'"data-class="' . $data->student_details->class_id . '"data-address_main="' . $data->student_details->address_line_main .'"data-address_sec="' . $data->student_details->address_line_secondary .'"><i class="fa fa-edit"></i></a>&nbsp;&nbsp;';  
                 $button .= '<a href="#" class="btn btn-danger btn-sm   deleteStudent"title="Delete" data-id=' . $data->id . '><i class="fa fa-trash"></i></a>&nbsp;&nbsp;';  
         
                 return $button;
@@ -739,10 +744,9 @@ class AdminController extends Controller
         $emergency_phone= $student->student_details->emergency_phone;
         $address_line_main= $student->student_details->address_line_main;
         $address_line_secondary= $student->student_details->address_line_secondary;
-
+      
         return response()->json([
                 'email' =>$student->email,
-               
                 'emergency_phone' =>$emergency_phone,
                 'address_line_main' =>$address_line_main,
                 'address_line_secondary' =>$address_line_secondary,
@@ -817,7 +821,7 @@ class AdminController extends Controller
     //Delted students
     public function deletedStudents()
     {
-        return view('admin.deleted-students');
+        return view('admin.student.deleted-students');
     }
 
     public function getDeletedStudents()
@@ -875,7 +879,7 @@ class AdminController extends Controller
     public function classTeachers($id)
     {
         $teachers = User::where('role_id',2)->get();
-        return view('admin.class-teachers', compact('id','teachers'));
+        return view('admin.class.class-teachers', compact('id','teachers'));
     
     }
     public function getSubjectTeachers(Request $request)
@@ -894,9 +898,14 @@ class AdminController extends Controller
                 
         })
         ->addColumn('teacher', function ($data) use ($class){
-            $teacher =$data->teacher_subject->where([['class_id',$class->id],['grade_id',$class->grade_id],['subject_id',$data->id]])->first();
-            if($teacher){
-               return $teacher->teacher_details->name;
+            if($data->teacher_subject){   
+                $teacher =$data->teacher_subject->where([['class_id',$class->id],['grade_id',$class->grade_id],['subject_id',$data->id]])->first();
+                    if($teacher){
+                        return $teacher->teacher_details->name;
+                    }
+                    else{
+                        return "No Teacher assigned";
+                    }
             }
             else{
                 return "No Teacher assigned";
@@ -935,7 +944,7 @@ class AdminController extends Controller
     public function classStudents($id)
     {
      //   $teachers = User::where('role_id',3)->get();
-        return view('admin.class-students', compact('id'));
+        return view('admin.class.class-students', compact('id'));
     }
     public function getClassStudents(Request $request)
     {
@@ -993,5 +1002,11 @@ class AdminController extends Controller
         })
             ->rawColumns(['reg_no', 'action','class','image','phone'])
             ->make(true);
+    }
+
+    public function teacherComplaintsOfStudents(Type $var = null)
+    {
+        return view('admin.index');
+
     }
 }

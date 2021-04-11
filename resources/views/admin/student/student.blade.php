@@ -21,7 +21,7 @@
 <div class="breadcrumb-header justify-content-between">
   <div class="my-auto">
     <div class="d-flex">
-      <h4 class="content-title mb-0 my-auto">Teachers</h4><span class="text-muted mt-1 tx-13 ml-2 mb-0"></span>
+      <h4 class="content-title mb-0 my-auto">students</h4><span class="text-muted mt-1 tx-13 ml-2 mb-0"></span>
     </div>
   </div>
 </div>
@@ -29,13 +29,13 @@
   <div class="card">
     <div class="card-header pb-0">
       <div class="d-flex justify-content-between">
-        <h4 class="card-title ">Add a Teacher </h4>
-        <i class="mdi "><span class="float-right" > 	&nbsp;<button type="button" class="btn btn-danger  viewDeleted" >Deleted Teachers</button></span><span class="float-right" ><button type="button" class="btn btn-secondary" data-toggle="modal" data-target=".addStudentModel">Add a Teacher</button></span></i>
+        <h4 class="card-title ">Add a student </h4>
+        <i class="mdi "><span class="float-right" > 	&nbsp;<button type="button" class="btn btn-danger  viewDeleted" >Deleted students</button></span><span class="float-right" ><button type="button" class="btn btn-secondary" data-toggle="modal" data-target=".addStudentModel">Add a student</button></span></i>
       </div>
     </div>
     <div class="card-body">
       <div class="table-responsive">
-        <table class="table datatable" id="teacherTable" width="100%" cellspacing="0">
+        <table class="table datatable" id="studentTable" width="100%" cellspacing="0">
           <tbody>  
               <thead class=" text-primary" >
                   <tr>
@@ -43,7 +43,8 @@
                       <th >Avatar</th>
                       <th >Name</th>
                       <th >User Name</th>
-                     
+                      <th >Class</th>
+                      <th >Reg Number</th>
                       <th >Phone</th>
                       <th >Action</th>
                   </tr>
@@ -54,16 +55,16 @@
     </div>
   </div>
 </div>
-  <div class="modal fade addStudentModel" id="addTeacherModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal fade addStudentModel" id="addstudentModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg" role="document">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title" id="exampleModalLabel">Add a Teacher </h5>
+          <h5 class="modal-title" id="exampleModalLabel">Add a student </h5>
           <button type="button" class="close" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">&times;</span>
           </button>
         </div>
-      <form id="addTeacherForm">
+      <form id="addStudentForm">
         <div class="modal-body">
           <div class="form-row">
             <div class="form-group col ">
@@ -74,13 +75,40 @@
               <label class="bmd-label-floating form-required">User Name</label>
               <input type="text" class="form-control" id="user_name" name="user_name" aria-describedby="emailHelp">
             </div>
-            <div class="form-group col">
+            {{-- <div class="form-group col">
+              <label for="exampleInputEmail1">Select Class </label>
+                <select class="form-control selectpicker" data-live-search="true" name="class_id" id="class_id" required>
+                    <option disabled selected>Please Select a Class</option>  
+                    @if($classes)
+                        @foreach($classes as $class )
+                        <option value="{{$class->id}}">{{$class->name}}</option>
+                        @endforeach
+                    @endif
+                </select>
+            </div> --}}
+            
+            {{-- <div class="form-group col">
               <label class="bmd-label-floating form-required">Email</label>
               <input type="text" class="form-control" id="email" name="email" aria-describedby="emailHelp">
+            </div> --}}
+          </div>
+          <div class="form-row">
+            <div class="form-group col">
+              <label class="bmd-label-floating ">Email</label>
+              <input type="text" class="form-control" id="email" name="email" aria-describedby="emailHelp">
+            </div>
+            <div class="form-group col">
+              <label for="exampleInputEmail1">Select Class </label>
+                <select class="form-control selectpicker" data-live-search="true" name="class_id" id="class_id" required>
+                    <option disabled selected>Please Select a Class</option>  
+                    @if($classes)
+                        @foreach($classes as $class )
+                        <option value="{{$class->id}}">{{$class->name}}</option>
+                        @endforeach
+                    @endif
+                </select>
             </div>
           </div>
-       
-       
           <div class="form-row">
             <div class="form-group col ">
               <label class="bmd-label-floating form-required">Password </label>
@@ -114,25 +142,25 @@
             
           </div>
           <div class="input-group file-browser">
-            <input type="text" class="custom-file-label form-control browse-file" placeholder="Choose Teacher Avatar" readonly>
+            <input type="text" class="custom-file-label form-control browse-file" placeholder="Choose student Avatar" readonly>
             <label class="input-group-btn">
               <span class="btn btn-default">
                 Browse <input type="file" name="image" id="image"  accept="image/*" style="display: none;" multiple>
               </span>
             </label>
           </div>
-          <div class="form-row">
+          {{-- <div class="form-row">
             <div class="form-group col">
               <label class="bmd-label-floating">Specialities</label>
               <textarea  class=" summernote" name="subject_specialities"
               id="subject_specialities"  ></textarea>
             </div>
-          </div>
+          </div> --}}
 
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-          <button type="button" class="btn btn-primary addTeacher">Save changes</button>
+          <button type="button" class="btn btn-primary addstudent">Save changes</button>
         </form>
         </div>
       </div>
@@ -140,16 +168,16 @@
   </div>
 
 {{-- //Edit  --}}
-<div class="modal fade addStudentModel" id="editTeacherModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal fade addStudentModel" id="editStudentModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-lg" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Add a Teacher </h5>
+        <h5 class="modal-title" id="exampleModalLabel">Add a student </h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
-    <form id="editTeacherForm">
+    <form id="editStudentForm">
       <div class="modal-body">
         <div class="form-row">
           <div class="form-group col ">
@@ -162,13 +190,29 @@
             <label class="bmd-label-floating form-required">User Name</label>
             <input type="text" class="form-control" id="edit_user_name" name="edit_user_name" aria-describedby="emailHelp" disabled>
           </div>
-          <div class="form-group col">
-            <label class="bmd-label-floating form-required">Email</label>
-            <input type="text" class="form-control" id="edit_email" name="edit_email" aria-describedby="emailHelp">
-          </div>
+        
+         
         </div>
      
-     
+        <div class="form-row">
+          <div class="form-group col">
+              <label class="bmd-label-floating form-required">Email</label>
+              <input type="text" class="form-control" id="edit_email" name="edit_email" aria-describedby="emailHelp">
+          </div>
+
+          <div class="form-group col">
+            <label for="exampleInputEmail1">Select Class </label>
+                <select class="form-control selectpicker" data-live-search="true" name="edit_class_id" id="edit_class_id" required>
+                    <option disabled selected>Please Select a Class</option>  
+                    @if($classes)
+                        @foreach($classes as $class )
+                        <option value="{{$class->id}}">{{$class->name}}</option>
+                        @endforeach
+                    @endif
+                </select>
+            </div>
+
+        </div>
         <div class="form-row">
           {{-- <div class="form-group col ">
             <label class="bmd-label-floating form-required">Password </label>
@@ -210,7 +254,7 @@
 
           <div class="form-group col-11">
             <div class="input-group file-browser ">
-              <input type="text" class="custom-file-label form-control browse-file" placeholder="Choose Teacher Avatar" readonly>
+              <input type="text" class="custom-file-label form-control browse-file" placeholder="Choose student Avatar" readonly>
               <label class="input-group-btn">
                 <span class="btn btn-default">
                   Browse <input type="file" name="edit_image" id="edit_image"  accept="image/*" style="display: none;" multiple>
@@ -219,18 +263,18 @@
             </div>  
           </div>
         </div> 
-        <div class="form-row">
+        {{-- <div class="form-row">
           <div class="form-group col">
             <label class="bmd-label-floating">Specialities</label>
             <textarea  class="editsummer summernote" name="edit_subject_specialities"
             id="edit_subject_specialities"  ></textarea>
           </div>
-        </div>
+        </div> --}}
 
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary editTeacherInfo">Save changes</button>
+        <button type="button" class="btn btn-primary editStudentInfo">Save changes</button>
       </form>
       </div>
     </div>
@@ -241,7 +285,7 @@
     <div class="modal-content tx-size-sm">
       <div class="modal-body tx-center pd-y-20 pd-x-20">
         {{-- <i class="  lh-1 mg-t-20 d-inline-block"></i> --}}
-        <h4 class="tx-success tx-semibold mg-b-20">Sending Credentials to the Teacher !</h4>
+        <h4 class="tx-success tx-semibold mg-b-20">Sending Credentials to the student !</h4>
         <img src="{{asset('assets/gifs/loading.gif')}}"  width="100" height="100" alt="Please wait">
         <p class="mg-b-20 mg-x-20"> Please Wait</p>
       </div>
@@ -250,11 +294,16 @@
 </div>
 @push('javascript')
 <script>
-        var datatable = $('#teacherTable').DataTable({
+        $.ajaxSetup({
+          headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+          }
+        });
+        var datatable = $('#studentTable').DataTable({
         processing: true,
         serverSide: true,
         ajax: {
-            url: "{{route('get-teachers')}}",
+            url: "{{route('get-students')}}",
         },
         columns: [
           {
@@ -278,7 +327,16 @@
             name: 'user_name',
           
         },
-     
+        {
+            data: 'class',
+            name: 'class',
+          
+        },
+        {
+            data: 'reg_no',
+            name: 'reg_no',
+          
+        },
         {
             data: 'phone',
             name: 'phone',
@@ -295,7 +353,7 @@
 function format(d) {
     var table = "";
     return new Promise((resolve, reject) => {
-       axios.post("{{route('get-teacher-detail')}}", {
+       axios.post("{{route('get-student-detail-admin')}}", {
             id: d.id
         }).then(function(response) {
         
@@ -307,7 +365,7 @@ function format(d) {
 
 }
 
-$('#teacherTable tbody').on('click', 'td.details-control', function() {
+$('#studentTable tbody').on('click', 'td.details-control', function() {
     var tr = $(this).closest('tr');
     var row = datatable.row(tr);
     var id = $(this).data('id');
@@ -321,22 +379,28 @@ $('#teacherTable tbody').on('click', 'td.details-control', function() {
         // row.child(  ).show();
 
         format(row.data()).then((data) => {
-           var html="Email : "+ data.email+"<br>";
-           html +="Emergency Contact : "+ data.emergency_phone+"<br>";
-           html +="Address Line Main : "+ data.address_line_main+"<br>";
-           if(data.address_line_secondary){
-              html +="Address Line Secondary : "+ data.address_line_secondary+"<br>";
-            }
-            else{
+          if(data.email==null){
 
-            }
-            if(data.details){
+            var html="Email : "+ "Not available"+"<br>";
+          }
+          else{
 
-              html +="Details : "+ data.details+"<br>";
-            }
-        
+            var html="Email : "+ data.email+"<br>";
+          }
+       
+            html +="Emergency Contact : "+ data.emergency_phone+"<br>";
+            html +="Address Line Main : "+ data.address_line_main+"<br>";
+           if(data.address_line_secondary==null){
+
+            html +="Address Line Secondary : "+ "Not available"+"<br>";
+          }
+          else{
+
+            html +="Address Line Secondary : "+ data.address_line_secondary+"<br>";
+          }
           
           
+           
            
             row.child(html).show();
         });
@@ -366,8 +430,8 @@ $(document).on('click', '.genrate_password', function() {
    $("#password").val($("#user_name").val()+pass);
 
 });
-var mailformat = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+.[a-z](?:\.[a-zA-Z0-9-]+)*$/;
-$(document).on('click', '.addTeacher', function() {
+
+$(document).on('click', '.addstudent', function() {
  
   //please_wait
    var phone_expresion="^((\+92)|(0092))-{0,1}\d{3}-{0,1}\d{7}$|^\d{11}$|^\d{4}-\d{7}$";
@@ -385,20 +449,14 @@ $(document).on('click', '.addTeacher', function() {
         $("#user_name").focus();
         return;
    }
-   if($("#email").val() == ""){
-    toastr.warning('Warning!', "Please Fill Email...", {
+  //  alert($("#class_id").val());
+   if($("#class_id").val() == null){
+    toastr.warning('Warning!', "Please Select a Class...", {
             "positionClass": "toast-bottom-right"
         });
-        $("#email").focus();
+        $("#class_id").focus();
         return;
    }
-   if (! $("#email").val().match(mailformat)) {
-      toastr.warning('Warning!', "Not a Valid Email...", {
-        "positionClass": "toast-bottom-right"
-    });
-    return;
-    }
-
    if($("#password").val() == ""){
     toastr.warning('Warning!', "Please Fill  out Password...", {
             "positionClass": "toast-bottom-right"
@@ -444,24 +502,24 @@ $(document).on('click', '.addTeacher', function() {
         $("#address_line_main").focus();
         return;
    }
-    var form = $("#addTeacherForm");
+    var form = $("#addStudentForm");
     var formData = new FormData(form[0]);
    // var formData = new FormData();
     var imagefile = document.querySelector('#image');
     formData.append("image", imagefile.files[0]);
 
     $('#please_wait').modal('show');
-    $('.addTeacher').attr("disabled", true);
-    axios.post("{{route('add-teacher')}}",
+    $('.addStudent').attr("disabled", true);
+    axios.post("{{route('add-student')}}",
         formData
     ).then(function(response) {
-      $('.addTeacher').attr("disabled", false);
+      $('.addstudent').attr("disabled", false);
       $('#please_wait').modal('hide');
     if(response.data.success){
 
-      $('#addTeacherModal').modal('hide');
+      $('#addstudentModal').modal('hide');
      
-      toastr.success('Success!', 'Teacher added Successfully',{
+      toastr.success('Success!', 'Student added Successfully',{
               "positionClass": "toast-bottom-right"
           })      
           $("#email").val(""); 
@@ -473,6 +531,8 @@ $(document).on('click', '.addTeacher', function() {
           $("#emergency_phone").val(""); 
           $("#password").val(""); 
           $("#phone").val(""); 
+          $(".selectpicker").val('default');
+          $(".selectpicker").selectpicker("refresh");
           $(".summernote").summernote("code", "");
       datatable.draw();
 
@@ -497,7 +557,7 @@ $(document).on('click', '.addTeacher', function() {
 
 });
 
-$(document).on('click', '.deleteClass', function() {
+$(document).on('click', '.deleteStudent', function() {
     var id = $(this).data('id');
     Swal.fire({
         title: 'Are you sure?',
@@ -510,10 +570,10 @@ $(document).on('click', '.deleteClass', function() {
         reverseButtons: true
     }).then((result) => {
         if (result.isConfirmed) {
-            axios.post("{{route('del-class')}}", {
+            axios.post("{{route('del-student')}}", {
                 id: id
             }).then(function(response) {
-              toastr.success('Success!', 'Class Deleted Successfully',{
+              toastr.success('Success!', 'Student Deleted Successfully',{
                 "positionClass": "toast-bottom-right"
             })
               datatable.draw();
@@ -525,36 +585,55 @@ $(document).on('click', '.deleteClass', function() {
     });
 
 });
-$(document).on('click', '.editTeacher', function() {
+$(document).on('click', '.editStudent', function() {
 
-var edit_id = $(this).data('id');
-var edit_name = $(this).data('name');
-var edit_user_name = $(this).data('user_name');
-var edit_phone = $(this).data('phone');
-var avatar = $(this).data('avatar');
-$("#edit_id").val(edit_id); 
-$("#edit_name").val(edit_name); 
-$("#edit_user_name").val(edit_user_name); 
-$("#edit_phone").val(edit_phone); 
-var path="{{asset('uploads/teacher_avatars/')}}";
-$("#edit_image_display").attr("src",path+"/"+avatar);
+  var edit_id = $(this).data('id');
+  var edit_name = $(this).data('name');
+  var edit_user_name = $(this).data('user_name');
+  var edit_phone = $(this).data('phone');
+  var edit_emergency_phone = $(this).data('ephone');
+  var avatar = $(this).data('avatar');
+  var email = $(this).data('email');
+  var edit_class = $(this).data('class');
+  var edit_reg_no = $(this).data('reg_no');
+  var edit_address_main = $(this).data('address_main');
+  var edit_address_sec = $(this).data('address_sec');
+  $("#edit_id").val(edit_id); 
+  $("#edit_name").val(edit_name); 
+  $("#edit_user_name").val(edit_user_name); 
+  $("#edit_class_id").val(edit_class); 
+  $('.selectpicker').selectpicker('refresh');
+  $("#edit_reg_no").val(edit_reg_no); 
+  $("#edit_phone").val(edit_phone); 
+  $("#edit_emergency_phone").val(edit_emergency_phone); 
+  $("#edit_address_line_main").val(edit_address_main); 
+  $("#edit_address_line_secondary").val(edit_address_sec); 
+  $("#edit_email").val(email);
 
- axios.post("{{route('get-teacher-detail')}}", {
-        id: edit_id
-    }).then(function(response) {
-      
-    $(".editsummer").summernote("code", response.data.details);
-    $("#edit_email").val(response.data.email); 
-    $("#edit_emergency_phone").val(response.data.emergency_phone); 
-    $("#edit_address_line_main").val(response.data.address_line_main); 
-    $("#edit_address_line_secondary").val(response.data.address_line_secondary); 
 
-    }).catch(function(error) {
 
-    })
+
+
+  var path="{{asset('uploads/student_avatars/')}}";
+
+  $("#edit_image_display").attr("src",path+"/"+avatar);
+
+  //  axios.post("{{route('get-teacher-detail')}}", {
+  //         id: edit_id
+  //     }).then(function(response) {
+        
+  //     $(".editsummer").summernote("code", response.data.details);
+  //     $("#edit_email").val(response.data.email); 
+  //     $("#edit_emergency_phone").val(response.data.emergency_phone); 
+  //     $("#edit_address_line_main").val(response.data.address_line_main); 
+  //     $("#edit_address_line_secondary").val(response.data.address_line_secondary); 
+
+  //     }).catch(function(error) {
+
+//     })
 });
 
-$(document).on('click', '.editTeacherInfo', function() {
+$(document).on('click', '.editStudentInfo', function() {
   if($("#edit_name").val() == ""){
     toastr.warning('Warning!', "Please Fill  Name...", {
             "positionClass": "toast-bottom-right"
@@ -562,26 +641,14 @@ $(document).on('click', '.editTeacherInfo', function() {
         $("#edit_name").focus();
         return;
    }
-  //  if($("#user_name").val() == ""){
-  //   toastr.warning('Warning!', "Please Fill User Name...", {
-  //           "positionClass": "toast-bottom-right"
-  //       });
-  //       $("#user_name").focus();
-  //       return;
-  //  }
-   if($("#edit_email").val() == ""){
-    toastr.warning('Warning!', "Please Fill Email...", {
+
+   if($("#edit_class_id").val() == null){
+    toastr.warning('Warning!', "Please Select a class...", {
             "positionClass": "toast-bottom-right"
         });
-        $("#edit_email").focus();
+        $("#edit_class_id").focus();
         return;
    }
-   if (! $("#edit_email").val().match(mailformat)) {
-      toastr.warning('Warning!', "Not a Valid Email...", {
-        "positionClass": "toast-bottom-right"
-    });
-    return;
-    }
    if($("#edit_phone").val() == ""){
     toastr.warning('Warning!', "Please Fill Phone...", {
             "positionClass": "toast-bottom-right"
@@ -619,7 +686,7 @@ $(document).on('click', '.editTeacherInfo', function() {
         $("#edit_address_line_main").focus();
         return;
    }
-    var form = $("#editTeacherForm");
+    var form = $("#editStudentForm");
     var formData = new FormData(form[0]);
    // var formData = new FormData();
     var imagefile = document.querySelector('#edit_image');
@@ -627,20 +694,20 @@ $(document).on('click', '.editTeacherInfo', function() {
 
 
 
-    axios.post("{{route('edit-teacher')}}",
+    axios.post("{{route('edit-student')}}",
         formData
     ).then(function(response) {
   
     if(response.data.success){
 
-      $('#editTeacherModal').modal('hide');
+      $('#editStudentModal').modal('hide');
    
-      toastr.success('Success!', 'Teacher added Successfully',{
+      toastr.success('Success!', 'Student Updated Successfully',{
               "positionClass": "toast-bottom-right"
           })      
       
       datatable.draw();
-
+      $(".summernote").summernote("code", "");
     }
     else{
 
@@ -653,7 +720,7 @@ $(document).on('click', '.editTeacherInfo', function() {
     });
 
 });
-$(document).on('click', '.deleteTeacher', function() {
+$(document).on('click', '.deletestudent', function() {
     var id = $(this).data('id');
     Swal.fire({
         title: 'Are you sure?',
@@ -666,10 +733,10 @@ $(document).on('click', '.deleteTeacher', function() {
         reverseButtons: true
     }).then((result) => {
         if (result.isConfirmed) {
-            axios.post("{{route('del-teacher')}}", {
+            axios.post("{{route('del-student')}}", {
                 id: id
             }).then(function(response) {
-              toastr.success('Success!', 'Teacher Deleted Successfully',{
+              toastr.success('Success!', 'Student Deleted Successfully',{
                 "positionClass": "toast-bottom-right"
             })
               datatable.draw();
@@ -684,7 +751,7 @@ $(document).on('click', '.deleteTeacher', function() {
 
 $(document).on('click', '.viewDeleted', function() {
 
-  location.href = "{{route('deleted-teachers')}}";
+  location.href = "{{route('deleted-students')}}";
 });
 
 

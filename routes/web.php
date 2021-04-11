@@ -51,7 +51,7 @@ Auth::routes(['register' => false, 'password.request' => false, 'reset' => false
     //deletd Teachers
         Route::get('/get-deleted-teachers', 'AdminController@getDeletedTeachers')->name('get-deleted-teachers');
         Route::get('deleted-teachers', 'AdminController@deletedTeachers')->name('deleted-teachers');
-        Route::post('/get-deleted-teacher-detail', 'AdminController@getDeletedTeachers')->name('get-deleted-teacher-detail');
+        //Route::post('/get-deleted-teacher-detail', 'AdminController@getDeletedTeachers')->name('get-deleted-teacher-detail');
         Route::post('activate-teacher', 'AdminController@activateTeacher')->name('activate-teacher');
      
         //students
@@ -60,7 +60,7 @@ Auth::routes(['register' => false, 'password.request' => false, 'reset' => false
         Route::any('/get-students', 'AdminController@getStudents')->name('get-students');
         Route::post('del-student', 'AdminController@deleteStudent')->name('del-student');
         Route::post('edit-student', 'AdminController@editStudent')->name('edit-student');
-        Route::post('get-student-detail', 'AdminController@getStudentDetail')->name('get-student-detail');
+        Route::post('get-student-detail-admin', 'AdminController@getStudentDetail')->name('get-student-detail-admin');
         //deletd Students
         Route::get('/get-deleted-students', 'AdminController@getDeletedStudents')->name('get-deleted-students');
         Route::get('deleted-students', 'AdminController@deletedStudents')->name('deleted-students');
@@ -75,30 +75,33 @@ Auth::routes(['register' => false, 'password.request' => false, 'reset' => false
         //assignteacherToSubjectOfClass
         Route::post('assign-teacher-to-subject', 'AdminController@assignTeacherToSubject')->name('assign-teacher-to-subject');
        
-    
+        //Teacher Complaints of Students
+        Route::get('teacher-complaints', 'AdminController@teacherComplaintsOfStudents')->name('teacher-complaints');
+
     });
 
-        Route::group(['namespace' => 'Student', 'prefix' => 'student','middleware' => 'checkStudent'], function () {
-            Route::get('/', 'StudentController@student')->name('home');
-           
-        });
+    Route::group(['namespace' => 'Student', 'prefix' => 'student','middleware' => 'checkStudent'], function () {
+        Route::get('/', 'StudentController@student')->name('home');
+        
+    });
 
 
-            Route::group(['namespace' => 'Teacher', 'prefix' => 'teacher','middleware' => 'checkTeacher'], function () {
-                Route::get('/', 'TeacherController@teacher')->name('home');
-                Route::get('teacher-classes', 'TeacherController@teacherClass')->name('teacher-classes');
-                Route::get('get-teacher-classes', 'TeacherController@getTeacherClass')->name('get-teacher-classes');
-                Route::post('/get-teacher-class-students', 'TeacherController@getTeacherClassStudent')->name('get-teacher-class-students');
-                Route::post('/teacher-class-students', 'TeacherController@teacherClassStudent')->name('teacher-class-students');
-                Route::post('get-student-detail', 'TeacherController@getStudentDetail')->name('get-student-detail');
-                Route::post('/teacher-insert-student-marks', 'TeacherController@teacherInsertStudentMarks')->name('teacher-insert-student-marks');
-                Route::post('add-student-result', 'TeacherController@addStudentResult')->name('add-student-result');
-                Route::post('class-student-results', 'TeacherController@classStudentResults')->name('class-student-results');
-                Route::post('get-class-assesments', 'TeacherController@getClassAssesments')->name('get-class-assesments');
-           
-            
-            
-            });
+    Route::group(['namespace' => 'Teacher', 'prefix' => 'teacher','middleware' => 'checkTeacher'], function () {
+        Route::get('/', 'TeacherController@teacher')->name('home');
+        Route::get('teacher-classes', 'TeacherController@teacherClass')->name('teacher-classes');
+        Route::get('get-teacher-classes', 'TeacherController@getTeacherClass')->name('get-teacher-classes');
+        Route::post('/get-teacher-class-students', 'TeacherController@getTeacherClassStudent')->name('get-teacher-class-students');
+        Route::post('/teacher-class-students', 'TeacherController@teacherClassStudent')->name('teacher-class-students');
+        Route::post('get-student-detail', 'TeacherController@getStudentDetail')->name('get-student-detail');
+        Route::post('/teacher-insert-student-marks', 'TeacherController@teacherInsertStudentMarks')->name('teacher-insert-student-marks');
+        Route::post('add-student-result', 'TeacherController@addStudentResult')->name('add-student-result');
+        Route::post('class-student-results', 'TeacherController@classStudentResults')->name('class-student-results');
+        Route::post('get-class-assesments', 'TeacherController@getClassAssesments')->name('get-class-assesments');
+    
+        Route::post('report-student-to-admin', 'TeacherController@reportStudentToAdmin')->name('report-student-to-admin');
+    
+    
+    });
 });
 // Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 // Route::get('/', [App\Http\Controllers\HomeController::class, 'index']);

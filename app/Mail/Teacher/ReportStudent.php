@@ -1,29 +1,28 @@
 <?php
 
-namespace App\Mail;
+namespace App\Mail\Teacher;
 
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 
-class RegisterTeacher extends Mailable
+class ReportStudent extends Mailable
 {
     use Queueable, SerializesModels;
     
-    public $pass;
-    public $user_name;
+    public $student;
+    public $description;
 
     /**
      * Create a new message instance.
      *
      * @return void
      */
-    public function __construct($user_name,$pass)
+    public function __construct($student,$description)
     {
-        $this->user_name=$user_name;
-        $this->pass=$pass;
-       
+        $this->student=$student;
+        $this->description=$description;
     }
 
     /**
@@ -33,6 +32,7 @@ class RegisterTeacher extends Mailable
      */
     public function build()
     {
-        return $this->subject('Student Report')->view('email.register-teacher');
+        return $this->subject('Teacher Registered ')->view('email.teacher.report-student');
+
     }
 }

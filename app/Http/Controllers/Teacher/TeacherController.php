@@ -12,8 +12,11 @@ use App\Models\ResultType;
 use App\Models\StudentAssessment;
 use App\Models\TeacherSubject;
 use App\Models\StudentMarks;
+use App\Models\TeacherMailsOfStudent;
 use App\Models\UserDetails\TeacherDetails;
 use App\Models\UserDetails\StudentDetails;
+
+use App\Mail\Teacher\ReportStudent;
 use Mail;
 
 //files Images
@@ -63,11 +66,13 @@ class TeacherController extends Controller
     public function teacherClassStudent(Request $request)
     {
         $id= $request->class_id;   
-        return view('teacher.class-students',compact('id'));
+        $class=Classes::find($id);
+        return view('teacher.class-students',compact('id','class'));
     }
 
     public function getTeacherClassStudent(Request $request)
     {
+      
         if($request->id){
             $data = User::where('role_id',3)->whereHas('student_details' ,function ($q)use ($request){
                 $q->where('class_id',$request->id);
@@ -78,7 +83,7 @@ class TeacherController extends Controller
         return DataTables::of($data)
         ->addColumn('action', function ($data) {
                 
-                $button = '<a href="#" class="btn btn-info btn-sm  editStudent " title="Report to Principle" data-toggle="modal" data-target="#editStudentModal"   data-id="' . $data->id . '" data-name="' . $data->name . '"data-avatar="' . $data->avatar . '"data-user_name="' . $data->user_name . '"data-phone="' . $data->student_details->phone .'"data-ephone="' . $data->student_details->emergency_phone .'"data-class="' . $data->student_details->class_id . '"data-address_main="' . $data->student_details->address_line_main .'"data-address_sec="' . $data->student_details->address_line_secondary .'"><i class="fa fa-envelope"></i></a>&nbsp;&nbsp;';  
+                $button = '<a href="#" class="btn btn-info btn-sm  editStudent " title="Report to Principle" data-toggle="modal" data-target="#student_report" data-name="' . $data->name . '" data-user_name="' . $data->user_name . '"  data-reg-no="' . $data->student_details->reg_no . '" data-id="' . $data->id . '"><i class="fa fa-envelope"></i></a>&nbsp;&nbsp;';  
         
                 return $button;
                 
@@ -213,4 +218,24 @@ public function getClassAssesments(Request $request)
                 ->make(true);
     
 }
+public function reportStudentToAdmin(Request $request)
+{
+  
+   $report=TeacherMailsOfStudent::create([
+    'teacher_id' => Auth::user()->id,
+    'student_id' => $request->student_id,
+    'class_id' => $request->class_id,
+    'description' => $request->description,
+]);
+
+    
+    $student= User::find($request->student_id);
+    Mail::to('m.tariq.sarfraz.007@gmail.com')->send(new ReportStudent($student,$request->description));
+    return response()->json([
+        'success' => true,
+        'result' => 'Reported successfully',
+    ], 200);
+}
+
+
 }
