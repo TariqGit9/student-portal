@@ -262,18 +262,7 @@
     </div>
   </div>
 </div>
-<div class="modal" id="please_wait">
-  <div class="modal-dialog modal-dialog-centered" role="document">
-    <div class="modal-content tx-size-sm">
-      <div class="modal-body tx-center pd-y-20 pd-x-20">
-        {{-- <i class="  lh-1 mg-t-20 d-inline-block"></i> --}}
-        <h4 class="tx-success tx-semibold mg-b-20">Sending Credentials to the student !</h4>
-        <img src="{{asset('assets/gifs/loading.gif')}}"  width="100" height="100" alt="Please wait">
-        <p class="mg-b-20 mg-x-20"> Please Wait</p>
-      </div>
-    </div>
-  </div>
-</div>
+
 <input type="hidden" id="id" value="{{$id}}">
 @push('javascript')
 <script>

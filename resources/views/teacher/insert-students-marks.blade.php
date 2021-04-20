@@ -177,8 +177,8 @@ $(document).on('click', '.add-result', function() {
             toastr.success('Success!', "Marks are Uploaded Successfully...", {
                 "positionClass": "toast-bottom-right"
             });
-    });
-}
+        });
+    }
 
 
 });

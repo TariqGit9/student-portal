@@ -87,10 +87,13 @@
         
          
         </div>
-
-       
-
-   
+        <div class="form-row">
+          <div class="form-group col">
+            <label class="bmd-label-floating">Title</label>
+            <input type="text" class="form-control" id="title" name="title" aria-describedby="emailHelp" >
+           
+          </div>
+        </div>
         <div class="form-row">
           <div class="form-group col">
             <label class="bmd-label-floating">Description</label>
@@ -269,7 +272,19 @@ $(document).on('click', '.sendreport', function() {
   
     var form = $("#report_student");
     var formData = new FormData(form[0]);
-    
+    if($("#title").val()=='' ){
+      toastr.warning('Warning!', "Please add a subject", {
+            "positionClass": "toast-bottom-right"
+      });
+      return;
+    }
+    if ($('#description').summernote('isEmpty'))
+    {
+      toastr.warning('Warning!', "Please add some description", {
+            "positionClass": "toast-bottom-right"
+      });
+      return;
+    }
     $('#please_wait').modal('show');
     axios.post("{{route('report-student-to-admin')}}",
         formData

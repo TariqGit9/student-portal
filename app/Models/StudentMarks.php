@@ -13,6 +13,6 @@ class StudentMarks extends Model
     protected $guarded = [];
     public function student()
     {
-        return $this->belongsTo('App\Models\User', 'user_id', 'id')->withTrashed();
+        return $this->belongsTo('App\Models\User', 'student_id', 'id')->withTrashed();
     }
 }

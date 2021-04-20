@@ -9,7 +9,7 @@ use App\Models\TeacherSubject;
 use App\Models\UserDetails\TeacherDetails;
 use App\Models\UserDetails\StudentDetails;
 use App\Http\Controllers\Controller;
-
+use App\Models\TeacherMailsOfStudent;
 //Mail
 use App\Mail\RegisterTeacher;
 use Mail;
@@ -116,12 +116,12 @@ class AdminController extends Controller
         $add_subject = Subject::updateOrCreate(
             [
                 'name' => $request->name,
-                'grade' => $request->grade,
+                'grade_id' => $request->grade,
                 'author' => $request->author,
             ],
             [
                 'name' => $request->name,
-                'grade' => $request->grade,
+                'grade_id' => $request->grade,
                 'type' => $request->type,
                 'author' => $request->author, 
                 'details' => $request->info,
@@ -206,10 +206,18 @@ class AdminController extends Controller
         $edit_subject->author = $request->edit_author;
         $edit_subject->details = $request->edit_info;
         
-        $edit_subject->save();
-        return response()->json([
-            'result' => 'Edited successfully',
-        ], 200);
+        try{
+            $edit_subject->save();
+            return response()->json([
+                'result' => 'Edited successfully',
+            ], 200);
+        }catch(\Exception $e){
+            return response()->json([
+                'result' => 'Please upload a smaller size picture',
+                'success' => false,
+            ], 200);
+        }
+     
     }
     public function deleteSubject(Request $request)
     {
@@ -393,7 +401,7 @@ class AdminController extends Controller
             'display_info_status' => 1,
             'subject_specialities' => $request->subject_specialities,
         ]);
-        Mail::to($request->email)->send(new RegisterTeacher($request->user_name,$request->password));
+        Mail::to($request->email)->send(new RegisterTeacher($request->user_name,$request->password,$user));
 
 
 
@@ -949,7 +957,7 @@ class AdminController extends Controller
     public function getClassStudents(Request $request)
     {
         
-        //$data = StudentDetails::where('class_id',$request->id)->first();
+        $data = StudentDetails::where('class_id',$request->id)->first();
     
         return DataTables::of($data)
         ->addColumn('action', function ($data) {
@@ -1006,7 +1014,75 @@ class AdminController extends Controller
 
     public function teacherComplaintsOfStudents(Type $var = null)
     {
-        return view('admin.index');
-
+        return view('admin.teacher.complaints');
     }
+    public function getTeacherComplaints(Request $request)
+    {
+                
+        $data = TeacherMailsOfStudent::all();
+        return DataTables::of($data)
+        ->addColumn('action', function ($data) {
+            $button = '<a href="#" class="btn btn-info btn-sm openComplaint " data-toggle="modal" data-target="#editTeacherModal"   data-id="' . $data->id . '"><i class="fa fa-eye"></i></a>&nbsp;&nbsp;';  
+            // $button .= '<a href="#" class="btn btn-danger btn-sm   deleteTeacher"title="Delete" data-id=' . $data->id . '><i class="fa fa-trash"></i></a>&nbsp;&nbsp;';  
+            return $button;
+        })
+        ->addColumn('student', function ($data) {
+            $student = $data->student_details;
+            return  $student->name.' ( '.$student->student_details->reg_no.' ) ';
+        })
+        ->addColumn('teacher', function ($data) {
+         
+            $teacher = $data->teacher_details->name;
+            return $teacher ;
+        })
+        ->addColumn('class', function ($data) {
+         
+            $teacher = $data->class_details->name;
+            return $teacher ;
+        })
+        ->addColumn('title', function ($data) {
+         
+            $title = $data->title;
+            return $title ;
+        })
+            ->rawColumns(['action','teacher','student','class'])
+            ->make(true);
+}
+public function getComplainData(Request $request)
+{
+    $data = TeacherMailsOfStudent::find( $request->id );
+    if($data->title===null){
+        $title='N/A';
+    }else{
+        $title=$data->title;
+    }
+    return response()->json([
+        'student' => $data->student_details->name.'( '.$data->student_details->student_details->reg_no.' )',
+        'teacher' => $data->teacher_details->name,
+        'title' => $title,
+        'description' => $data->description,
+        'complain_id' =>$request->id  ,
+        'status' =>$this->getComplainStatus($data)  ,
+    ], 200);
+}
+public function getComplainStatus($data){
+    if($data->status==0){
+        $status='Not Viewed yet';
+    }elseif($data->status==1){
+        $status=' Viewed and Recieved';
+    }
+    return $status;
+}
+
+public function changeComplainStatus(Request $request)
+{
+    $data = TeacherMailsOfStudent::find( $request->id );
+    $student->status= $request->status;
+    $student->save();
+    return response()->json([
+        'success' => true,
+        
+    ], 200);
+
+}
 }

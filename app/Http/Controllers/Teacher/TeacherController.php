@@ -47,7 +47,7 @@ class TeacherController extends Controller
                 
            $button= '<a  class="btn btn-success  btn-sm class_students"title="Class Students" data-class_id ="'. $data->class_id.'" style="color:white;"><i class="fa fa-users"></i></a>&nbsp;&nbsp;';  
            $button.= '<a class="btn btn-info btn-sm upload_student_marks"title="Upload Students Marks" data-class_id ="'. $data->class_id.'"data-subject_id ="'. $data->subject_id.'" style="color:white;"><i class="fa fa-list"></i></a>&nbsp;&nbsp;';  
-           $button.= '<a  class="btn btn-info btn-sm class_student_marks"title="Class Students Marks" data-class_id ="'. $data->class_id.'"style="color:white;"><i class="fa fa-file" ></i></a>&nbsp;&nbsp;';  
+           $button.= '<a  class="btn btn-info btn-sm class_student_marks"title="Class Students Marks" data-class_id ="'. $data->class_id.' "data-subject_id ="'. $data->subject_id.'"style="color:white;"><i class="fa fa-file" ></i></a>&nbsp;&nbsp;';  
         
            //class_student_marks  
            return $button;
@@ -65,9 +65,14 @@ class TeacherController extends Controller
     }
     public function teacherClassStudent(Request $request)
     {
-        $id= $request->class_id;   
+        $id= $request->class_id;
+        
         $class=Classes::find($id);
-        return view('teacher.class-students',compact('id','class'));
+        if($class !=null ){
+            return view('teacher.class-students',compact('id','class'));
+        }else{
+            return redirect()->route('home');
+        }
     }
 
     public function getTeacherClassStudent(Request $request)
@@ -148,8 +153,11 @@ class TeacherController extends Controller
         $subject = Subject::find($request->subject_id);
         $class = Classes::find($request->class_id);
         $types = ResultType::all();
-       
-        return view('teacher.insert-students-marks',compact('class','students','subject','types'));
+        if($class !=null && $subject!=null ){
+            return view('teacher.insert-students-marks',compact('class','students','subject','types'));
+        }else{
+            return redirect()->route('home');
+        }
     }
     public function addStudentResult(Request $request)
     {
@@ -165,6 +173,7 @@ class TeacherController extends Controller
                 'subject_id' => $request->subject_id,
                 'test_date' => $request->date,
                 'description' => $request->description,
+                'status' =>0,
                 'passing_marks' => $request->passing_marks,
                 'total_marks' => $request->total_marks,
             ]);
@@ -189,22 +198,32 @@ class TeacherController extends Controller
     }
 public function classStudentResults(Request $request)
 {
-    $class_id=$request->class_id;
-    $types = ResultType::all();
-    return view('teacher.class-student-results',compact('types','class_id'));
+    
+    $id = $request->class_id;
+    $class=Classes::find($id);
+    $subject_id= $request->subject_id;
+    if($class){
+        return view('teacher.class-student-results',compact('class','id','subject_id'));
+    }else{
+        return redirect()->route('home');
+    }
 }
 //getClassAssesments
 public function getClassAssesments(Request $request)
 {
-    $result = StudentAssessment::where([['class_id',$request->class_id],['type_id',$request->type]])->get(); 
+    $result = StudentAssessment::where([['class_id',$request->class_id],['subject_id',$request->subject_id],['teacher_id',Auth::user()->id]])->get(); 
+   
+
         return DataTables::of($result)
         ->addColumn('action', function ($data) {
                 
-           $button= '';//'<a  class="btn btn-success  btn-sm class_students"title="Class Students" data-class_id ="'. $data->class_id.'" style="color:white;"><i class="fa fa-users"></i></a>&nbsp;&nbsp;';  
-        //    $button.= '<a class="btn btn-info btn-sm upload_student_marks"title="Upload Students Marks" data-class_id ="'. $data->class_id.'"data-subject_id ="'. $data->subject_id.'" style="color:white;"><i class="fa fa-list"></i></a>&nbsp;&nbsp;';  
-        //    $button.= '<a  class="btn btn-info btn-sm class_student_marks"title="Class Students Marks" data-class_id ="'. $data->class_id.'"style="color:white;"><i class="fa fa-file" ></i></a>&nbsp;&nbsp;';  
-        
-        //    //class_student_marks  
+           $button= '<a  class="btn btn-info  btn-sm assesmentClassStudent "title="View Student performance" data-id ="'. $data->id.'" style="color:white;"><i class="fa fa-eye"></i></a>&nbsp;&nbsp;';  
+            if($data->status==1){
+                $button.= '<a  class="btn btn-success  btn-sm assessments_status "title="Test published" data-status ="0" data-id ="'. $data->id.'" style="color:white;"><i class="fa fa-check"></i></a>&nbsp;&nbsp;';  
+
+            }else{
+                $button.= '<a  class="btn btn-danger  btn-sm assessments_status "title="Test are hidden" data-status ="1" data-id ="'. $data->id.'" style="color:white;"><i class="fa fa-times"></i></a>&nbsp;&nbsp;';  
+            }
            return $button;
                 
         })
@@ -212,9 +231,28 @@ public function getClassAssesments(Request $request)
                return $data->total_marks;     
         })
         ->addColumn('description', function ($data) {
-            return $data->descrption;     
+            return $data->description;     
         })
-                ->rawColumns(['action','class','subject'])
+        ->addColumn('type', function ($data) {
+            if($data->assessments_type){
+                return $data->assessments_type->name;
+            }else{
+                return '--';
+            }   
+        })
+        ->addColumn('passing_marks', function ($data) {
+            return $data->passing_marks;     
+        })
+        // ->addColumn('subject', function ($data) {
+        //     return $data->subject_details->name;     
+        // })
+        // ->addColumn('class', function ($data) {
+        //     return $data->class_details->name;     
+        // })
+        ->addColumn('date', function ($data) {
+            return $data->test_date;     
+        })
+                ->rawColumns(['action','class','subject','passing_marks','description','total_marks'])
                 ->make(true);
     
 }
@@ -225,6 +263,7 @@ public function reportStudentToAdmin(Request $request)
     'teacher_id' => Auth::user()->id,
     'student_id' => $request->student_id,
     'class_id' => $request->class_id,
+    'title' => $request->title,
     'description' => $request->description,
 ]);
 
@@ -235,6 +274,73 @@ public function reportStudentToAdmin(Request $request)
         'success' => true,
         'result' => 'Reported successfully',
     ], 200);
+}
+public function toggleAssessmentsStatus(Request $request)
+{
+ 
+   $data = StudentAssessment::find($request->id);
+   $data->status=$request->status;
+   $data->save();
+
+   return response()->json([
+    'success' => true,
+], 200);
+}
+public function assesmentClassStudent(Request $request)
+{
+
+//    
+    $id= $request->assessment;
+    $data = StudentAssessment::find($id);
+    if($data){
+        return view('teacher.student-assessment',compact('data','id'));
+    }else{
+        return redirect()->route('home');
+    }
+
+   return response()->json([
+    'success' => true,
+], 200);
+}
+public function getClassAssesmentsResults(Request $request)
+{
+    $result = StudentMarks::where('assesment_id',$request->id)->get();
+    $data = StudentAssessment::find($request->id);
+    //  
+    $passing_marks = $data->passing_marks;
+        return DataTables::of($result)
+        ->addColumn('action', function ($data) {
+                
+           $button= '<a  class="btn btn-info  btn-sm assesmentClassStudent "title="Edit" data-id ="'. $data->id.'" style="color:white;"><i class="fa fa-edit"></i></a>&nbsp;&nbsp;';  
+          
+           return $button;
+                
+        })
+        ->addColumn('result', function ($data)  use ($passing_marks) {
+            if($passing_marks > $data->obtained_marks){
+                $button= '<a  class="btn btn-danger  btn-sm  "title="Failed"  style="color:white;"><i class="fa fa-times"></i></a>&nbsp;&nbsp;';  
+              
+            }else{
+                $button= '<a  class="btn btn-success  btn-sm  "title="Passed"  style="color:white;"><i class="fa fa-check"></i></a>&nbsp;&nbsp;'; 
+          
+            }
+               return $button;     
+        })
+        ->addColumn('student_name', function ($data) {
+            if($data->student){
+                return $data->student->name .' ( '.$data->student->student_details->reg_no.' ) '; 
+            }else{
+                return '--';
+            }
+        })
+     
+        ->addColumn('obtained_marks', function ($data) {
+            return $data->obtained_marks;     
+        })
+       
+                ->rawColumns(['action','result','student_name','obtained_marks'])
+                ->make(true);
+    
 }
 
 

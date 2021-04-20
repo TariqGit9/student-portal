@@ -12,10 +12,14 @@ class TeacherMailsOfStudent extends Model
 
     public function teacher_details()
     {
-        return $this->belongsTo('App\Models\User', 'user_id', 'id')->withTrashed();
+        return $this->belongsTo('App\Models\User', 'teacher_id', 'id')->withTrashed();
     }
     public function student_details()
     {
-        return $this->belongsTo('App\Models\User', 'user_id', 'id')->withTrashed();
+        return $this->belongsTo('App\Models\User', 'student_id', 'id')->withTrashed();
+    }
+    public function class_details()
+    {
+        return $this->belongsTo('App\Models\Classes', 'class_id', 'id')->withTrashed();
     }
 }

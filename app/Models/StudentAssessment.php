@@ -23,5 +23,9 @@ class StudentAssessment extends Model
     {
         return $this->belongsTo('App\Models\Classes', 'class_id', 'id')->withTrashed();
     }
+    public function assessments_type()
+    {
+        return $this->belongsTo('App\Models\ResultType', 'type_id', 'id');
+    }
 
 }

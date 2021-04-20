@@ -48,7 +48,7 @@
 <form id="class_student_marks" method="post" action="class-student-results">
   @csrf
   <input id="class_id" class="class_id" name ="class_id" type="hidden" value="">
-
+  <input class="subject_id" name ="subject_id" type="hidden" value="">
 </form >
 {{-- class-student-results --}}
 
@@ -102,11 +102,12 @@ $(document).on('click', '.class_students', function() {
 //class_student_marks
 
 $(document).on('click', '.class_student_marks', function() {
+  var subject_id = $(this).data('subject_id');
+  var class_id = $(this).data('class_id');
  
- var class_id = $(this).data('class_id');
- $('.class_id').val(class_id);
- 
- $('#class_student_marks').submit();
+  $('.class_id').val(class_id);
+  $('.subject_id').val(subject_id);
+  $('#class_student_marks').submit();
 });
 </script>
 @endpush

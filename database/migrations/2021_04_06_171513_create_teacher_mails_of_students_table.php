@@ -25,8 +25,12 @@ class CreateTeacherMailsOfStudentsTable extends Migration
             $table->unsignedBigInteger('class_id')->nullable();
             $table->foreign('class_id')->references('id')->on('classes')->onDelete('cascade');
            
+            $table->string('title')->nullable();
+
             $table->longtext('description')->nullable();
 
+            $table->integer('status')->default(0);
+            
             $table->timestamps();
         });
     }

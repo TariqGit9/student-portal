@@ -77,6 +77,10 @@ Auth::routes(['register' => false, 'password.request' => false, 'reset' => false
        
         //Teacher Complaints of Students
         Route::get('teacher-complaints', 'AdminController@teacherComplaintsOfStudents')->name('teacher-complaints');
+        Route::get('/get-teacher-complaints', 'AdminController@getTeacherComplaints')->name('get-teacher-complaints');
+        
+        Route::post('assign-teacher-to-subject', 'AdminController@assignTeacherToSubject')->name('assign-teacher-to-subject');
+        Route::post('view-complain', 'AdminController@getComplainData')->name('view-complain');
 
     });
 
@@ -91,13 +95,18 @@ Auth::routes(['register' => false, 'password.request' => false, 'reset' => false
         Route::get('teacher-classes', 'TeacherController@teacherClass')->name('teacher-classes');
         Route::get('get-teacher-classes', 'TeacherController@getTeacherClass')->name('get-teacher-classes');
         Route::post('/get-teacher-class-students', 'TeacherController@getTeacherClassStudent')->name('get-teacher-class-students');
-        Route::post('/teacher-class-students', 'TeacherController@teacherClassStudent')->name('teacher-class-students');
+        Route::any('/teacher-class-students', 'TeacherController@teacherClassStudent')->name('teacher-class-students');
         Route::post('get-student-detail', 'TeacherController@getStudentDetail')->name('get-student-detail');
-        Route::post('/teacher-insert-student-marks', 'TeacherController@teacherInsertStudentMarks')->name('teacher-insert-student-marks');
+        Route::any('/teacher-insert-student-marks', 'TeacherController@teacherInsertStudentMarks')->name('teacher-insert-student-marks');
         Route::post('add-student-result', 'TeacherController@addStudentResult')->name('add-student-result');
-        Route::post('class-student-results', 'TeacherController@classStudentResults')->name('class-student-results');
+        Route::any('class-student-results', 'TeacherController@classStudentResults')->name('class-student-results');
         Route::post('get-class-assesments', 'TeacherController@getClassAssesments')->name('get-class-assesments');
-    
+    //
+        Route::post('toggle-assessments-status', 'TeacherController@toggleAssessmentsStatus')->name('toggle-assessments-status');
+        Route::any('assesment-class-student', 'TeacherController@assesmentClassStudent')->name('assesment-class-student');
+        Route::post('get-class-assesments-result', 'TeacherController@getClassAssesmentsResults')->name('get-class-assesments-result');
+
+
         Route::post('report-student-to-admin', 'TeacherController@reportStudentToAdmin')->name('report-student-to-admin');
     
     

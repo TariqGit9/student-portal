@@ -13,17 +13,17 @@ class RegisterTeacher extends Mailable
     
     public $pass;
     public $user_name;
-
+    public $user;
     /**
      * Create a new message instance.
      *
      * @return void
      */
-    public function __construct($user_name,$pass)
+    public function __construct($user_name,$pass, $user)
     {
         $this->user_name=$user_name;
         $this->pass=$pass;
-       
+        $this->user=$user;
     }
 
     /**
