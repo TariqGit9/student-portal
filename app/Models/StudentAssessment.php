@@ -27,5 +27,12 @@ class StudentAssessment extends Model
     {
         return $this->belongsTo('App\Models\ResultType', 'type_id', 'id');
     }
-
+    public function grade()
+    {
+        return $this->belongsTo('App\Models\ClassGrade');
+    }
+    public function type()
+    {
+        return $this->belongsTo('App\Models\ResultType');
+    }
 }

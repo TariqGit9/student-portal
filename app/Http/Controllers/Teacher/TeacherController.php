@@ -306,7 +306,6 @@ public function getClassAssesmentsResults(Request $request)
 {
     $result = StudentMarks::where('assesment_id',$request->id)->get();
     $data = StudentAssessment::find($request->id);
-    //  
     $passing_marks = $data->passing_marks;
         return DataTables::of($result)
         ->addColumn('action', function ($data) {
@@ -338,8 +337,8 @@ public function getClassAssesmentsResults(Request $request)
             return $data->obtained_marks;     
         })
        
-                ->rawColumns(['action','result','student_name','obtained_marks'])
-                ->make(true);
+        ->rawColumns(['action','result','student_name','obtained_marks'])
+        ->make(true);
     
 }
 
