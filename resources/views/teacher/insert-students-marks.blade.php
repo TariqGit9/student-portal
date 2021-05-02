@@ -40,11 +40,11 @@
                 <div class="row row-sm">
                     <div class="col-lg">
                         <label class="bmd-label-floating"> Description</label>
-                        <input class="form-control" id="description" name= "description" type="text">
+                        <input class="form-control formclean" id="description" name= "description" type="text">
                     </div>
                     <div class="col-lg mg-t-10 mg-lg-t-0">
                         <label class="bmd-label-floating"> Type</label>
-                        <select class="form-control selectpicker" data-live-search="true" name="type_id" id="type_id" required>
+                        <select class="form-control selectpicker " data-live-search="true" name="type_id" id="type_id" required>
                             <option disabled selected>Please Select an Option</option>  
                             @if($types)
                             @foreach($types as $type ){{$type->id}}
@@ -54,22 +54,22 @@
                         </select>
                     </div>
                     <div class="col-lg mg-t-10 mg-lg-t-0">
-                        <label class="bmd-label-floating">Date</label>
-                        <input class="form-control" name= "date" id="date" type="date">
+                        <label class="bmd-label-floating ">Date</label>
+                        <input class="form-control formclean" name= "date" id="date" type="date">
                     </div>
                 </div>
                 <div class="row row-sm">
                     <div class="col-lg">
-                        <label class="bmd-label-floating">Total Marks</label>
-                        <input class="form-control" name= "total_marks" id="total_marks" type="number">
+                        <label class="bmd-label-floating ">Total Marks</label>
+                        <input class="form-control formclean" name= "total_marks" id="total_marks" type="number">
                     </div>
                     <div class="col-lg mg-t-10 mg-lg-t-0">
-                        <label class="bmd-label-floating">Passing Marks</label>
-                        <input class="form-control" name= "passing_marks" id="passing_marks"  type="number">
+                        <label class="bmd-label-floating ">Passing Marks</label>
+                        <input class="form-control formclean" name= "passing_marks" id="passing_marks"  type="number">
                     </div>
                     {{-- <div class="col-lg mg-t-10 mg-lg-t-0">
-                        <label class="bmd-label-floating">Date</label>
-                        <input class="form-control" name= "date"  type="date">
+                        <label class="bmd-label-floating ">Date</label>
+                        <input class="form-control formclean" name= "date"  type="date">
                     </div> --}}
                 </div>
             </div>
@@ -118,7 +118,11 @@
     </div>
     </form>
 
-
+<form id="class_student_marks" method="post" action="class-student-results">
+  @csrf
+  <input id="class_id" class="class_id" name ="class_id" type="hidden" value="{{$class->id}}">
+  <input class="subject_id" name ="subject_id" type="hidden" value="{{ $subject->id}}">
+</form >
 
 @push('javascript')
 <script>
@@ -176,6 +180,24 @@ $(document).on('click', '.add-result', function() {
         ).then(function(response) {
             toastr.success('Success!', "Marks are Uploaded Successfully...", {
                 "positionClass": "toast-bottom-right"
+            });
+            Swal.fire({
+                title: 'Marks Uploaded Successfully',
+                // text: "Are you sure!",
+                icon: 'success',
+                showCancelButton: true,
+                confirmButtonColor: '#4BB543',
+                cancelButtonColor: '#24a0ed',
+                cancelButtonText: "Upload more Results",
+                confirmButtonText: 'View Results',
+                reverseButtons: true
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    $('#class_student_marks').submit();
+                }else{
+                    $('.obt_marks').val(0);
+                    $('.formclean').val('');
+                }
             });
         });
     }

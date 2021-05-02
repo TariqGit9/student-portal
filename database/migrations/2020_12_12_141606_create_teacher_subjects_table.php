@@ -23,7 +23,7 @@ class CreateTeacherSubjectsTable extends Migration
             $table->foreign('grade_id')->references('id')->on('class_grades')->onDelete('cascade');
             $table->unsignedBigInteger('class_id')->nullable();
             $table->foreign('class_id')->references('id')->on('classes')->onDelete('cascade');
-            
+            $table->string('ip_address')->nullable();
             $table->softDeletes();
             $table->timestamps();
         });

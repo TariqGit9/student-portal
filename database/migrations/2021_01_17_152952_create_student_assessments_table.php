@@ -34,9 +34,15 @@ class CreateStudentAssessmentsTable extends Migration
             $table->unsignedBigInteger('subject_id')->nullable();
             $table->foreign('subject_id')->references('id')->on('subjects')->onDelete('cascade');
 
+            $table->unsignedBigInteger('school_id')->nullable();
+            
+            $table->unsignedBigInteger('school_session_id')->nullable();
+            
+
             $table->integer('status')->default(0);
 
             $table->string('test_date')->dafault(0);
+            $table->string('ip_address')->nullable();
             $table->softDeletes();
             $table->timestamps();
         });

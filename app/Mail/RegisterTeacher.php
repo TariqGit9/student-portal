@@ -33,6 +33,6 @@ class RegisterTeacher extends Mailable
      */
     public function build()
     {
-        return $this->subject('Student Report')->view('email.register-teacher');
+        return $this->subject('Teacher Register')->view('email.register-teacher');
     }
 }

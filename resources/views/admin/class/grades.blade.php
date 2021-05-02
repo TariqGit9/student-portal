@@ -82,7 +82,7 @@
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-          <button type="button" class="btn btn-primary editGrade">Save changes</button>
+          <button type="button" class="btn btn-primary editGradechanges">Save changes</button>
         </form>
         </div>
       </div>
@@ -129,7 +129,7 @@ $(document).on('click', '.addGrade', function() {
   
     $('#addGrade').modal('hide');
    
-        toastr.success('Success!', 'Class added Successfully',{
+        toastr.success('Success!', 'Grade added Successfully',{
                 "positionClass": "toast-bottom-right"
             })
         
@@ -179,6 +179,30 @@ $(document).on('click', '.editGrade', function() {
 
 });
 
+$(document).on('click', '.editGradechanges', function() {
+   
+   if($("#edit_name").val() == ""){
+    toastr.warning('Warning!', "Please Fill Grade Name...", {
+            "positionClass": "toast-bottom-right"
+        });
+        return;
+   }
+    axios.post("{{route('edit-grade')}}",
+        $('#editGradeForm').serialize()
+    ).then(function(response) {
+  
+    $('#editGradeModal').modal('hide');
+   
+        toastr.success('Success!', 'Grade Updated Successfully',{
+                "positionClass": "toast-bottom-right"
+            })
+        
+        $("#edit_name").val(""); 
+        datatable.draw();
+    });
+
+
+});
 
 
 </script>

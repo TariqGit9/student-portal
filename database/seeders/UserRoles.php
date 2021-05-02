@@ -31,5 +31,10 @@ class UserRoles extends Seeder
             'name' => 'student',
          //   'type' => '0',
         ]);
+        $Role = Roles::updateOrCreate([
+          'id' => '4',
+          'name' => 'super_admin',
+       //   'type' => '0',
+      ]);
     }
 }

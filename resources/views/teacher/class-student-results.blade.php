@@ -55,61 +55,6 @@
 </div>
  
 
-{{-- //Edit  --}}
-<div class="modal fade " id="student_report" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-lg" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Report a Student </h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-    <form id="report_student">
-      <div class="modal-body">
-        <div class="form-row">
-          <div class="form-group col ">
-            <label class="bmd-label-floating form-required">Name </label>
-            <input type="text" class="form-control" id="name" name="name" aria-describedby="emailHelp" disabled>
-          </div>
-          <input type="hidden" class="form-control" id="student_id" name="student_id" aria-describedby="emailHelp">
-          <input type="hidden" class="form-control" value="{{$id}}" id="class_id" name="class_id" aria-describedby="emailHelp">
-         
-          <div class="form-group col">
-            <label class="bmd-label-floating form-required">User Name</label>
-            <input type="text" class="form-control" id="user_name" name="user_name" aria-describedby="emailHelp" disabled>
-          </div>
-          <div class="form-group col">
-            <label class="bmd-label-floating form-required">Reg number</label>
-            <input type="text" class="form-control" id="reg_no" name="reg_no" aria-describedby="emailHelp" disabled>
-          </div>
-        
-         
-        </div>
-        <div class="form-row">
-          <div class="form-group col">
-            <label class="bmd-label-floating">Title</label>
-            <input type="text" class="form-control" id="title" name="title" aria-describedby="emailHelp" >
-           
-          </div>
-        </div>
-        <div class="form-row">
-          <div class="form-group col">
-            <label class="bmd-label-floating">Description</label>
-            <textarea  class="editsummer summernote" name="description"
-            id="description"  ></textarea>
-          </div>
-        </div>
-
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary sendreport">Save changes</button>
-      </form>
-      </div>
-    </div>
-  </div>
-</div>
 <form id="assessment_student" method="post" action="assesment-class-student">
   @csrf
   <input class="assessment" name ="assessment" type="hidden" value="">

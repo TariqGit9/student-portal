@@ -21,8 +21,16 @@ class checkAdmin
         {
             if(Auth::user()->role_id == 1)
             {
-                return $next($request);
-                // return redirect('admin/dashboard');
+                if(Auth::user()->school->status==1 && Auth::user()->status==1  ){
+                    return $next($request);
+                }else{
+                    if(Auth::user()->school->status==1){
+                    return response()->view('error.user_blocked');
+                    }
+                    else{
+                        return response()->view('error.school_blocked');
+                    }
+                }
             }
         }
         return redirect('/login');

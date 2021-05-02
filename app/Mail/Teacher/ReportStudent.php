@@ -32,7 +32,7 @@ class ReportStudent extends Mailable
      */
     public function build()
     {
-        return $this->subject('Teacher Registered ')->view('email.teacher.report-student');
+        return $this->subject('Student Report')->view('email.teacher.report-student');
 
     }
 }

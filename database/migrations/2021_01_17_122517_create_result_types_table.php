@@ -16,7 +16,9 @@ class CreateResultTypesTable extends Migration
         Schema::create('result_types', function (Blueprint $table) {
             $table->id();
             $table->string('name');
+            $table->unsignedBigInteger('school_id')->nullable();
             $table->string('status')->nullable();
+            $table->string('ip_address')->nullable();
             $table->timestamps();
         });
     }

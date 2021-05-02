@@ -15,12 +15,17 @@ class CreateSchoolInformationTable extends Migration
     {
         Schema::create('school_information', function (Blueprint $table) {
             $table->id();
+            $table->string('school_unique_id');
+            $table->string('avatar')->nullable();
             $table->string('name');
-            $table->string('abrevation');
+            $table->string('abbreviation');
+            $table->string('email')->nullable();
             $table->string('phone');
             $table->string('phone2');
             $table->string('address');
+            $table->integer('status')->default(1);
             $table->longtext('details');
+            $table->string('ip_address')->nullable();
             $table->softDeletes();
             $table->timestamps();
         });

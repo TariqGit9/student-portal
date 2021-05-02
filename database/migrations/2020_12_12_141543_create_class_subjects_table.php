@@ -19,6 +19,7 @@ class CreateClassSubjectsTable extends Migration
             $table->foreign('class_id')->references('id')->on('classes')->onDelete('cascade');
             $table->unsignedBigInteger('subject_id')->nullable();
             $table->foreign('subject_id')->references('id')->on('subjects')->onDelete('cascade');
+            $table->string('ip_address')->nullable();
             $table->softDeletes();
             $table->timestamps();
         });

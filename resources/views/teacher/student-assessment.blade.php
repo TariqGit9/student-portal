@@ -105,35 +105,40 @@
  
 
 {{-- //Edit  --}}
-<div class="modal fade " id="student_report" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal fade " id="edit_marks" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-lg" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Report a Student </h5>
+        <h5 class="modal-title" id="exampleModalLabel">Edit Marks  </h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
-    <form id="report_student">
+    <form id="student_marks">
       <div class="modal-body">
         <div class="form-row">
           <div class="form-group col ">
             <label class="bmd-label-floating form-required">Name </label>
             <input type="text" class="form-control" id="name" name="name" aria-describedby="" disabled>
           </div>
-          <input type="hidden" class="form-control" id="student_id" name="student_id" aria-describedby="emailHelp">
-          <input type="hidden" class="form-control" value="{{$id}}" id="edit_id" name="edit_id" aria-describedby="emailHelp">
-         
-       
-        
-         
+        </div>
+        <div class="form-row">
+          <div class="form-group col ">
+            <label class="bmd-label-floating form-required">Total Obtained </label>
+            <input type="number" class="form-control" value="{{$data->total_marks}}" id="Totalmarks" name="Totalmarks" aria-describedby="" disabled>
+          </div>
+          <div class="form-group col ">
+            <label class="bmd-label-floating form-required">Marks Obtained </label>
+            <input type="number" class="form-control" id="marks" name="marks" aria-describedby="" >
+          </div>
+          <input type="hidden" class="form-control" value="" id="edit_id" name="edit_id" aria-describedby="emailHelp">
         </div>
     
 
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary sendreport">Save changes</button>
+        <button type="button" class="btn btn-primary editchanges">Save changes</button>
       </form>
       </div>
     </div>
@@ -180,19 +185,46 @@
         ]
 });
 
-$(document).on('click', '.editmarks', function() {
+$(document).on('click', '.studentMarks', function() {
 
 var edit_id = $(this).data('id');
 var marks = $(this).data('marks');
+var name = $(this).data('name');
 
+$("#edit_id").val(edit_id); 
+$("#marks").val(marks); 
+$("#name").val(name); 
 
-$("#student_id").val(edit_id); 
-$("#name").val(edit_name); 
-$("#user_name").val(edit_user_name); 
-$("#reg_no").val(edit_reg_no); 
+$('#edit_marks').modal('show');
+});
+$(document).on('click', '.editchanges', function() {
+
+  if($("#marks").val() > {{$data->total_marks}}){
+    toastr.warning('Warning!', "Obtained Marks can not be greater than Total marks...", {
+            "positionClass": "toast-bottom-right"
+        });
+        return;
+   }
+    axios.post("{{route('edit-marks')}}",
+        $('#student_marks').serialize()
+    ).then(function(response) {
+  
+    $('#edit_marks').modal('hide');
+   
+        toastr.success('Success!', ' Updated Successfully',{
+                "positionClass": "toast-bottom-right"
+            })
+        
+        $("#marks").val(""); 
+        datatable.draw();
+    });
 
 
 });
+
+
+
+
 </script>
 @endpush
 @endsection

@@ -32,7 +32,9 @@ class HomeController extends Controller
         }
         else if(Auth::user()->role_id ==3) {
             return redirect('/student');
-            
+        }
+        else if(Auth::user()->role_id ==4) {
+            return redirect('/super-admin');
         }
         else{
             session(['url.intended' => '/login']); 

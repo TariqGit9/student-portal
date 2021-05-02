@@ -16,6 +16,8 @@ class CreateClassGradesTable extends Migration
         Schema::create('class_grades', function (Blueprint $table) {
             $table->id();
             $table->string('name');
+            $table->unsignedBigInteger('school_id');
+            $table->string('ip_address')->nullable();
             $table->softDeletes();
             $table->timestamps();
         });

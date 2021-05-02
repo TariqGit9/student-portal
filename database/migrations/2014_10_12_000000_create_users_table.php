@@ -22,7 +22,9 @@ class CreateUsersTable extends Migration
             $table->string('password');
             $table->string('avatar');
             $table->integer('role_id');
+            $table->unsignedBigInteger('school_id')->nullable();
             $table->integer('status')->default(1);
+            $table->string('ip_address')->nullable();
             $table->softDeletes();
             $table->rememberToken();
             $table->timestamps();

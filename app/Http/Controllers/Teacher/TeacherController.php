@@ -145,7 +145,6 @@ class TeacherController extends Controller
     }
     public function teacherInsertStudentMarks(Request $request)
     {
-        
         $students = User::where('role_id',3)->whereHas('student_details' ,function ($q)use ($request){
             $q->where('class_id',$request->class_id);
         })->get(); 
@@ -174,12 +173,18 @@ class TeacherController extends Controller
                 'test_date' => $request->date,
                 'description' => $request->description,
                 'status' =>0,
+                'school_session_id'=>Auth::user()->school->school_session,
                 'passing_marks' => $request->passing_marks,
                 'total_marks' => $request->total_marks,
             ]);
             foreach($data as $key=>$info){
+
                 $id= $info['id'];
                 $obt_marks=  $info['obt_marks'];
+                if( $obt_marks  >  $request->total_marks ){
+                    $obt_marks=$request->total_marks;
+                }
+
                 $marks = StudentMarks::create([
                     'assesment_id' => $assesment->id,
                     'student_id' => $id,
@@ -211,7 +216,7 @@ public function classStudentResults(Request $request)
 //getClassAssesments
 public function getClassAssesments(Request $request)
 {
-    $result = StudentAssessment::where([['class_id',$request->class_id],['subject_id',$request->subject_id],['teacher_id',Auth::user()->id]])->get(); 
+    $result = StudentAssessment::where([['class_id',$request->class_id],['subject_id',$request->subject_id],['teacher_id',Auth::user()->id],['school_session_id',Auth::user()->school->school_session]])->get(); 
    
 
         return DataTables::of($result)
@@ -305,12 +310,12 @@ public function assesmentClassStudent(Request $request)
 public function getClassAssesmentsResults(Request $request)
 {
     $result = StudentMarks::where('assesment_id',$request->id)->get();
-    $data = StudentAssessment::find($request->id);
-    $passing_marks = $data->passing_marks;
+    $data1 = StudentAssessment::find($request->id);
+    $passing_marks = $data1->passing_marks;
         return DataTables::of($result)
         ->addColumn('action', function ($data) {
-                
-           $button= '<a  class="btn btn-info  btn-sm assesmentClassStudent "title="Edit" data-id ="'. $data->id.'" style="color:white;"><i class="fa fa-edit"></i></a>&nbsp;&nbsp;';  
+       
+           $button= '<a  class="btn btn-info  btn-sm studentMarks "title="Edit" data-name ="'. $data->student->name .' ( '.$data->student->student_details->reg_no.' ) '.'" data-marks ="'. $data->obtained_marks.'" data-id ="'. $data->id.'" style="color:white;"><i class="fa fa-edit"></i></a>&nbsp;&nbsp;';  
           
            return $button;
                 
@@ -341,6 +346,17 @@ public function getClassAssesmentsResults(Request $request)
         ->make(true);
     
 }
+public function editMarks(Request $request)
+{
+    
+    $data = StudentMarks::find($request->edit_id);
+    $data->obtained_marks = $request->marks;
+    $data->save();
 
+    return response()->json([
+        'success' => true,
+    ], 200);
+
+}
 
 }

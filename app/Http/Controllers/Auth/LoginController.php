@@ -36,17 +36,22 @@ class LoginController extends Controller
     protected $username;
     protected function redirectTo()
     {
-        if (Auth::user()->role_id == 1) {
+       
+        if (Auth::user()->role_id == 1 ) {
             session(['url.intended' => '/admin']);
         }
-        else if(Auth::user()->role_id == 2) {
+        else if(Auth::user()->role_id == 2 ) {
            
             session(['url.intended' => '/teacher']);
         }
-        else if(Auth::user()->role_id ==3) {
+        else if(Auth::user()->role_id ==3 ) {
             session(['url.intended' => '/student']); 
         }
+        else if(Auth::user()->role_id ==4) {
+            session(['url.intended' => '/super-admin']); 
+        }
         else{
+           
             session(['url.intended' => '/login']); 
         }
         

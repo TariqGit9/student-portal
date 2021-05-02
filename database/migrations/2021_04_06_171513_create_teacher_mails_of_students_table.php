@@ -22,15 +22,23 @@ class CreateTeacherMailsOfStudentsTable extends Migration
             $table->unsignedBigInteger('teacher_id')->nullable();
             $table->foreign('teacher_id')->references('id')->on('users')->onDelete('cascade');
             
+            $table->unsignedBigInteger('admin_id')->nullable();
+            $table->foreign('admin_id')->references('id')->on('classes')->onDelete('cascade');
+           
+            $table->unsignedBigInteger('school_id')->nullable();
+
+
             $table->unsignedBigInteger('class_id')->nullable();
             $table->foreign('class_id')->references('id')->on('classes')->onDelete('cascade');
            
+
+
             $table->string('title')->nullable();
 
             $table->longtext('description')->nullable();
 
             $table->integer('status')->default(0);
-            
+            $table->string('ip_address')->nullable();
             $table->timestamps();
         });
     }

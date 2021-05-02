@@ -4,6 +4,7 @@ namespace App\Providers;
 use App\Models\SchoolInformation;
 use Auth;
 use Illuminate\Support\ServiceProvider;
+use Illuminate\Support\Facades\Schema;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -24,6 +25,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
+        Schema::defaultStringLength(191);
         view()->composer('layouts*', function ($view) {
            $school_info= SchoolInformation::first();
 

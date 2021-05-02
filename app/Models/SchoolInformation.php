@@ -10,4 +10,8 @@ class SchoolInformation extends Model
     // use SoftDeletes;
     use HasFactory;
     protected $guarded = [];
+    public function school_session()
+    {
+        return $this->hasOne('App\Models\SchoolSession','school_id','id')->where('status',1);
+    }
 }

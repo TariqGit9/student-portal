@@ -36,19 +36,21 @@ Auth::routes(['register' => false, 'password.request' => false, 'reset' => false
         Route::post('edit-subject', 'AdminController@editSubject')->name('edit-subject');
         Route::post('del-subject', 'AdminController@deleteSubject')->name('del-subject');
         Route::post('get-subject-detail', 'AdminController@getSubjectDetail')->name('get-subject-detail');
-    //grades
+        //grades 
         Route::get('grades', 'AdminController@grades')->name('grades');
         Route::get('/get-grades', 'AdminController@getGrades')->name('get-grades');
         Route::post('add-grade', 'AdminController@addGrade')->name('add-grade');
+        Route::post('edit-grade', 'AdminController@editGrade')->name('edit-grade');
         Route::post('del-grade', 'AdminController@deleteGrade')->name('del-grade');
-    //teachers
+  
+        //teachers
         Route::get('all-teachers', 'AdminController@teachers')->name('all-teachers');
         Route::post('add-teacher', 'AdminController@addTeacher')->name('add-teacher');
         Route::get('/get-teachers', 'AdminController@getTeachers')->name('get-teachers');
         Route::post('del-teacher', 'AdminController@deleteTeacher')->name('del-teacher');
         Route::post('edit-teacher', 'AdminController@editTeacher')->name('edit-teacher');
         Route::post('get-teacher-detail', 'AdminController@getTeacherDetail')->name('get-teacher-detail');
-    //deletd Teachers
+        //deletd Teachers
         Route::get('/get-deleted-teachers', 'AdminController@getDeletedTeachers')->name('get-deleted-teachers');
         Route::get('deleted-teachers', 'AdminController@deletedTeachers')->name('deleted-teachers');
         //Route::post('/get-deleted-teacher-detail', 'AdminController@getDeletedTeachers')->name('get-deleted-teacher-detail');
@@ -88,7 +90,16 @@ Auth::routes(['register' => false, 'password.request' => false, 'reset' => false
         Route::get('/', 'StudentController@student')->name('home');
         
     });
-
+    Route::group(['namespace' => 'SuperAdmin', 'prefix' => 'super-admin','middleware' => 'checkSuperAdmin'], function () {
+        Route::get('/', 'SuperAdminController@superAdmin')->name('home');
+        Route::get('/all-schools', 'SuperAdminController@allSchools')->name('all-schools');
+        Route::get('/get-schools', 'SuperAdminController@getSchools')->name('get-schools');
+        Route::post('get-school-detail-super-admin', 'SuperAdminController@getSchoolDetail')->name('get-school-detail-super-admin');
+        Route::post('add-school-superadmin', 'SuperAdminController@addSchool')->name('add-school-superadmin');
+        Route::post('edit-school-superadmin', 'SuperAdminController@editSchool')->name('edit-school-superadmin');
+        
+        Route::post('block-school-super-admin', 'SuperAdminController@changeSchoolStatus')->name('block-school-super-admin');
+    });
 
     Route::group(['namespace' => 'Teacher', 'prefix' => 'teacher','middleware' => 'checkTeacher'], function () {
         Route::get('/', 'TeacherController@teacher')->name('home');
@@ -108,7 +119,7 @@ Auth::routes(['register' => false, 'password.request' => false, 'reset' => false
 
 
         Route::post('report-student-to-admin', 'TeacherController@reportStudentToAdmin')->name('report-student-to-admin');
-    
+        Route::post('edit-marks', 'TeacherController@editMarks')->name('edit-marks');
     
     });
 });

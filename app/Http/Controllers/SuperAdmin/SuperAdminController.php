@@ -1,0 +1,240 @@
+<?php
+
+namespace App\Http\Controllers\SuperAdmin;
+
+use App\Http\Controllers\Controller;
+use Illuminate\Http\Request;
+use App\Models\SchoolInformation;
+
+
+//files Images
+use Intervention\Image\Facades\Image;
+use Illuminate\Support\Facades\Storage;
+use File;
+use Auth;
+use Mail;
+
+//datatables
+use DataTables;
+
+class SuperAdminController extends Controller
+{
+    public function superAdmin()
+    {
+        return view('super-admin.dashboard.index');
+    }
+    public function allSchools()
+    {
+       
+        return view('super-admin.managment.index');
+    }
+    public function getSchools()
+    {
+       
+        $data = SchoolInformation::all();
+      
+        return DataTables::of($data)
+        ->addColumn('action', function ($data) {
+                if($data->status==0){
+                    $button = '<a href="#" class="btn btn-danger btn-sm   toggle_block_data"title=" Click to unblock"  data-status="1"  data-id="' . $data->id . '"><i class="fa fa-times"></i></a>&nbsp;&nbsp;';  
+
+                }else{
+                    $button = '<a href="#" class="btn btn-success btn-sm   toggle_block_data"title=" Click to block"  data-status="0"  data-id="' . $data->id . '"><i class="fa fa-check"></i></a>&nbsp;&nbsp;';  
+
+                }
+           
+                $button .= '<a href="#" class="btn btn-info btn-sm  edit_data"title="Edit" data-name= "' . $data->name . '" data-phone="' . $data->phone . '" data-phone2="' . $data->phone2 . '" data-email="' . $data->email . '" data-abbreviation="' . $data->abbreviation . '" data-avatar="' . $data->avatar . '" data-address="' . $data->address . '" data-id="' . $data->id . '"><i class="fa fa-edit"></i></a>&nbsp;&nbsp;';  
+                $button .= '<a href="#" class="btn btn-secondary btn-sm   view_all_school_users"title=" View School Users"  data-status="0"  data-id="' . $data->id . '"><i class="fa fa-eye"></i></a>&nbsp;&nbsp;';  
+                return $button;
+        })
+        ->addColumn('name', function ($data) {
+            if ($data->name === null) {
+                $text = "Not Available";
+                return $text;
+            } else {
+                $text = $data->name.'('. $data->abbreviation.')';
+                return $text;
+            }
+        })
+        ->addColumn('email', function ($data) {
+            if ($data->email === null) {
+                $text = "Not Available";
+                return $text;
+            } else {
+                $text = $data->email;
+                return $text;
+            }
+        })
+        ->addColumn('phone', function ($data) {
+            if ($data->phone === null) {
+                $text = "Not Available";
+                return $text;
+            } else {
+                $text ="<div > <p>". $data->phone."</p> <p> ".$data->phone2."<div>";
+                return $text;
+            }
+        })
+        // ->addColumn('address', function ($data) {
+        //     if ($data->address === null) {
+        //         $text = "Not Available";
+        //         return $text;
+        //     } else {
+        //         $text = $data->address;
+        //         return $text;
+        //     }
+        // })
+        ->addColumn('unique_id', function ($data) {
+            if ($data->school_unique_id === null) {
+                $text = "Not Available";
+                return $text;
+            } else {
+                $text = $data->school_unique_id;
+                return $text;
+            }
+        })
+        ->addColumn('image', function ($data) {
+         
+            $image = '<img src="' . asset("uploads/school_avatars/" . $data->avatar) . '" alt="logo" width="50" height="50">';
+            return $image;
+        })
+            ->rawColumns(['action','address','image','name','phone','email','unique_id'])
+            ->make(true);
+    }
+    public function getSchoolDetail(Request $request)
+    {
+   
+        $school_info = SchoolInformation::find($request->id);
+        $details=$school_info->details;
+        $address=$school_info->address;
+        if( $details == null){
+            $details="Not Available";
+        }
+        if( $address == null){
+            $address="Not Available";
+        }
+        return response()->json([
+            'address' =>$address,
+            'details' =>$details,
+        ], 200);
+     
+    }
+    public function addSchool(Request $request)
+    { 
+        $filename="default.webp";
+        if($request->hasFile('image')){
+            if(@is_array(getimagesize($request->image))){
+                $time = time();
+                $file=$request->image;
+                $extension = $file->getClientOriginalExtension();
+                $filename = $time."school_avatar" . '.' . $extension;
+                $resized_image = Image::make($file)->resize(200, 200)->encode($extension);
+              
+                Storage::disk(config('filesystems.default'))
+                ->put('school_avatars/' . $filename, $resized_image);
+
+            }
+            else{
+                return response()->json([
+                    'success' => false,
+                    'error' => "Not a Image.",
+                ]);
+
+            }
+        }
+ 
+      //  dd($request->all());
+     // where('email', $request->email) ->or
+        if($request->email){
+            $school = SchoolInformation::where('email', $request->email)->first();
+        }
+       
+      
+       if( $school){
+            if ($school->email==$request->email) {
+                return response()->json([
+                    'success' => false,
+                    'error' => "Email already Exists.",
+                ]);
+            }
+        }
+        $school = SchoolInformation::create(
+            [
+            'name' => $request->name,
+            'email' => $request->email,
+            'avatar' => $filename,
+            'abbreviation' => $request->abbreviation,
+            'school_unique_id' => time(),
+            'phone' =>  $request->phone,
+            'phone2' =>  $request->phone2,
+            'address' =>  $request->address,
+            'details' => $request->school_details,
+            'ip_address' => $request->ip(),
+        ]);
+  
+        return response()->json([
+            'success' => true,
+            'result' => 'Added successfully',
+        ], 200);
+    }
+    public function editSchool(Request $request)
+    {
+    
+        $school = SchoolInformation::find($request->edit_id);
+       // dd($request->all(), $school->avatar);
+        $oldfile =$school->avatar;
+        $filename =$school->avatar;
+        if($request->hasFile('edit_image')){
+            if(@is_array(getimagesize($request->edit_image))){
+                $time = time();
+                $file=$request->edit_image;
+                $extension = $file->getClientOriginalExtension();
+                $filename = $time."school_avatar" . '.' . $extension;
+                $resized_image = Image::make($file)->resize(200, 200)->encode($extension);
+              
+                Storage::disk(config('filesystems.default'))
+                ->put('school_avatars/' . $filename, $resized_image);
+                if($school->avatar !="default.webp"){
+
+                    $oldfileName = 'school_avatars/' . $oldfile;
+                    if (Storage::exists($oldfileName)) {
+                   
+                        Storage::delete($oldfileName);
+                    }
+                }
+            }
+            else{
+                return response()->json([
+                    'success' => false,
+                    'error' => "Not a Image.",
+                ]);
+
+            }
+        }
+       
+        $school->name= $request->edit_name;
+        $school->email= $request->edit_email;
+        $school->abbreviation= $request->edit_abbreviation;
+        $school->phone= $request->edit_phone;
+        $school->phone2= $request->edit_phone2;
+        $school->address= $request->edit_address;
+        $school->details= $request->edit_details;
+        $school->avatar= $filename;
+        $school->save();
+
+        return response()->json([
+            'success' => true,
+            'result' => 'Edit successfully',
+        ], 200);
+    }
+
+    public function changeSchoolStatus(Request $request)
+    {
+        $school = SchoolInformation::find($request->id);
+        $school->status= $request->status;
+        $school->save();
+        
+        return response()->json([
+            'success' => true,
+        ], 200);
+    }
+}

@@ -18,6 +18,8 @@ class CreateClassesTable extends Migration
             $table->string('name');
             $table->unsignedBigInteger('grade_id')->nullable();
             $table->foreign('grade_id')->references('id')->on('class_grades')->onDelete('cascade');
+            $table->unsignedBigInteger('school_id');
+            $table->string('ip_address')->nullable();
             $table->softDeletes();
             $table->timestamps();
         });

@@ -20,7 +20,7 @@ class CreateStudentMarksTable extends Migration
             $table->unsignedBigInteger('student_id');
             $table->foreign('student_id')->references('id')->on('users')->onDelete('cascade');
             $table->float('obtained_marks')->dafault(0);
-            
+            $table->string('ip_address')->nullable();
             $table->softDeletes();
             $table->timestamps();
         });

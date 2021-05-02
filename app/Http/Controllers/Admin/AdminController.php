@@ -19,7 +19,7 @@ use Illuminate\Http\Request;
 use Intervention\Image\Facades\Image;
 use Illuminate\Support\Facades\Storage;
 use File;
-
+use Auth;
 //datatables
 use DataTables;
 class AdminController extends Controller
@@ -30,7 +30,8 @@ class AdminController extends Controller
     }
     public function classes()
     {
-        $grades = ClassGrade::all();
+      
+        $grades = ClassGrade::where('school_id',Auth::user()->school_id)->get();
         return view('admin.class.classes', compact('grades'));
        
     }
@@ -41,10 +42,13 @@ class AdminController extends Controller
             [
                 'name' => $request->name,
                 'grade_id' => $request->grade,
+                'school_id' => Auth::user()->school_id,
+                
             ],
             [
                 'name' => $request->name,
                 'grade_id' => $request->grade,
+                'school_id' => Auth::user()->school_id,
             ]);
         return response()->json([
             'result' => 'Added successfully',
@@ -73,13 +77,13 @@ class AdminController extends Controller
     public function getClasses()
     {
         $number=0;
-        $classes = Classes::all();
+        $classes = Classes::where('school_id',Auth::user()->school_id)->get();
         return DataTables::of($classes)
         ->addColumn('action', function ($classes) {
                 
                 // $button = '<a href="#" class="btn btn-info btn-sm  deleteClass"title="Edit" data-id=' . $classes->id . '><i class="fa fa-edit"></i></a>&nbsp;&nbsp;';  
-                $button = '<a href="#" class="btn btn-danger btn-sm  deleteClass"title="Delete" data-id=' . $classes->id . '><i class="fa fa-trash"></i></a>&nbsp;&nbsp;';  
-                $button .= '<a href="'.route("class-subjects", $classes->id).'" class="btn btn-info btn-sm "title="Class Subjects "><i class="fa fa-book-open"></i></a>&nbsp;&nbsp;';  
+                // $button = '<a href="#" class="btn btn-danger btn-sm  deleteClass"title="Delete" data-id=' . $classes->id . '><i class="fa fa-trash"></i></a>&nbsp;&nbsp;';  
+                $button = '<a href="'.route("class-subjects", $classes->id).'" class="btn btn-info btn-sm "title="Class Subjects "><i class="fa fa-book-open"></i></a>&nbsp;&nbsp;';  
                 $button .= '<a href="'.route("class-teachers", $classes->id).'" class="btn btn-warning btn-sm "title="Class Teachers "><i class="fa fa-pen"></i></a>&nbsp;&nbsp;';  
              
                 $button .= '<a href="'.route("class-students", $classes->id).'" class="btn btn-success btn-sm "title="Class Students"><i class="fa fa-users"></i></a>&nbsp;&nbsp;';  
@@ -107,7 +111,7 @@ class AdminController extends Controller
     public function subjects()
     {
         //ClassGrade
-        $grades = ClassGrade::all();
+        $grades = ClassGrade::where('school_id',Auth::user()->school_id)->get();
         return view('admin.class.subjects', compact('grades'));
     }
     public function addSubject(Request $request)
@@ -118,6 +122,7 @@ class AdminController extends Controller
                 'name' => $request->name,
                 'grade_id' => $request->grade,
                 'author' => $request->author,
+                'school_id' => Auth::user()->school_id,
             ],
             [
                 'name' => $request->name,
@@ -125,6 +130,7 @@ class AdminController extends Controller
                 'type' => $request->type,
                 'author' => $request->author, 
                 'details' => $request->info,
+                'school_id' => Auth::user()->school_id,
 
             ]);
         return response()->json([
@@ -134,7 +140,7 @@ class AdminController extends Controller
     public function getSubjects(Request $request)
     {
         $number=0;
-        $subjects = Subject::all();
+        $subjects = Subject::where('school_id',Auth::user()->school_id)->get();
         if( $request->id){
             $class = Classes::find($request->id); 
             $subjects =   $class->grade->subjects;
@@ -268,11 +274,12 @@ class AdminController extends Controller
         $add_grade = ClassGrade::updateOrCreate(
             [
                 'name' => $request->name,
+                'school_id' => Auth::user()->school_id,
                
             ],
             [
                 'name' => $request->name,
-               
+                'school_id' => Auth::user()->school_id,
             ]);
         return response()->json([
             'result' => 'Added successfully',
@@ -280,9 +287,9 @@ class AdminController extends Controller
     }
     public function editGrade(Request $request)
     {
-     
-        $edit_class = Classes::find($request->editid);
-        $edit_class->name = $request->editname;
+        
+        $edit_class = ClassGrade::find($request->edit_id);
+        $edit_class->name = $request->edit_name;
         $edit_class->save();
         return response()->json([
             'result' => 'Edited successfully',
@@ -292,13 +299,13 @@ class AdminController extends Controller
     public function getGrades()
     {
         
-        $grades = ClassGrade::all();
+        $grades = ClassGrade::where('school_id',Auth::user()->school_id)->get();
         return DataTables::of($grades)
         ->addColumn('action', function ($grades) {
                 
                 // $button = '<a href="#" class="btn btn-info btn-sm  editGrade "title="edit" data-id=' . $grades->id . '><i class="fa fa-edit"></i></a>&nbsp;&nbsp;';  
                 $button = '<a href="#" class="btn btn-info btn-sm  editGrade " data-toggle="modal" data-target="#editGradeModal"   data-id="' . $grades->id . '" data-name="' . $grades->name . '"><i class="fa fa-edit"></i></a>&nbsp;&nbsp;';  
-                $button .= '<a href="#" class="btn btn-danger btn-sm   deleteGrade"title="Delete" data-id=' . $grades->id . '><i class="fa fa-trash"></i></a>&nbsp;&nbsp;';  
+                // $button .= '<a href="#" class="btn btn-danger btn-sm   deleteGrade"title="Delete" data-id=' . $grades->id . '><i class="fa fa-trash"></i></a>&nbsp;&nbsp;';  
         
                 return $button;
                 
@@ -386,6 +393,9 @@ class AdminController extends Controller
             'password' => bcrypt( $request->password ),
             'role_id' => 2,
             'status' => 1,
+            'school_id' => Auth::user()->school_id,
+            'ip_address' => $request->ip(),
+
         ]);
    //TeacherDetails
         $userdetails = TeacherDetails::updateOrCreate(
@@ -418,7 +428,7 @@ class AdminController extends Controller
     public function getTeachers()
     {
         
-        $data = User::where('role_id',2)->get();
+        $data = User::where([[ 'school_id' , Auth::user()->school_id],['role_id',2]])->get();
        
         return DataTables::of($data)
         ->addColumn('action', function ($data) {
@@ -538,7 +548,7 @@ class AdminController extends Controller
     public function getDeletedTeachers()
     {
         
-        $data = User::onlyTrashed()->where('role_id',2)->get();
+        $data = User::onlyTrashed()->where([[ 'school_id' , Auth::user()->school_id],['role_id',2]])->get();
        
         return DataTables::of($data)
         ->addColumn('action', function ($data) {
@@ -578,7 +588,7 @@ class AdminController extends Controller
     //students
     public function students()
     {
-       $classes= Classes::all();
+       $classes= Classes::where('school_id',Auth::user()->school_id)->get();
         return view('admin.student.student', compact('classes'));
     }
 
@@ -615,7 +625,7 @@ class AdminController extends Controller
       //  dd($request->all());
      // where('email', $request->email) ->or
         if($request->email){
-            $user = User::where('email', $request->email) ->orWhere('user_name', $request->user_name)->first();
+            $user = User::where('email', $request->email)->orWhere('user_name', $request->user_name)->first();
         }
         else{
             $user = User::withTrashed()->where('user_name', $request->user_name)->first();
@@ -655,9 +665,14 @@ class AdminController extends Controller
             'password' => bcrypt( $request->password ),
             'role_id' => 3,
             'status' => 1,
+            'school_id' => Auth::user()->school_id,
+            'ip_address' => $request->ip(),
         ]);
    //TeacherDetails
-        $count=  StudentDetails::count();
+        // $count=  StudentDetails::count();
+        $count = StudentDetails::whereHas('student' ,function ($q)use ($request){
+            $q->where( 'school_id' , Auth::user()->school_id);
+        })->count();
         $count++;
         $userdetails = StudentDetails::updateOrCreate(
             [
@@ -689,13 +704,13 @@ class AdminController extends Controller
         
       
         if($request->id){
-            $data = User::where('role_id',3)->whereHas('student_details' ,function ($q)use ($request){
+            $data = User::where([[ 'school_id' , Auth::user()->school_id],['role_id',3]])->whereHas('student_details' ,function ($q)use ($request){
                 $q->where('class_id',$request->id);
             })->get();
             
         }
         else{
-            $data = User::where('role_id',3)->get();
+            $data = User::where([[ 'school_id' , Auth::user()->school_id],['role_id',3]])->get();
         }
        
 
@@ -835,7 +850,7 @@ class AdminController extends Controller
     public function getDeletedStudents()
     {
         
-        $data = User::onlyTrashed()->where('role_id',3)->get();
+        $data = User::onlyTrashed()->where([[ 'school_id' , Auth::user()->school_id],['role_id',3]])->get();
         // if($request->id){
         //     $data = User::where('role_id',3)->whereHas('student_details' ,function ($q)use ($request){
         //         $q->where('class_id',$request->id);
@@ -886,7 +901,7 @@ class AdminController extends Controller
     //Class Teachers
     public function classTeachers($id)
     {
-        $teachers = User::where('role_id',2)->get();
+        $teachers = User::where([[ 'school_id' , Auth::user()->school_id],['role_id',2]])->get();
         return view('admin.class.class-teachers', compact('id','teachers'));
     
     }
@@ -1019,7 +1034,7 @@ class AdminController extends Controller
     public function getTeacherComplaints(Request $request)
     {
                 
-        $data = TeacherMailsOfStudent::all();
+        $data = TeacherMailsOfStudent::where('school_id' , Auth::user()->school_id)->get();
         return DataTables::of($data)
         ->addColumn('action', function ($data) {
             $button = '<a href="#" class="btn btn-info btn-sm openComplaint " data-toggle="modal" data-target="#editTeacherModal"   data-id="' . $data->id . '"><i class="fa fa-eye"></i></a>&nbsp;&nbsp;';  
@@ -1085,4 +1100,5 @@ public function changeComplainStatus(Request $request)
     ], 200);
 
 }
+
 }
