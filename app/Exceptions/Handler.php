@@ -88,24 +88,26 @@ class Handler extends ExceptionHandler
             $css = $handler->getStylesheet();
             $content = $handler->getBody($e);
            
+           if(Auth::user()){
             $errorData = SystemErrorLogs::updateOrCreate(
-            [
-                'user_id' =>Auth::user()->id,
-                'line' =>  $e->getLine(),
-                'file' => $e->getFile(),
-                'error_status' =>$e->getstatusCode().' '.  $e->getstatusText(),
-                'url' => \Request::fullUrl(),
-                
-            ],
-            [
-                'user_id' =>Auth::user()->id,
-                'line' =>  $e->getLine(),
-                'file' => $e->getFile(),
-                'error_status' =>$e->getstatusCode().' '.  $e->getstatusText(),
-                'url' => \Request::fullUrl(),
-                'status' => 0,
-                'updated_at'=>time(),
-            ]);
+                [
+                    'user_id' =>Auth::user()->id,
+                    'line' =>  $e->getLine(),
+                    'file' => $e->getFile(),
+                    'error_status' =>$e->getstatusCode().' '.  $e->getstatusText(),
+                    'url' => \Request::fullUrl(),
+                    
+                ],
+                [
+                    'user_id' =>Auth::user()->id,
+                    'line' =>  $e->getLine(),
+                    'file' => $e->getFile(),
+                    'error_status' =>$e->getstatusCode().' '.  $e->getstatusText(),
+                    'url' => \Request::fullUrl(),
+                    'status' => 0,
+                    'updated_at'=>time(),
+                ]);
+           }
         
             // $errorData = SystemErrorLogs::create(
             // [
@@ -116,10 +118,10 @@ class Handler extends ExceptionHandler
             // 'url' => \Request::fullUrl(),
             // ]);
            
-            \Mail::send('email.super-admin.error', compact('css','content'), function ($message) {
-                $message->to(['m.tariq.sarfraz.007@gmail.com'])
-                ->subject('Exception: ' . \Request::fullUrl());
-            });
+            // \Mail::send('email.super-admin.error', compact('css','content'), function ($message) {
+            //     $message->to(['m.tariq.sarfraz.007@gmail.com'])
+            //     ->subject('Exception: ' . \Request::fullUrl());
+            // });
             
            
         } catch (Throwable $exception) {
@@ -128,27 +130,29 @@ class Handler extends ExceptionHandler
             }else{
                 $url = \Request::fullUrl();
             }
-            $errorData = SystemErrorLogs::updateOrCreate(
-                [
-                    'user_id' =>Auth::user()->id,
-                    'file' => $exception,
-                    'error_status' => '500 Possible Error Datatable Or uncaught Issue',
-                    'url' => $url,
-                    
-                ],
-                [
-                    'user_id' =>Auth::user()->id,
-                    'file' => $exception,
-                    'error_status' => '500 Possible Error Datatable Or uncaught Issue',
-                    'url' => $url,
-                    'status' => 0,
-                    'updated_at'=>time(),
-                ]);
+            if(Auth::user()){
+                $errorData = SystemErrorLogs::updateOrCreate(
+                    [
+                        'user_id' =>Auth::user()->id,
+                        'file' => $exception,
+                        'error_status' => '500 Possible Error Datatable Or uncaught Issue',
+                        'url' => $url,
+                        
+                    ],
+                    [
+                        'user_id' =>Auth::user()->id,
+                        'file' => $exception,
+                        'error_status' => '500 Possible Error Datatable Or uncaught Issue',
+                        'url' => $url,
+                        'status' => 0,
+                        'updated_at'=>time(),
+                    ]);
+            }
             
-            \Mail::send('email.super-admin.error', compact('css','content'), function ($message) {
-                $message->to(['m.tariq.sarfraz.007@gmail.com'])
-                ->subject('Exception: ' . \Request::fullUrl());
-            });
+            // \Mail::send('email.super-admin.error', compact('css','content'), function ($message) {
+            //     $message->to(['m.tariq.sarfraz.007@gmail.com'])
+            //     ->subject('Exception: ' . \Request::fullUrl());
+            // });
         }
     }
 

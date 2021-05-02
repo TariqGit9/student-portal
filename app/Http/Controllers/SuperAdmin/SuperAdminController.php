@@ -5,8 +5,10 @@ namespace App\Http\Controllers\SuperAdmin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\SchoolInformation;
-
-
+use App\Models\User;
+use App\Models\UserDetails\TeacherDetails;
+use App\Models\UserDetails\StudentDetails;
+use App\Models\UserDetails\AdminDetails;
 //files Images
 use Intervention\Image\Facades\Image;
 use Illuminate\Support\Facades\Storage;
@@ -74,15 +76,6 @@ class SuperAdminController extends Controller
                 return $text;
             }
         })
-        // ->addColumn('address', function ($data) {
-        //     if ($data->address === null) {
-        //         $text = "Not Available";
-        //         return $text;
-        //     } else {
-        //         $text = $data->address;
-        //         return $text;
-        //     }
-        // })
         ->addColumn('unique_id', function ($data) {
             if ($data->school_unique_id === null) {
                 $text = "Not Available";
@@ -235,6 +228,124 @@ class SuperAdminController extends Controller
         
         return response()->json([
             'success' => true,
+        ], 200);
+    }
+    public function allSchoolUsers(Request $request)
+    {
+    
+        $school_id = $request->school_id;
+        $school = SchoolInformation::find($request->school_id);
+        return view('super-admin.managment.school-users', compact('school_id','school'));
+    }
+    public function getSchoolUsers(Request $request)
+    {
+      
+        $role_id=$request->role_id;
+        $data = User::where([['role_id',$request->role_id],['school_id',$request->school_id]])->get();
+        $user_details=null;
+        $picture= '';
+        if($data->first() !=null){
+            if($data[0]->role_id==1){
+                if($data[0]->admin_details){
+                    $user_details='admin_details';
+                }else{
+                    $user_details=null;
+                }
+                $picture= 'admin';
+            }else if($data[0]->role_id==2){
+                
+                $user_details='teacher_details';
+                $picture= 'teacher';
+            }else if($data[0]->role_id==3){
+                $user_details='student_details';
+                $picture= 'student';
+            }
+        }
+     
+        
+        
+        return DataTables::of($data)
+        ->addColumn('action', function ($data) use ( $user_details){
+                
+                $button = '';  
+        
+                return $button;
+                
+        })
+        ->addColumn('image', function ($data)  use ( $user_details , $picture) {
+                $image = '<img src="' . asset("uploads/".$picture."_avatars/" . $data->avatar) . '" alt="logo" width="50" height="50">';
+                return $image;
+        })
+        ->addColumn('phone', function ($data)  use ( $user_details) {
+        
+                if($data->$user_details){
+                  
+                    if($data->$user_details->phone){
+                        $phone = $data->$user_details->phone;
+                    }
+                    else{
+                        $phone ='N/A'; 
+                    }
+                }else{
+                    $phone ='N/A'; 
+                }
+         
+                return $phone;
+       
+
+        })
+        ->addColumn('email', function ($data)  use ( $user_details) {
+         
+           if($data->email){
+            $email = $data->email;
+           }else{
+            $email = 'N/A';
+           }
+            return $email;
+       
+
+        })
+
+            ->rawColumns([ 'action','image','phone','email'])
+            ->make(true);
+    }
+    public function getUserDetails(Request $request)
+    {
+        $data = User::find($request->id);
+        if( $data->role_id==1){
+            if($data->admin_details){
+                $html ='<strong >Address Line</strong >: '.$data->admin_details->address_line_main;
+                if($data->admin_details->address_line_secondary){
+                    $html .='<br><strong > Address Line 2 </strong >: '.$data->admin_details->address_line_secondary;
+                }
+                if($data->admin_details->emergency_phone){
+                    $html .='<br><strong > Emergency Phone </strong >: '.$data->admin_details->emergency_phone;
+                }
+            }else{
+                $html ='Address not available';
+            }
+        }
+        else if( $data->role_id==2){
+            $html ='<strong >Address Line</strong >: '.$data->teacher_details->address_line_main;
+            if($data->teacher_details->address_line_secondary){
+                $html .='<br><strong > Address Line 2 </strong >: '.$data->teacher_details->address_line_secondary;
+            }
+            if($data->teacher_details->emergency_phone){
+                $html .='<br><strong > Emergency Phone </strong >: '.$data->teacher_details->emergency_phone;
+            }
+        }  
+        else if( $data->role_id==3){
+            $html ='<strong >Address Line</strong >: '.$data->student_details->address_line_main;
+            if($data->student_details->address_line_secondary){
+                $html .='<br><strong > Address Line 2 </strong >: '.$data->student_details->address_line_secondary;
+            }
+            if($data->student_details->emergency_phone){
+                $html .='<br><strong > Emergency Phone </strong >: '.$data->student_details->emergency_phone;
+            }
+        }
+        return response()->json([
+            'success' => true,
+            'html' => $html,
         ], 200);
     }
 }

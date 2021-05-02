@@ -213,6 +213,12 @@
   </div>
 </div>
 
+<form id="all_school_users" method="post" action="view-all-school-users">
+  @csrf
+  <input id="school_id" class="school_id" name ="school_id" type="hidden" value="">
+</form >
+
+
 @push('javascript')
 <script>
 var mailformat = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+.[a-z](?:\.[a-zA-Z0-9-]+)*$/;
@@ -655,11 +661,14 @@ $(document).on('click', '.toggle_block_data', function() {
 
 });
 
-$(document).on('click', '.viewDeleted', function() {
 
-  location.href = "{{route('deleted-students')}}";
+
+$(document).on('click', '.view_all_school_users', function() {
+  var id = $(this).data('id');
+  var class_id = $(this).data('class_id');
+  $('.school_id').val(id);
+  $('#all_school_users').submit();
 });
-
 
 </script>
 @endpush

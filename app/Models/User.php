@@ -52,6 +52,10 @@ class User extends Authenticatable
     {
         return $this->belongsTo('App\Models\UserDetails\StudentDetails', 'id', 'user_id')->withTrashed();
     }
+    public function admin_details()
+    {
+        return $this->belongsTo('App\Models\UserDetails\AdminDetails', 'id', 'user_id');
+    }
     public function deleted_teacher_details()
     {
         return $this->belongsTo('App\Models\UserDetails\TeacherDetails', 'id', 'user_id')->withTrashed();

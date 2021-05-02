@@ -15,6 +15,12 @@ class CreateAdminDetailsTable extends Migration
     {
         Schema::create('admin_details', function (Blueprint $table) {
             $table->id();
+            $table->unsignedBigInteger('user_id')->nullable();
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+            $table->string('phone')->nullable();
+            $table->string('emergency_phone')->nullable();
+            $table->string('address_line_main')->nullable();
+            $table->string('address_line_secondary')->nullable();
             $table->softDeletes();
             $table->timestamps();
         });

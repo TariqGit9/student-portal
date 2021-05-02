@@ -17,7 +17,7 @@ Route::get('/', 'HomeController@index')->name('home');
 Route::get('/home', 'HomeController@index')->name('home');
 
 Auth::routes();
-Auth::routes(['register' => false, 'password.request' => false, 'reset' => false]);
+
 
     Route::group(['middleware' => 'auth'], function () {
         Route::group(['namespace' => 'Admin', 'prefix' => 'admin','middleware' => 'checkAdmin'], function () {
@@ -97,8 +97,11 @@ Auth::routes(['register' => false, 'password.request' => false, 'reset' => false
         Route::post('get-school-detail-super-admin', 'SuperAdminController@getSchoolDetail')->name('get-school-detail-super-admin');
         Route::post('add-school-superadmin', 'SuperAdminController@addSchool')->name('add-school-superadmin');
         Route::post('edit-school-superadmin', 'SuperAdminController@editSchool')->name('edit-school-superadmin');
-        
         Route::post('block-school-super-admin', 'SuperAdminController@changeSchoolStatus')->name('block-school-super-admin');
+        Route::any('view-all-school-users', 'SuperAdminController@allSchoolUsers')->name('view-all-school-users');
+        Route::any('get-school-users', 'SuperAdminController@getSchoolUsers')->name('get-school-users');
+
+        Route::any('get-user-details', 'SuperAdminController@getUserDetails')->name('get-user-details');
     });
 
     Route::group(['namespace' => 'Teacher', 'prefix' => 'teacher','middleware' => 'checkTeacher'], function () {
