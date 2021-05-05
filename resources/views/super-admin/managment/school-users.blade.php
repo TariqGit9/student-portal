@@ -366,7 +366,7 @@ $(document).on('click', '.addstudent', function() {
          $(".selectpicker").val('default');
          $(".selectpicker").selectpicker("refresh");
          $(".summernote").summernote("code", "");
-     datatable.draw();
+         dataTableData($('#user_roles').val());
 
    }
    else{
@@ -388,7 +388,47 @@ $(document).on('click', '.addstudent', function() {
 
 
 });
+$(document).on('click', '.toggle_block_data', function() {
+    var id = $(this).data('id');
+    var status = $(this).data('status');
+    if(status==1){
+      var Text_message = "Are you Sure you want to activate the user";
+      var Text_button = "Activate";
+      var color='#4BB543';
+    }else{
+      var Text_message = "Are you Sure you want to de-activate the user";
+      var Text_button = "Deactivate";
+      var color='#ca0b00';
+ 
+    }
 
+    Swal.fire({
+        title: 'Change user Status',
+        text: Text_message,
+        icon: 'info',
+        showCancelButton: true,
+        confirmButtonColor: color,
+        cancelButtonText: "Cancel",
+        confirmButtonText: Text_button,
+        reverseButtons: true
+    }).then((result) => {
+        if (result.isConfirmed) {
+            axios.post("{{route('block-user-super-admin')}}", {
+                 status: status, id:id ,
+            }).then(function(response) {
+              toastr.success('Success!', 'user Status Changed Successfully',{
+                "positionClass": "toast-bottom-right"
+            })
+            dataTableData($('#user_roles').val());
+        
+        })
+        }
+        else{
+
+        }
+    });
+
+});
 </script>
 @endpush
 @endsection

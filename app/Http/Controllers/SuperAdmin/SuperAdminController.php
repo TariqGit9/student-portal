@@ -12,6 +12,7 @@ use App\Models\UserDetails\AdminDetails;
 //files Images
 use Intervention\Image\Facades\Image;
 use Illuminate\Support\Facades\Storage;
+use App\Models\SchoolSession;
 use File;
 use Auth;
 use Mail;
@@ -44,9 +45,9 @@ class SuperAdminController extends Controller
                     $button = '<a href="#" class="btn btn-success btn-sm   toggle_block_data"title=" Click to block"  data-status="0"  data-id="' . $data->id . '"><i class="fa fa-check"></i></a>&nbsp;&nbsp;';  
 
                 }
-           
                 $button .= '<a href="#" class="btn btn-info btn-sm  edit_data"title="Edit" data-name= "' . $data->name . '" data-phone="' . $data->phone . '" data-phone2="' . $data->phone2 . '" data-email="' . $data->email . '" data-abbreviation="' . $data->abbreviation . '" data-avatar="' . $data->avatar . '" data-address="' . $data->address . '" data-id="' . $data->id . '"><i class="fa fa-edit"></i></a>&nbsp;&nbsp;';  
-                $button .= '<a href="#" class="btn btn-secondary btn-sm   view_all_school_users"title=" View School Users"  data-status="0"  data-id="' . $data->id . '"><i class="fa fa-eye"></i></a>&nbsp;&nbsp;';  
+                $button .= '<a href="#" class="btn btn-secondary btn-sm   view_all_school_users"title=" View School Users"  data-status="0"  data-id="' . $data->id . '"><i class="fa fa-eye"></i></a>&nbsp;&nbsp;'; 
+                $button .= '<a href="#" class="btn btn-warning btn-sm   view_all_school_sessions"title=" School Sessions"  data-status="0"  data-id="' . $data->id . '"><i class="fa fa-calendar"></i></a>&nbsp;&nbsp;';   
                 return $button;
         })
         ->addColumn('name', function ($data) {
@@ -232,7 +233,9 @@ class SuperAdminController extends Controller
     }
     public function allSchoolUsers(Request $request)
     {
-    
+        if(!$request->school_id){
+            return view('super-admin.managment.index');
+        }
         $school_id = $request->school_id;
         $school = SchoolInformation::find($request->school_id);
         return view('super-admin.managment.school-users', compact('school_id','school'));
@@ -267,7 +270,13 @@ class SuperAdminController extends Controller
         return DataTables::of($data)
         ->addColumn('action', function ($data) use ( $user_details){
                 
-                $button = '';  
+            if($data->status==0){
+                $button = '<a href="#" class="btn btn-danger btn-sm   toggle_block_data"title=" Click to unblock"  data-status="1"  data-id="' . $data->id . '"><i class="fa fa-times"></i></a>&nbsp;&nbsp;';  
+
+            }else{
+                $button = '<a href="#" class="btn btn-success btn-sm   toggle_block_data"title=" Click to block"  data-status="0"  data-id="' . $data->id . '"><i class="fa fa-check"></i></a>&nbsp;&nbsp;';  
+
+            }
         
                 return $button;
                 
@@ -346,6 +355,84 @@ class SuperAdminController extends Controller
         return response()->json([
             'success' => true,
             'html' => $html,
+        ], 200);
+    }
+    public function changeUserStatus(Request $request)
+    {
+        $user = User::find($request->id);
+        $user->status= $request->status;
+        $user->save();
+        
+        return response()->json([
+            'success' => true,
+        ], 200);
+    }
+    public function allSchoolSessions(Request $request)
+    {
+        if(!$request->school_id){
+            return view('super-admin.managment.index');
+        }
+        $school_id = $request->school_id;
+        $school = SchoolInformation::find($request->school_id);
+        return view('super-admin.managment.school-session', compact('school_id','school'));
+    }
+    public function getSchoolSessions(Request $request)
+    {
+        $data = SchoolSession::where('school_id',$request->school_id)->orderBy('id', 'DESC')->get();
+
+        return DataTables::of($data)
+        ->addColumn('action', function ($data){
+            if($data->status==0){
+                $button = '<a href="#" class="btn btn-danger btn-sm   toggle_block_data"title=" Click to open"  data-status="1"  data-id="' . $data->id . '"><i class="fa fa-times"></i></a>&nbsp;&nbsp;';  
+            }else{
+                $button = '<a href="#" class="btn btn-success btn-sm   toggle_block_data"title=" Click to close"  data-status="0"  data-id="' . $data->id . '"><i class="fa fa-check"></i></a>&nbsp;&nbsp;';  
+            }
+        //  $button .= '<a href="#" class="btn btn-info btn-sm  edit_data"title="Edit" data-name= "' . $data->name . '" data-id="' . $data->id . '"><i class="fa fa-edit"></i></a>&nbsp;&nbsp;';  
+            return $button;
+        })
+        ->addColumn('name', function ($data)  {
+            $name =$data->name;
+            return $name;
+        })
+        ->addColumn('status', function ($data)  {
+            if($data->status==0){
+                return '<a href="#" class="btn btn-danger btn-sm   "title=" Click to open"   >Not active</a>&nbsp;&nbsp;';  
+            }else{
+                return  '<a href="#" class="btn btn-success btn-sm   "title=" Click to close" >Active</a>&nbsp;&nbsp;';  
+            }
+        })
+        ->rawColumns([ 'action','name','status'])
+        ->make(true);
+    }
+    public function addSessions(Request $request)
+    {
+       
+        if($request->status==1){
+            $old_sessions=SchoolSession::where('school_id',$request->school_id)->update(['status'=>0]);
+        }
+        $session = SchoolSession::create(
+        [
+            'name' => $request->name,
+            'status' =>$request->status,
+            'school_id' =>$request->school_id,
+        ]);
+  
+        return response()->json([
+            'success' => true,
+        ], 200);
+    }
+
+    // 
+    public function changeSchoolSession(Request $request)
+    {
+        if($request->status==1){
+            $old_sessions=SchoolSession::where('school_id',$request->school_id)->update(['status'=>0]);
+        }
+        $session=SchoolSession::find($request->id);
+        $session->status=$request->status;
+        $session->save();
+        return response()->json([
+            'success' => true,
         ], 200);
     }
 }

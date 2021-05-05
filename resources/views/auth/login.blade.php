@@ -22,9 +22,6 @@
         
         </div>
         @error('email')
-       <center style="color:red">
-        
-           
             <span class="" role="alert">
                 <strong>{{ $message }}</strong>
             </span>
@@ -35,7 +32,7 @@
             <strong>Password is wrong</strong>
         </span>
        @enderror
-    </center>
+   
        
 
         
@@ -44,6 +41,10 @@
             <button class="login100-form-btn">
                 Login
             </button>
+            <br>
+            <a class="btn btn-link text-danger" href="{{ route('password.request') }}">
+                {{ __('Forgot Your Password?') }}
+            </a>
         </div>
 
     </form>

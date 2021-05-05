@@ -45,13 +45,10 @@
 
 		<!--  Right-sidemenu css -->
 		<link href="{{asset('assets/plugins/sidebar/sidebar.css')}}" rel="stylesheet">
-{{-- datatables --}}
+		{{-- datatables --}}
 		<link href="{{asset('/assets/plugins/datatable/css/dataTables.bootstrap4.min.css')}}" rel="stylesheet">
 	
-		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.14/dist/css/bootstrap-select.min.css">
-		<link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.css" rel="stylesheet">
-	  	<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
-		
+
 		<!-- P-scroll bar css-->
 		<link href="{{asset('assets/plugins/perfect-scrollbar/p-scrollbar.css')}}" rel="stylesheet" />
 
@@ -69,6 +66,14 @@
 
 		<!--- Animations css-->
 		<link href="{{asset('assets/css/animate.css')}}" rel="stylesheet">
+		
+		
+		
+		<link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.css" rel="stylesheet">
+		<link href="{{asset('assets/css/bootstrap-select.min.css')}}" rel="stylesheet">
+		<!-- <link href="{{asset('assets/css/summernote.min.css')}}" rel="stylesheet"> -->
+		<link href="{{asset('assets/css/toastr.min.css')}}" rel="stylesheet">
+
 
 	</head>
 
@@ -343,13 +348,14 @@
 		{{-- axios --}}
 		<script src="{{asset('assets/js/axios.min.js')}}"></script>
 	
-		<script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
-		{{-- <script src="https://unpkg.com/axios/dist/axios.min.js"></script> --}}
+		
 		<script src="{{asset('assets/plugins/datatable/js/jquery.dataTables.min.js')}}"></script>
 		<script src="{{asset('assets/plugins/datatable/js/dataTables.bootstrap4.js')}}"></script>
-		<script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.js"></script>
-		<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
-		<script src="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.14/dist/js/bootstrap-select.min.js"></script>
+
+		<script src="{{asset('assets/js/bootstrap-select.js')}}"></script>
+		<script src="{{asset('assets/js/summernote.js')}}"></script>
+		<script src="{{asset('assets/js/sweetalert.js')}}"></script>
+		<script src="{{asset('assets/js/toastr.js')}}"></script>
 	  <script>
 	$(document).ready(function() {
 		$('.summernote').summernote({

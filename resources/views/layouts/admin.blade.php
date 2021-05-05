@@ -45,7 +45,7 @@
 
 		<!--  Right-sidemenu css -->
 		<link href="{{asset('assets/plugins/sidebar/sidebar.css')}}" rel="stylesheet">
-{{-- datatables --}}
+		{{-- datatables --}}
 		<link href="{{asset('/assets/plugins/datatable/css/dataTables.bootstrap4.min.css')}}" rel="stylesheet">
 	
 		

@@ -148,8 +148,6 @@ $(document).on('click', '.assessments_status', function() {
 
 $(document).on('click', '.assesmentClassStudent', function() {
   var id = $(this).data('id');
-  
- 
   $('.assessment').val(id);
   
   $('#assessment_student').submit();

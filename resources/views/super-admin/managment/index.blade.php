@@ -30,7 +30,7 @@
     <div class="card-header pb-0">
       <div class="d-flex justify-content-between">
         <h4 class="card-title ">Add a School </h4>
-        <i class="mdi "><span class="float-right" > 	&nbsp;<button type="button" class="btn btn-danger  viewDeleted" >Deleted students</button></span><span class="float-right" ><button type="button" class="btn btn-secondary" data-toggle="modal" data-target=".addSchoolModel">Add a student</button></span></i>
+        <i class="mdi "><span class="float-right" ><button type="button" class="btn btn-secondary" data-toggle="modal" data-target=".addSchoolModel">Add a school</button></span></i>
       </div>
     </div>
     <div class="card-body">
@@ -115,7 +115,7 @@
             <div class="form-group col">
               <label class="bmd-label-floating">Specialities</label>
               <textarea  class=" summernote" name="school_details"
-              id="subject_specialities"  ></textarea>
+              id="school_details"  ></textarea>
             </div>
           </div>
 
@@ -217,7 +217,10 @@
   @csrf
   <input id="school_id" class="school_id" name ="school_id" type="hidden" value="">
 </form >
-
+<form id="all_school_sessions" method="post" action="view-all-school-sessions">
+  @csrf
+  <input id="school_id" class="school_id" name ="school_id" type="hidden" value="">
+</form >
 
 @push('javascript')
 <script>
@@ -412,6 +415,16 @@ $(document).on('click', '.addschool', function() {
         $("#abbreviation").focus();
         return;
    }
+   if ($('#school_details').summernote('isEmpty')) {//using id
+    toastr.warning('Warning!', "Please Fill School Details ...", {
+            "positionClass": "toast-bottom-right"
+        });
+        $("#school_details").focus();
+        return;
+  }
+
+
+
     var form = $("#addSchoolForm");
     var formData = new FormData(form[0]);
    // var formData = new FormData();
@@ -665,11 +678,16 @@ $(document).on('click', '.toggle_block_data', function() {
 
 $(document).on('click', '.view_all_school_users', function() {
   var id = $(this).data('id');
-  var class_id = $(this).data('class_id');
   $('.school_id').val(id);
   $('#all_school_users').submit();
 });
+// 
 
+$(document).on('click', '.view_all_school_sessions', function() {
+  var id = $(this).data('id');
+  $('.school_id').val(id);
+  $('#all_school_sessions').submit();
+});
 </script>
 @endpush
 @endsection

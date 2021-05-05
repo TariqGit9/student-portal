@@ -159,7 +159,7 @@ background: url('https://cdn.rawgit.com/DataTables/DataTables/6c7ada53ebc228ea9b
 <script>
 var x= $("#id").val();
 
-$("select option:selected").css('backgroundColor', '#FFFFFF');
+  $("select option:selected").css('backgroundColor', '#FFFFFF');
         var datatable = $('#groupTable').DataTable({
         processing: true,
         serverSide: true,
