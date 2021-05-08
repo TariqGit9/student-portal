@@ -148,10 +148,10 @@ class TeacherController extends Controller
         $students = User::where('role_id',3)->whereHas('student_details' ,function ($q)use ($request){
             $q->where('class_id',$request->class_id);
         })->get(); 
-        
+       
         $subject = Subject::find($request->subject_id);
         $class = Classes::find($request->class_id);
-        $types = ResultType::all();
+        $types = ResultType::where([['school_id', Auth::user()->school->id],['status', 1]])->get();
         if($class !=null && $subject!=null ){
             return view('teacher.insert-students-marks',compact('class','students','subject','types'));
         }else{
@@ -173,7 +173,7 @@ class TeacherController extends Controller
                 'test_date' => $request->date,
                 'description' => $request->description,
                 'status' =>0,
-                'school_session_id'=>Auth::user()->school->school_session,
+                'school_session_id'=>Auth::user()->school->school_session->id,
                 'passing_marks' => $request->passing_marks,
                 'total_marks' => $request->total_marks,
             ]);
@@ -216,7 +216,7 @@ public function classStudentResults(Request $request)
 //getClassAssesments
 public function getClassAssesments(Request $request)
 {
-    $result = StudentAssessment::where([['class_id',$request->class_id],['subject_id',$request->subject_id],['teacher_id',Auth::user()->id],['school_session_id',Auth::user()->school->school_session]])->get(); 
+    $result = StudentAssessment::where([['class_id',$request->class_id],['subject_id',$request->subject_id],['teacher_id',Auth::user()->id],['school_session_id',Auth::user()->school->school_session->id]])->get(); 
    
 
         return DataTables::of($result)
@@ -348,7 +348,6 @@ public function getClassAssesmentsResults(Request $request)
 }
 public function editMarks(Request $request)
 {
-    
     $data = StudentMarks::find($request->edit_id);
     $data->obtained_marks = $request->marks;
     $data->save();

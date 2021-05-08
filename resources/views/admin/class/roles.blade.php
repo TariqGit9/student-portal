@@ -1,3 +1,4 @@
+
 @extends('layouts.admin')
 @push('styles')
 @endpush
@@ -6,7 +7,7 @@
 <div class="breadcrumb-header justify-content-between">
   <div class="my-auto">
     <div class="d-flex">
-      <h4 class="content-title mb-0 my-auto">Grades</h4><span class="text-muted mt-1 tx-13 ml-2 mb-0"></span>
+      <h4 class="content-title mb-0 my-auto">Result Types</h4><span class="text-muted mt-1 tx-13 ml-2 mb-0"></span>
     </div>
   </div>
 </div>
@@ -14,13 +15,13 @@
   <div class="card">
     <div class="card-header pb-0">
       <div class="d-flex justify-content-between">
-        <h4 class="card-title ">Add a Grade </h4>
-        <i class="mdi "><span class="float-right" ><button type="button" class="btn btn-secondary" data-toggle="modal" data-target=".addStudentModel">Add a Grade</button></span></i>
+        <h4 class="card-title ">Add a Result Type </h4>
+        <i class="mdi "><span class="float-right" ><button type="button" class="btn btn-secondary" data-toggle="modal" data-target=".addStudentModel">Add a Result Type</button></span></i>
       </div>
     </div>
     <div class="card-body">
       <div class="table-responsive">
-        <table class="table datatable" id="groupTable" width="100%" cellspacing="0">
+        <table class="table datatable" id="table-view" width="100%" cellspacing="0">
           <tbody>  
               <thead class=" text-primary" >
                   <tr>
@@ -34,55 +35,55 @@
     </div>
   </div>
 </div>
-  <div class="modal fade addStudentModel" id="addGrade" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal fade addStudentModel" id="addData" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-md" role="document">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title" id="exampleModalLabel">Add a Grade </h5>
+          <h5 class="modal-title" id="exampleModalLabel">Add a Result Type </h5>
           <button type="button" class="close" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">&times;</span>
           </button>
         </div>
         <div class="modal-body">
-            <form id="addGradeForm">
+            <form id="addDataForm">
                 <div class="form-group ">
-                  <label for="bmd-label-floating form-required">Grade</label>
+                  <label for="bmd-label-floating form-required">Result Type</label>
                   <input type="text" class="form-control" id="name" name="name" aria-describedby="emailHelp">
                 </div>   
                
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-          <button type="button" class="btn btn-primary addGrade">Save changes</button>
+          <button type="button" class="btn btn-primary addData">Save changes</button>
         </form>
         </div>
       </div>
     </div>
   </div>
 
-  <div class="modal fade addStudentModel" id="editGradeModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal fade addStudentModel" id="editDataModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-md" role="document">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title" id="exampleModalLabel">Edit a Grade </h5>
+          <h5 class="modal-title" id="exampleModalLabel">Edit Result type </h5>
           <button type="button" class="close" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">&times;</span>
           </button>
         </div>
         <div class="modal-body">
-            <form id="editGradeForm">
+            <form id="editDataForm">
                 <div class="form-group ">
 
                   <input type="hidden" class="form-control" id="edit_id" name="edit_id" >
                
-                  <label for="bmd-label-floating form-required">Grade</label>
+                  <label for="bmd-label-floating form-required">Result type</label>
                   <input type="text" class="form-control" id="edit_name" name="edit_name" >
                 </div>   
                
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-          <button type="button" class="btn btn-primary editGradechanges">Save changes</button>
+          <button type="button" class="btn btn-primary editDatachanges">Save changes</button>
         </form>
         </div>
       </div>
@@ -92,11 +93,11 @@
 
 @push('javascript')
 <script>
-        var datatable = $('#groupTable').DataTable({
+        var datatable = $('#table-view').DataTable({
         processing: true,
         serverSide: true,
         ajax: {
-            url: "{{route('get-grades')}}",
+            url: "{{route('get-result-types')}}",
         },
         columns: [
       
@@ -115,21 +116,21 @@
 
 
 
-$(document).on('click', '.addGrade', function() {
+$(document).on('click', '.addData', function() {
    
    if($("#name").val() == ""){
-    toastr.warning('Warning!', "Please Fill Grade Name...", {
+    toastr.warning('Warning!', "Please Fill Result Type Name...", {
             "positionClass": "toast-bottom-right"
         });
         return;
    }
-    axios.post("{{route('add-grade')}}",
-        $('#addGradeForm').serialize()
+    axios.post("{{route('add-result-type')}}",
+        $('#addDataForm').serialize()
     ).then(function(response) {
   
-    $('#addGrade').modal('hide');
+    $('#addData').modal('hide');
    
-        toastr.success('Success!', 'Grade added Successfully',{
+        toastr.success('Success!', 'Result Type added Successfully',{
                 "positionClass": "toast-bottom-right"
             })
         
@@ -140,35 +141,8 @@ $(document).on('click', '.addGrade', function() {
 
 });
 
-$(document).on('click', '.deleteGrade', function() {
-    var id = $(this).data('id');
-    Swal.fire({
-        title: 'Are you sure?',
-        // text: "Are you sure!",
-        icon: 'warning',
-        showCancelButton: true,
-        confirmButtonColor: '#ca0b00',
-        // cancelButtonColor: '#d33',
-        confirmButtonText: 'Delete!',
-        reverseButtons: true
-    }).then((result) => {
-        if (result.isConfirmed) {
-            axios.post("{{route('del-grade')}}", {
-                id: id
-            }).then(function(response) {
-              toastr.success('Success!', 'Grade Deleted Successfully',{
-                "positionClass": "toast-bottom-right"
-            })
-              datatable.draw();
-             
-                //   
-            }).catch(function(error) {})
 
-        }
-    });
-
-});
-$(document).on('click', '.editGrade', function() {
+$(document).on('click', '.editData', function() {
 
     var edit_id = $(this).data('id');
     var edit_name = $(this).data('name');
@@ -179,21 +153,21 @@ $(document).on('click', '.editGrade', function() {
 
 });
 
-$(document).on('click', '.editGradechanges', function() {
+$(document).on('click', '.editDatachanges', function() {
    
    if($("#edit_name").val() == ""){
-    toastr.warning('Warning!', "Please Fill Grade Name...", {
+    toastr.warning('Warning!', "Please Fill Result Type Name...", {
             "positionClass": "toast-bottom-right"
         });
         return;
    }
-    axios.post("{{route('edit-grade')}}",
-        $('#editGradeForm').serialize()
+    axios.post("{{route('edit-result-type')}}",
+        $('#editDataForm').serialize()
     ).then(function(response) {
   
-    $('#editGradeModal').modal('hide');
+    $('#editDataModal').modal('hide');
    
-        toastr.success('Success!', 'Grade Updated Successfully',{
+        toastr.success('Success!', 'Result Type Updated Successfully',{
                 "positionClass": "toast-bottom-right"
             })
         
@@ -204,7 +178,43 @@ $(document).on('click', '.editGradechanges', function() {
 
 });
 
+$(document).on('click', '.change_status', function() {
+  var status = $(this).data('status');
+  var id = $(this).data('id');
+  if(status==0){
+      var message="Hide Result Type from Teachers! ";
+      var button='Hide';
+      var color='#ca0b00';
+  }else{
+      var message="Show Result Type to Teachers! ";
+      var button='Publish';
+      var color='#4BB543';
+  }
+  Swal.fire({
+        title: 'Are you Sure ?',
+        text: message,
+        icon: 'info',
+        showCancelButton: true,
+        confirmButtonColor: color,
+        confirmButtonText: button,
+        reverseButtons: true
+    }).then((result) => {
+        if (result.isConfirmed) {
+            axios.post("{{route('change-result-type-status')}}", {
+              id: id , status: status
+            }).then(function(response) {
+              toastr.success('Success!', 'Status updated Successfully',{
+                "positionClass": "toast-bottom-right"
+            })
+              datatable.draw();
+             
+                //   
+            }).catch(function(error) {})
 
+        }
+    });
+  
+});
 </script>
 @endpush
 @endsection

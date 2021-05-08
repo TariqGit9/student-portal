@@ -10,6 +10,7 @@ use App\Models\UserDetails\TeacherDetails;
 use App\Models\UserDetails\StudentDetails;
 use App\Http\Controllers\Controller;
 use App\Models\TeacherMailsOfStudent;
+use App\Models\ResultType;
 //Mail
 use App\Mail\RegisterTeacher;
 use Mail;
@@ -18,6 +19,7 @@ use Illuminate\Http\Request;
 //files Images
 use Intervention\Image\Facades\Image;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Hash;
 use File;
 use Auth;
 //datatables
@@ -43,7 +45,6 @@ class AdminController extends Controller
                 'name' => $request->name,
                 'grade_id' => $request->grade,
                 'school_id' => Auth::user()->school_id,
-                
             ],
             [
                 'name' => $request->name,
@@ -722,7 +723,7 @@ class AdminController extends Controller
                 // $button = '<a href="#" class="btn btn-info btn-sm  editGrade "title="edit" data-id=' . $grades->id . '><i class="fa fa-edit"></i></a>&nbsp;&nbsp;';  
                 $button = '<a href="#" class="btn btn-info btn-sm  editStudent " data-toggle="modal" data-target="#editStudentModal" data-email="' . $data->email . '"  data-id="' . $data->id . '" data-name="' . $data->name . '"data-avatar="' . $data->avatar . '"data-user_name="' . $data->user_name . '"data-phone="' . $data->student_details->phone .'"data-ephone="' . $data->student_details->emergency_phone .'"data-class="' . $data->student_details->class_id . '"data-address_main="' . $data->student_details->address_line_main .'"data-address_sec="' . $data->student_details->address_line_secondary .'"><i class="fa fa-edit"></i></a>&nbsp;&nbsp;';  
                 $button .= '<a href="#" class="btn btn-danger btn-sm   deleteStudent"title="Delete" data-id=' . $data->id . '><i class="fa fa-trash"></i></a>&nbsp;&nbsp;';  
-        
+                $button .= '<a href="#" class="btn btn-success btn-sm   changeStudentPassword"title="Change Password" data-id=' . $data->id . '" data-name="' . $data->user_name . '"><i class="fa fa-key"></i></a>&nbsp;&nbsp;';  
                 return $button;
                 
         })
@@ -1101,4 +1102,67 @@ public function changeComplainStatus(Request $request)
 
 }
 
+
+public function changeStudentPassword(Request $request)
+{
+    $data = User::find( $request->id );
+  
+    $data->password= Hash::make($request->password);
+    $data->save();
+    return response()->json([
+        'success' => true,
+    ], 200);
+
+}
+
+public function getResultTypes(Request $request)
+{
+    return view('admin.class.roles');
+}
+
+public function getSchoolResultTypes()
+{
+    
+    $data = ResultType::where('school_id',Auth::user()->school_id)->get();
+    return DataTables::of($data)
+    ->addColumn('action', function ($data) {
+            
+            // $button = '<a href="#" class="btn btn-info btn-sm  editGrade "title="edit" data-id=' . $data->id . '><i class="fa fa-edit"></i></a>&nbsp;&nbsp;';  
+            $button = '<a href="#" class="btn btn-info btn-sm  editData " data-toggle="modal" data-target="#editDataModal"   data-id="' . $data->id . '" data-name="' . $data->name . '"><i class="fa fa-edit"></i></a>&nbsp;&nbsp;';  
+            if($data->status==1){
+                $button.= '<a  class="btn btn-success  btn-sm change_status "title="Click to Hide" data-status ="0" data-id ="'. $data->id.'" style="color:white;"><i class="fa fa-eye"></i></a>&nbsp;&nbsp;';  
+
+            }else{
+                $button.= '<a  class="btn btn-danger  btn-sm change_status "title="Click to show" data-status ="1" data-id ="'. $data->id.'" style="color:white;"><i class="fa fa-eye-slash"></i></a>&nbsp;&nbsp;';  
+            }
+    
+            return $button;
+            
+    })
+    ->rawColumns(['action'])
+    ->make(true);
+}
+
+public function addResultType(Request $request)
+{
+    $user = ResultType::create(
+            [
+            'name' => $request->name,
+            'status' => 1,
+            'school_id' => Auth::user()->school_id,
+            'ip_address' => $request->ip(),
+            ]);
+}
+public function editResultType(Request $request)
+{
+    $data = ResultType::find( $request->edit_id);
+    $data->name= $request->edit_name;
+    $data->save();
+}
+public function changeResultTypeStatus(Request $request)
+{
+    $data = ResultType::find( $request->id);
+    $data->status= $request->status;
+    $data->save();
+}
 }

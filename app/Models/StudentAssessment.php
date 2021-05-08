@@ -35,4 +35,8 @@ class StudentAssessment extends Model
     {
         return $this->belongsTo('App\Models\ResultType');
     }
+    public function student_obt_marks()
+    {
+        return $this->hasOne('App\Models\StudentMarks', 'assesment_id', 'id')->first();
+    }
 }

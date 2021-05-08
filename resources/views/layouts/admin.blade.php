@@ -146,7 +146,13 @@
 								<li><a class="slide-item" href="chart-peity.html">Chart-peity</a></li>
 							</ul> --}}
 						</li>
+						<li class="slide">
+							<a class="side-menu__item"   href="{{route('marks-types')}}"><svg xmlns="http://www.w3.org/2000/svg" class="side-menu__icon" viewBox="0 0 24 24" ><path d="M0 0h24v24H0V0z" fill="none"/><path d="M5 5h15v3H5zm12 5h3v9h-3zm-7 0h5v9h-5zm-5 0h3v9H5z" opacity=".3"/><path d="M20 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h15c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM8 19H5v-9h3v9zm7 0h-5v-9h5v9zm5 0h-3v-9h3v9zm0-11H5V5h15v3z"/></svg><span class="side-menu__label">Marks Roles</span></a>
 						
+						</li>
+
+
+
 						<li class="side-item side-item-category">Complaints</li>
 						<li class="slide">
 							<a class="side-menu__item" data-toggle="slide" href="#"><svg xmlns="http://www.w3.org/2000/svg" class="side-menu__icon" viewBox="0 0 24 24" ><path d="M0 0h24v24H0V0z" fill="none"/><path d="M15 11V4H4v8.17l.59-.58.58-.59H6z" opacity=".3"/><path d="M21 6h-2v9H6v2c0 .55.45 1 1 1h11l4 4V7c0-.55-.45-1-1-1zm-5 7c.55 0 1-.45 1-1V3c0-.55-.45-1-1-1H3c-.55 0-1 .45-1 1v14l4-4h10zM4.59 11.59l-.59.58V4h11v7H5.17l-.58.59z"/></svg><span class="side-menu__label">Complaints</span> <i class="angle fe fe-chevron-down"></i></a>
@@ -308,15 +314,16 @@
 												</div>
 											</div>
 										</div>
-				
+										<a class="dropdown-item" href="{{ route('logout') }}"><i class="bx  bx-cog"></i>Edit profile</a>
 										<a class="dropdown-item" href="{{ route('logout') }}"
-										onclick="event.preventDefault();
-													  document.getElementById('logout-form').submit();">Logout</a>
+											onclick="event.preventDefault();document.getElementById('logout-form').submit();">
+											<i class="bx bx-log-out"></i>Logout
+										</a>
 									</div>
 								</div>
 								<form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
 									@csrf
-									</form>
+								</form>
 							
 							</div>
 						</div>

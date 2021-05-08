@@ -76,20 +76,23 @@ Auth::routes(['register' => false]);
         Route::post('/get-class-students', 'AdminController@getClassStudents')->name('get-class-students');
         //assignteacherToSubjectOfClass
         Route::post('assign-teacher-to-subject', 'AdminController@assignTeacherToSubject')->name('assign-teacher-to-subject');
-       
+        Route::post('change-student-password', 'AdminController@changeStudentPassword')->name('change-student-password');
+
         //Teacher Complaints of Students
         Route::get('teacher-complaints', 'AdminController@teacherComplaintsOfStudents')->name('teacher-complaints');
         Route::get('/get-teacher-complaints', 'AdminController@getTeacherComplaints')->name('get-teacher-complaints');
         
         Route::post('assign-teacher-to-subject', 'AdminController@assignTeacherToSubject')->name('assign-teacher-to-subject');
         Route::post('view-complain', 'AdminController@getComplainData')->name('view-complain');
+        Route::any('marks-types', 'AdminController@getResultTypes')->name('marks-types');
+        Route::get('get-result-types', 'AdminController@getSchoolResultTypes')->name('get-result-types');
 
+        Route::post('add-result-type', 'AdminController@addResultType')->name('add-result-type');
+        Route::post('edit-result-type', 'AdminController@editResultType')->name('edit-result-type');
+        Route::post('change-result-type-status', 'AdminController@changeResultTypeStatus')->name('change-result-type-status');    
     });
 
-    Route::group(['namespace' => 'Student', 'prefix' => 'student','middleware' => 'checkStudent'], function () {
-        Route::get('/', 'StudentController@student')->name('home');
-        
-    });
+
     Route::group(['namespace' => 'SuperAdmin', 'prefix' => 'super-admin','middleware' => 'checkSuperAdmin'], function () {
         Route::get('/', 'SuperAdminController@superAdmin')->name('home');
         Route::get('/all-schools', 'SuperAdminController@allSchools')->name('all-schools');
@@ -104,7 +107,7 @@ Auth::routes(['register' => false]);
         Route::any('get-user-details', 'SuperAdminController@getUserDetails')->name('get-user-details');
         Route::any('view-all-school-sessions', 'SuperAdminController@allSchoolSessions')->name('view-all-school-sessions');
         Route::post('get-school-session', 'SuperAdminController@getSchoolSessions')->name('get-school-session');
-
+        // 
 
         Route::post('add-session', 'SuperAdminController@addSessions')->name('add-session');
         Route::post('change-school-session', 'SuperAdminController@changeSchoolSession')->name('change-school-session');
@@ -131,6 +134,12 @@ Auth::routes(['register' => false]);
         Route::post('report-student-to-admin', 'TeacherController@reportStudentToAdmin')->name('report-student-to-admin');
         Route::post('edit-marks', 'TeacherController@editMarks')->name('edit-marks');
     
+    });
+
+    Route::group(['namespace' => 'Student', 'prefix' => 'student','middleware' => 'checkStudent'], function () {
+        Route::get('/', 'StudentController@student')->name('home');
+        Route::get('my-marks', 'StudentController@studentMarks')->name('my-marks');
+        Route::post('get-student-marks', 'StudentController@getStudentMarks')->name('get-student-marks');
     });
 });
 // Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');

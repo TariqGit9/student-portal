@@ -10,7 +10,7 @@ class Classes extends Model
     use HasFactory;
     protected $guarded = [];
     use SoftDeletes;
-
+//These Two are Same you know why cuz i am a Shit Coder...
     public function grade()
     {
         return $this->belongsTo('App\Models\ClassGrade');
@@ -19,4 +19,5 @@ class Classes extends Model
     {
         return $this->belongsTo('App\Models\ClassGrade', 'grade_id', 'id');
     }
+//These Two are Same you know why cuz i am a Shit Coder...
 }

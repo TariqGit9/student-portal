@@ -7,5 +7,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class ResultType extends Model
 {
+    
     use HasFactory;
+    protected $guarded = [];
+
 }

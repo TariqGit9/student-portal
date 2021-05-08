@@ -272,9 +272,11 @@
 											</div>
 										</div>
 				
+										<a class="dropdown-item" href="{{ route('logout') }}"><i class="bx  bx-cog"></i>Edit profile</a>
 										<a class="dropdown-item" href="{{ route('logout') }}"
-										onclick="event.preventDefault();
-													  document.getElementById('logout-form').submit();">Logout</a>
+											onclick="event.preventDefault();document.getElementById('logout-form').submit();">
+											<i class="bx bx-log-out"></i>Logout
+										</a>
 									</div>
 								</div>
 								<form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
