@@ -7,11 +7,10 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 
-class ReportStudent extends Mailable
+class ReportTeacher extends Mailable
 {
     use Queueable, SerializesModels;
     
-     
     public $student;
     public $teacher;
     public $data;
@@ -35,7 +34,7 @@ class ReportStudent extends Mailable
      */
     public function build()
     {
-        return $this->subject('Student Report')->view('email.teacher.report-student');
+        return $this->subject('Teacher Report')->view('email.student.report-teacher');
 
     }
 }

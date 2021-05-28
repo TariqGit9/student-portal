@@ -6,7 +6,7 @@
 <div class="breadcrumb-header justify-content-between">
   <div class="my-auto">
     <div class="d-flex">
-      <h4 class="content-title mb-0 my-auto">Teacher Complaints</h4><span class="text-muted mt-1 tx-13 ml-2 mb-0"></span>
+      <h4 class="content-title mb-0 my-auto">Student Complaints</h4><span class="text-muted mt-1 tx-13 ml-2 mb-0"></span>
     </div>
   </div>
 </div>
@@ -41,7 +41,7 @@
   <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalScrollableTitle">Teacher Complain</h5>
+        <h5 class="modal-title" id="exampleModalScrollableTitle">Student Complain </h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
@@ -83,7 +83,7 @@
         processing: true,
         serverSide: true,
         ajax: {
-            url: "{{route('get-teacher-complaints')}}",
+            url: "{{route('get-students-complaints')}}",
         },
         columns: [
       
@@ -119,7 +119,7 @@
 $(document).on('click', '.openComplaint', function() {
     var id = $(this).data('id');
     $('#please_wait').modal('show');
-    axios.post("{{route('view-complain')}}", {
+    axios.post("{{route('view-complain-student')}}", {
         id: id
     }).then(function(response) {
         $('#please_wait').modal('hide');
@@ -153,10 +153,11 @@ $(document).on('click', '.openComplaint', function() {
 
 $(document).on('click', '.change-complain-status', function() {
 
-var id = $(this).data('id');
-var status =$(this).data('status');
-changeStatus(id,status);
+    var id = $(this).data('id');
+    var status =$(this).data('status');
+    changeStatus(id,status);
 });
+
 $(document).on('click', '#change-status', function() {
     var id = $('#report_id').val();
     var status = $('#status_rep').val();
@@ -164,14 +165,14 @@ $(document).on('click', '#change-status', function() {
 });
 
 function changeStatus(id,status){
+
   $('#please_wait').modal('show');
-    axios.post("{{route('change-complain-status-teacher')}}", {
+    axios.post("{{route('change-complain-status-student')}}", {
         id: id , status : status
     }).then(function(response) {
       $('#please_wait').modal('hide');
       $('#complain_modal').modal('hide');
       datatable.draw();
-
     })
 }
 </script>

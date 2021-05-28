@@ -23,10 +23,16 @@
                         <th scope="row">{{++$number}}</th>
                         <td>{{$marks->description}}</td>
                         <td>{{$marks->test_date}}</td>
-                        @if($marks->student_marks[0])
-                            <td>{{$marks->student_marks[0]->obtained_marks}}</td>
-                        @else
-                            <td>0</td>
+                        @php 
+                            $final_result = 0;
+                            if($marks->student_marks){
+                                $final_result =$marks->student_marks->where('student_id',$user_id)->first();
+                            }
+                        @endphp
+
+                        @if($marks->student_marks)
+                            <td>{{$final_result->obtained_marks}}</td>
+                       
                         @endif
                         <td>{{$marks->total_marks}}</td>
                   

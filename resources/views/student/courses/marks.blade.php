@@ -1,4 +1,4 @@
-@extends('layouts.student')
+@extends('layouts.'.$user)
 @push('styles')
 @endpush
 @section('content')
@@ -36,6 +36,8 @@
     </div>
 </div>
 @push('javascript')
+<!-- <script src="{{asset('assets/project-js/student/student-marks.js')}}"></script> -->
+
 <script>
 $( document ).ready(function() {
 	var id = $('#subject').val();
@@ -49,8 +51,16 @@ $(document).on('change', '#subject', function() {
 
 function getData(id){
 	// $('#please_wait').modal('show');
-	axios.post("{{route('get-student-marks')}}", {
-			id: id 
+  @if(Auth::user()->role_id==3)
+	var url = "{{route('get-student-marks')}}";
+ 
+  var student_id = null;
+	@elseif(Auth::user()->role_id==2)
+	var url = "{{route('display-student-marks')}}";
+  var student_id = "{{$student->id}}";
+	@endif
+	axios.post(url, {
+			id: id ,student_id: student_id 
 		}).then(function(response) {
 			// $('#please_wait').modal('hide');
 			$('#table_data').html(response.data.success);

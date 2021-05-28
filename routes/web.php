@@ -20,6 +20,9 @@ Auth::routes();
 Auth::routes(['register' => false]);
 
     Route::group(['middleware' => 'auth'], function () {
+
+        Route::post('change-user-password', 'HomeController@changeUserPassword')->name('change-user-password');
+
         Route::group(['namespace' => 'Admin', 'prefix' => 'admin','middleware' => 'checkAdmin'], function () {
         Route::get('/', 'AdminController@admin')->name('home');
         Route::get('classes', 'AdminController@classes')->name('classes');
@@ -83,7 +86,15 @@ Auth::routes(['register' => false]);
         Route::get('/get-teacher-complaints', 'AdminController@getTeacherComplaints')->name('get-teacher-complaints');
         
         Route::post('assign-teacher-to-subject', 'AdminController@assignTeacherToSubject')->name('assign-teacher-to-subject');
-        Route::post('view-complain', 'AdminController@getComplainData')->name('view-complain');
+        Route::post('view-complain', 'AdminController@getTeacherComplainData')->name('view-complain');
+        Route::post('change-complain-status-teacher', 'AdminController@changeComplainStatusTeacher')->name('change-complain-status-teacher');
+        
+        
+        Route::get('students-complaints', 'AdminController@StudentsComplaintsOfTeacher')->name('students-complaints');
+        Route::get('/get-students-complaints', 'AdminController@getStudentsComplaints')->name('get-students-complaints');
+        Route::post('view-complain-student', 'AdminController@getStudentComplainData')->name('view-complain-student');
+        Route::post('change-complain-status-student', 'AdminController@changeComplainStatusStudent')->name('change-complain-status-student');
+       
         Route::any('marks-types', 'AdminController@getResultTypes')->name('marks-types');
         Route::get('get-result-types', 'AdminController@getSchoolResultTypes')->name('get-result-types');
 
@@ -132,14 +143,24 @@ Auth::routes(['register' => false]);
 
 
         Route::post('report-student-to-admin', 'TeacherController@reportStudentToAdmin')->name('report-student-to-admin');
+        Route::post('student-marks', 'TeacherController@studentMarks')->name('student-marks');
+        Route::post('display-student-marks', 'TeacherController@getStudentMarks')->name('display-student-marks');
+
         Route::post('edit-marks', 'TeacherController@editMarks')->name('edit-marks');
-    
     });
 
     Route::group(['namespace' => 'Student', 'prefix' => 'student','middleware' => 'checkStudent'], function () {
         Route::get('/', 'StudentController@student')->name('home');
+      
+        Route::get('show-user-detail/{{id}}', 'StudentController@student')->name('show-user-detail');
+        Route::get('get-class-teacher-student', 'StudentController@getClassTeachers')->name('get-class-teacher-student');
         Route::get('my-marks', 'StudentController@studentMarks')->name('my-marks');
+        Route::get('teachers', 'StudentController@studentTeachers')->name('teachers');
         Route::post('get-student-marks', 'StudentController@getStudentMarks')->name('get-student-marks');
+
+        Route::post('report-teacher-to-admin', 'StudentController@reportTeacherToAdmin')->name('report-teacher-to-admin');
+
+
     });
 });
 // Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');

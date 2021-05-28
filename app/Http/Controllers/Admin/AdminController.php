@@ -11,7 +11,9 @@ use App\Models\UserDetails\StudentDetails;
 use App\Http\Controllers\Controller;
 use App\Models\TeacherMailsOfStudent;
 use App\Models\ResultType;
+use App\Models\StudentMailsOfTeacher;
 //Mail
+
 use App\Mail\RegisterTeacher;
 use Mail;
 //Request
@@ -1038,8 +1040,13 @@ class AdminController extends Controller
         $data = TeacherMailsOfStudent::where('school_id' , Auth::user()->school_id)->get();
         return DataTables::of($data)
         ->addColumn('action', function ($data) {
-            $button = '<a href="#" class="btn btn-info btn-sm openComplaint " data-toggle="modal" data-target="#editTeacherModal"   data-id="' . $data->id . '"><i class="fa fa-eye"></i></a>&nbsp;&nbsp;';  
-            // $button .= '<a href="#" class="btn btn-danger btn-sm   deleteTeacher"title="Delete" data-id=' . $data->id . '><i class="fa fa-trash"></i></a>&nbsp;&nbsp;';  
+            $button = '<a href="#" class="btn btn-info btn-sm openComplaint " data-toggle="modal" data-target="#editTeacherModal"   data-id="' . $data->id . '"><i class="fa fa-file"></i></a>&nbsp;&nbsp;';  
+            if($data->status==1){
+                $button.= '<a  class="btn btn-success  btn-sm change-complain-status "title="Click to Mark as unseen" data-status ="0" data-id ="'. $data->id.'" style="color:white;"><i class="fa fa-eye"></i></a>&nbsp;&nbsp;';  
+    
+            }else{
+                $button.= '<a  class="btn btn-danger  btn-sm change-complain-status "title="Click to Mark as seen" data-status ="1" data-id ="'. $data->id.'" style="color:white;"><i class="fa fa-eye-slash"></i></a>&nbsp;&nbsp;';  
+            }
             return $button;
         })
         ->addColumn('student', function ($data) {
@@ -1064,7 +1071,7 @@ class AdminController extends Controller
             ->rawColumns(['action','teacher','student','class'])
             ->make(true);
 }
-public function getComplainData(Request $request)
+public function getTeacherComplainData(Request $request)
 {
     $data = TeacherMailsOfStudent::find( $request->id );
     if($data->title===null){
@@ -1090,11 +1097,11 @@ public function getComplainStatus($data){
     return $status;
 }
 
-public function changeComplainStatus(Request $request)
+public function changeComplainStatusTeacher(Request $request)
 {
     $data = TeacherMailsOfStudent::find( $request->id );
-    $student->status= $request->status;
-    $student->save();
+    $data->status= $request->status;
+    $data->save();
     return response()->json([
         'success' => true,
         
@@ -1165,4 +1172,94 @@ public function changeResultTypeStatus(Request $request)
     $data->status= $request->status;
     $data->save();
 }
+
+
+public function getStudentComplainData(Request $request)
+{
+    $data = StudentMailsOfTeacher::find( $request->id );
+    if($data->title===null){
+        $title='N/A';
+    }else{
+        $title=$data->title;
+    }
+    return response()->json([
+        'student' => $data->student_details->name.'( '.$data->student_details->student_details->reg_no.' )',
+        'teacher' => $data->teacher_details->name,
+        'title' => $title,
+        'description' => $data->description,
+        'complain_id' =>$request->id  ,
+        'status' =>$this->getComplainStatus($data)  ,
+    ], 200);
+}
+
+
+public function StudentsComplaintsOfTeacher()
+{
+    return view('admin.student.complaints');
+}
+public function getStudentsComplaints(Request $request)
+{
+            
+    $data = StudentMailsOfTeacher::where('school_id' , Auth::user()->school_id)->get();
+    return DataTables::of($data)
+    ->addColumn('action', function ($data) {
+        $button = '<a href="#" class="btn btn-info btn-sm openComplaint " data-toggle="modal" data-target="#editTeacherModal"   data-id="' . $data->id . '"><i class="fa fa-file"></i></a>&nbsp;&nbsp;';  
+        if($data->status==1){
+            $button.= '<a  class="btn btn-success  btn-sm change-complain-status "title="Click to Mark as unseen" data-status ="0" data-id ="'. $data->id.'" style="color:white;"><i class="fa fa-eye"></i></a>&nbsp;&nbsp;';  
+
+        }else{
+            $button.= '<a  class="btn btn-danger  btn-sm change-complain-status "title="Click to Mark as seen" data-status ="1" data-id ="'. $data->id.'" style="color:white;"><i class="fa fa-eye-slash"></i></a>&nbsp;&nbsp;';  
+        }
+        return $button;
+    })
+    ->addColumn('student', function ($data) {
+        $student = $data->student_details;
+        return  $student->name.' ( '.$student->student_details->reg_no.' ) ';
+    })
+    ->addColumn('teacher', function ($data) {
+    
+        $teacher = $data->teacher_details->name;
+        return $teacher ;
+    })
+    ->addColumn('class', function ($data) {
+       
+        $class = $data->class_details->name;
+        return $class ;
+    })
+    ->addColumn('title', function ($data) {
+     
+        $title = $data->title;
+        return $title ;
+    })
+        ->rawColumns(['action','teacher','student','class'])
+        ->make(true);
+}
+public function getStudentsComplainData(Request $request)
+{
+$data = StudentMailsOfTeacher::find( $request->id );
+if($data->title===null){
+    $title='N/A';
+}else{
+    $title=$data->title;
+}
+return response()->json([
+    'student' => $data->student_details->name.'( '.$data->student_details->student_details->reg_no.' )',
+    'teacher' => $data->teacher_details->name,
+    'title' => $title,
+    'description' => $data->description,
+    'complain_id' =>$request->id  ,
+    'status' =>$this->getComplainStatus($data)  ,
+], 200);
+}
+public function changeComplainStatusStudent(Request $request)
+{
+    $data = StudentMailsOfTeacher::find( $request->id );
+    $data->status= $request->status;
+    $data->save();
+    return response()->json([
+        'success' => true,
+    ], 200);
+
+}
+
 }

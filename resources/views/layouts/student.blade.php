@@ -271,7 +271,7 @@
 											</div>
 										</div>
 				
-										<a class="dropdown-item" href="{{ route('logout') }}"><i class="bx  bx-cog"></i>Edit profile</a>
+										<a class="dropdown-item" href="#" data-toggle="modal" data-target="#UserPasswordModal" ><i class="bx  bx-cog"></i>Edit profile</a>
 										<a class="dropdown-item" href="{{ route('logout') }}"
 											onclick="event.preventDefault();document.getElementById('logout-form').submit();">
 											<i class="bx bx-log-out"></i>Logout
@@ -310,7 +310,55 @@
 
 		</div>
 		<!-- End Page -->
+		<div class="modal" id="please_wait">
+			<div class="modal-dialog modal-dialog-centered modal-sm" role="document">
+				<div class="modal-content tx-size-sm">
+				<div class="modal-body tx-center pd-y-20 pd-x-20">
+					{{-- <i class="  lh-1 mg-t-20 d-inline-block"></i> --}}
+					<img src="{{asset('assets/img/loader.svg')}}"  width="50" height="50" alt="Please wait">
+					<br>
+					<p class="mg-b-20 mg-x-20 mt-2"> Please Wait</p>
+				</div>
+				</div>
+			</div>
+		</div>
 
+		<div class="modal fade" id="UserPasswordModal" tabindex="-1" role="dialog" aria-labelledby="PasswordModalTitle" aria-hidden="true">
+			<div class="modal-dialog modal-dialog-centered" role="document">
+			  <div class="modal-content">
+				<div class="modal-header">
+				  <h5 class="modal-title" id="exampleModalLongTitle">Change <span id="student_name_pass"></span>'s Password</h5>
+				  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				  </button>
+				</div>
+				<div class="modal-body">
+					<div class="form-group col ">
+						<label class="bmd-label-floating form-required">Current Password </label>
+						<div class="input-group mb-3">
+							<input type="password" class="form-control" id="current_password" name="current_password" placeholder="Password" aria-label="Password" aria-describedby="basic-addon2">
+						</div>
+				  	</div>
+					<div class="form-group col ">
+						<label class="bmd-label-floating form-required">New Password </label>
+						<div class="input-group mb-3">
+							<input type="password" class="form-control" id="new_password" name="new_password" placeholder="Password" aria-label="Password" aria-describedby="basic-addon2">
+						</div>
+				  	</div>
+					<div class="form-group col ">
+						<label class="bmd-label-floating form-required">Confirm New Password </label>
+						<div class="input-group mb-3">
+							<input type="password" class="form-control" id="confirm_new_password" name="confirm_new_password" placeholder="Password" aria-label="Password" aria-describedby="basic-addon2">
+						</div>
+				  	</div>
+				</div>
+				<div class="modal-footer">
+				  <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+				  <button type="button" class="btn btn-primary save_user_password">Save changes</button>
+				</div>
+			  </div>
+			</div>
+		  </div>
 		<!-- Back-to-top -->
 		<a href="#top" id="back-to-top"><i class="las la-angle-double-up"></i></a>
 
@@ -362,15 +410,64 @@
 		<script src="{{asset('assets/js/sweetalert.js')}}"></script>
 		<script src="{{asset('assets/js/toastr.js')}}"></script>
 	  <script>
-	$(document).ready(function() {
-		$('.summernote').summernote({
-		height: 200,
-		codemirror: { // codemirror options
-			theme: 'monokai'
-		}
+		$(document).ready(function() {
+			$('.summernote').summernote({
+			height: 200,
+			codemirror: { // codemirror options
+				theme: 'monokai'
+			}
+			});
 		});
-	});
 	
+		$(document).on('click', '.save_user_password', function() {
+	
+	var current_password=  $('#current_password').val();
+	var new_password=  $('#new_password').val();
+	var confirm_new_password=  $('#confirm_new_password').val();
+	if(! new_password == confirm_new_password){
+		toastr.warning('Warning!', "Password does not match",{
+				"positionClass": "toast-bottom-right"
+		})  
+		return;
+	}
+	var passw=   /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])[0-9a-zA-Z]{8,}$/;
+	if(new_password.match(passw)) 
+	{ 
+	
+	}else{
+		toastr.warning('Warning!', "Password must contain at least one numeric digit and a uppercase character and atleast 8 characters",{
+				"positionClass": "toast-bottom-right"
+		})  
+		return;	
+	}
+
+	if(confirm_new_password != null && confirm_new_password.length >= 8){
+		axios.post("{{route('change-user-password')}}", {
+			current_password: current_password , new_password: new_password,  confirm_new_password: confirm_new_password
+		}).then(function(response) {
+			if(response.data.success==true){
+				toastr.success('Success!', 'Password Updated Successfully',{
+				"positionClass": "toast-bottom-right"
+				})
+			}else{
+				toastr.error('Error!', 'Current Password is Wrong',{
+				"positionClass": "toast-bottom-right"
+				})
+			}
+		$('#UserPasswordModal').modal('hide');
+
+		}); 
+	}else{
+		toastr.warning('Warning!', "Password must have 8 characters",{
+				"positionClass": "toast-bottom-right"
+		})  
+	
+	}
+
+
+});
+
+
 	</script>
 
 

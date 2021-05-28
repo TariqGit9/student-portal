@@ -262,7 +262,34 @@
     </div>
   </div>
 </div>
-
+<div class="modal fade" id="PasswordModal" tabindex="-1" role="dialog" aria-labelledby="PasswordModalTitle" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLongTitle">Change <span id="student_name_pass"></span>'s Password</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+      <div class="form-group col ">
+            <label class="bmd-label-floating form-required">Password </label>
+            <div class="input-group mb-3">
+             <input type="hidden" class="form-control" id="pass_id" name="pass_id">
+              <input type="text" class="form-control" id="editpassword" name="editpassword" placeholder="Password" aria-label="Password" aria-describedby="basic-addon2">
+              <div class="input-group-append">
+                <button class="btn btn-secondary genrate_password" data-type="Edit" type="button">Genrate</button>
+              </div>
+            </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary save_password">Save changes</button>
+      </div>
+    </div>
+  </div>
+</div>
 <input type="hidden" id="id" value="{{$id}}">
 @push('javascript')
 <script>
@@ -720,6 +747,38 @@ $(document).on('click', '.viewDeleted', function() {
   location.href = "{{route('deleted-students')}}";
 });
 
+$(document).on('click', '.changeStudentPassword', function() {
+  var id = $(this).data('id');
+  var name = $(this).data('name');
+
+  $('#pass_id').val(id);
+  $("#student_name_pass").html(name);
+  $('#editpassword').val("");
+  $('#PasswordModal').modal('show');
+});
+
+$(document).on('click', '.save_password', function() {
+  var pass_id=  $('#pass_id').val();
+ var editpassword=  $('#editpassword').val();
+  if(editpassword != null && editpassword.length >= 6){
+    axios.post("{{route('change-student-password')}}", {
+        id: pass_id , password: editpassword,
+    }).then(function(response) {
+      toastr.success('Success!', 'Student Password Updated Successfully',{
+        "positionClass": "toast-bottom-right"
+    })
+    $('#PasswordModal').modal('hide');
+
+    }); 
+  }else{
+    toastr.warning('Warning!', "Password must have 6 characters",{
+              "positionClass": "toast-bottom-right"
+    })  
+  
+  }
+
+
+});
 
 </script>
 @endpush

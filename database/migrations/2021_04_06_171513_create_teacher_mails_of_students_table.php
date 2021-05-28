@@ -22,9 +22,7 @@ class CreateTeacherMailsOfStudentsTable extends Migration
             $table->unsignedBigInteger('teacher_id')->nullable();
             $table->foreign('teacher_id')->references('id')->on('users')->onDelete('cascade');
             
-            $table->unsignedBigInteger('admin_id')->nullable();
-            $table->foreign('admin_id')->references('id')->on('classes')->onDelete('cascade');
-           
+            
             $table->unsignedBigInteger('school_id')->nullable();
 
 

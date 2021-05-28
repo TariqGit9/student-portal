@@ -112,6 +112,12 @@
   </div>
 </div>
 
+<form id="view_student_marks" method="post" action="student-marks">
+  @csrf
+  <input  class="student_id" name ="student_id" type="hidden" value="">
+
+</form >
+
 @push('javascript')
 <script>
         var x= $("#id").val();
@@ -253,7 +259,7 @@ $(document).on('click', '.genrate_password', function() {
 
 
 
-$(document).on('click', '.editStudent', function() {
+$(document).on('click', '.getStudentdetailsReport', function() {
 
 var edit_id = $(this).data('id');
 var edit_name = $(this).data('name');
@@ -273,7 +279,7 @@ $(document).on('click', '.sendreport', function() {
     var form = $("#report_student");
     var formData = new FormData(form[0]);
     if($("#title").val()=='' ){
-      toastr.warning('Warning!', "Please add a subject", {
+      toastr.warning('Warning!', "Please add a title", {
             "positionClass": "toast-bottom-right"
       });
       return;
@@ -346,6 +352,15 @@ $(document).on('click', '.viewDeleted', function() {
 });
 
 
+$(document).on('click', '.viewMarks', function() {
+
+var id = $(this).data('id');
+alert(id);
+$(".student_id").val(id); 
+$('#view_student_marks').submit();
+
+
+});
 </script>
 @endpush
 @endsection

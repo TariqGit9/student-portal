@@ -88,9 +88,9 @@ class TeacherController extends Controller
         return DataTables::of($data)
         ->addColumn('action', function ($data) {
                 
-                $button = '<a href="#" class="btn btn-info btn-sm  editStudent " title="Report to Principle" data-toggle="modal" data-target="#student_report" data-name="' . $data->name . '" data-user_name="' . $data->user_name . '"  data-reg-no="' . $data->student_details->reg_no . '" data-id="' . $data->id . '"><i class="fa fa-envelope"></i></a>&nbsp;&nbsp;';  
-        
-                return $button;
+                $button = '<a href="#" class="btn btn-info btn-sm  getStudentdetailsReport " title="Report to Principle" data-toggle="modal" data-target="#student_report" data-name="' . $data->name . '" data-user_name="' . $data->user_name . '"  data-reg-no="' . $data->student_details->reg_no . '" data-id="' . $data->id . '"><i class="fa fa-envelope"></i></a>&nbsp;&nbsp;';  
+                $button .= '<a href="#" class="btn btn-success btn-sm  viewMarks " title="View Student Marks of all subjects" data-id="' . $data->id . '"><i class="fa fa-eye"></i></a>&nbsp;&nbsp;';  
+                return   $button ;
                 
         })
         ->addColumn('image', function ($data) {
@@ -267,14 +267,16 @@ public function reportStudentToAdmin(Request $request)
    $report=TeacherMailsOfStudent::create([
     'teacher_id' => Auth::user()->id,
     'student_id' => $request->student_id,
+    'school_id' => Auth::user()->school_id,
     'class_id' => $request->class_id,
     'title' => $request->title,
     'description' => $request->description,
 ]);
 
-    
+    $teacher=  Auth::user();
     $student= User::find($request->student_id);
-    Mail::to('m.tariq.sarfraz.007@gmail.com')->send(new ReportStudent($student,$request->description));
+    
+    Mail::to('m.tariq.sarfraz.007@gmail.com')->send(new ReportStudent($student,$teacher,$report));
     return response()->json([
         'success' => true,
         'result' => 'Reported successfully',
@@ -355,6 +357,56 @@ public function editMarks(Request $request)
     return response()->json([
         'success' => true,
     ], 200);
+
+}
+public function studentMarks(Request $request)
+{
+    $student = User::find($request->student_id);
+    $class =   $student->student_details->class;
+    $grade = $class->grade;
+    $subjects = $grade->subjects;
+    $user = 'teacher';
+    return view('student.courses.marks',compact('subjects','class','student','user'));
+}
+public function getStudentMarks(Request $request)
+{
+    $student = User::find($request->student_id);
+    $school =   $student->school;
+    $school_session = $school->school_session;
+    $school_result_types =  ResultType::where([['school_id', $school->id],['status', 1]])->get();
+    $html="";
+    $colors = array("primary","success",  "secondary", "warning","danger","primary","success",  "secondary", "warning","danger");
+    $counter =0;
+    $number =0;
+    foreach($school_result_types as $result_type){
+        $student_marks_of_type = StudentAssessment::where([['school_session_id',$school_session->id],['type_id',$result_type->id],['subject_id',$request->id],['status', 1]])
+        ->whereHas('student_marks' ,function ($q)use ($request , $student){
+            $q->where('student_id', $student->id);
+        })->get();
+      
+        $total_marks = $student_marks_of_type->sum('total_marks');
+           
+        if(! $student_marks_of_type->isEmpty()){
+            $obt_marks=0;
+           
+            foreach($student_marks_of_type as $data){
+               
+                if($data->student_marks){
+                        $final_result =$data->student_marks->where('student_id', $request->student_id)->first();
+                        $obt_marks= $obt_marks + $final_result->obtained_marks;
+                       
+                }
+            }
+            $user_id = $request->student_id;
+            $data =  view('student.courses.tables-view.marks-tables-view',compact('result_type','number','obt_marks','total_marks','student_marks_of_type','counter','colors','user_id'))->render();
+            $html= $html. $data;
+            $counter++;
+        }
+    }
+    return response()->json([
+        'success' => $html,
+    ], 200);
+    
 
 }
 
