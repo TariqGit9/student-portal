@@ -186,7 +186,7 @@
 								<a class="close-toggle" href="#"><i class="header-icons fe fe-x"></i></a>
 							</div>
 							<div class="main-header-center ml-3 d-sm-none d-md-none d-lg-block">
-								<input class="form-control" placeholder="Search for anything..." type="search"> <button class="btn"><i class="fas fa-search d-none d-md-block"></i></button>
+								{{-- <input class="form-control" placeholder="Search for anything..." type="search"> <button class="btn"><i class="fas fa-search d-none d-md-block"></i></button> --}}
 							</div>
 						</div>
 						<div class="main-header-right">
@@ -314,7 +314,7 @@
 												</div>
 											</div>
 										</div>
-										<a class="dropdown-item" href="#" data-toggle="modal" data-target="#UserPasswordModal" ><i class="bx  bx-cog"></i>Edit profile</a>
+										<a class="dropdown-item" href="#" data-toggle="modal" data-target="#UserPasswordModal" ><i class="bx  bx-key"></i>Edit Password</a>
 										<a class="dropdown-item" href="{{ route('logout') }}"
 											onclick="event.preventDefault();document.getElementById('logout-form').submit();">
 											<i class="bx bx-log-out"></i>Logout
@@ -374,6 +374,7 @@
 					<span aria-hidden="true">&times;</span>
 				  </button>
 				</div>
+				<form autocomplete="off">
 				<div class="modal-body">
 					<div class="form-group col ">
 						<label class="bmd-label-floating form-required">Current Password </label>
@@ -394,6 +395,7 @@
 						</div>
 				  	</div>
 				</div>
+			</form>
 				<div class="modal-footer">
 				  <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
 				  <button type="button" class="btn btn-primary save_user_password">Save changes</button>

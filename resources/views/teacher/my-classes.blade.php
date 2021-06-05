@@ -50,6 +50,11 @@
   <input id="class_id" class="class_id" name ="class_id" type="hidden" value="">
   <input class="subject_id" name ="subject_id" type="hidden" value="">
 </form >
+<form id="class_student_attendance" method="post" action="teacher-insert-student-attendance">
+  @csrf
+  <input id="class_id" class="class_id" name ="class_id" type="hidden" value="">
+  <input class="subject_id" name ="subject_id" type="hidden" value="">
+</form >
 {{-- class-student-results --}}
 
 @push('javascript')
@@ -108,6 +113,16 @@ $(document).on('click', '.class_student_marks', function() {
   $('.class_id').val(class_id);
   $('.subject_id').val(subject_id);
   $('#class_student_marks').submit();
+});
+
+
+$(document).on('click', '.class_student_attendance', function() {
+  var subject_id = $(this).data('subject_id');
+  var class_id = $(this).data('class_id');
+ 
+  $('.class_id').val(class_id);
+  $('.subject_id').val(subject_id);
+  $('#class_student_attendance').submit();
 });
 </script>
 @endpush

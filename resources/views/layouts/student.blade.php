@@ -119,6 +119,9 @@
 						<li class="slide">
 							<a class="side-menu__item" href="{{route('my-marks')}}"><svg xmlns="http://www.w3.org/2000/svg" class="side-menu__icon" viewBox="0 0 24 24"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M19 5H5v14h14V5zM9 17H7v-7h2v7zm4 0h-2V7h2v10zm4 0h-2v-4h2v4z" opacity=".3"/><path d="M3 5v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2zm2 0h14v14H5V5zm2 5h2v7H7zm4-3h2v10h-2zm4 6h2v4h-2z"/></svg><span class="side-menu__label">Marks</span></a>
 						</li>
+						<li class="slide">
+							<a class="side-menu__item"   href="{{route('my-attendance')}}"><svg xmlns="http://www.w3.org/2000/svg" class="side-menu__icon" viewBox="0 0 24 24"><path d="M0 0h24v24H0V0z" fill="none"></path><path d="M13 4H6v16h12V9h-5V4zm3 14H8v-2h8v2zm0-6v2H8v-2h8z" opacity=".3"></path><path d="M8 16h8v2H8zm0-4h8v2H8zm6-10H6c-1.1 0-2 .9-2 2v16c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm4 18H6V4h7v5h5v11z"></path></svg><span class="side-menu__label">Attendance</span></a>
+						</li>
 					</ul>
 				</div>
 			</aside>
@@ -142,7 +145,7 @@
 								<a class="close-toggle" href="#"><i class="header-icons fe fe-x"></i></a>
 							</div>
 							<div class="main-header-center ml-3 d-sm-none d-md-none d-lg-block">
-								<input class="form-control" placeholder="Search for anything..." type="search"> <button class="btn"><i class="fas fa-search d-none d-md-block"></i></button>
+								{{-- <input class="form-control" placeholder="Search for anything..." type="search"> <button class="btn"><i class="fas fa-search d-none d-md-block"></i></button> --}}
 							</div>
 						</div>
 						<div class="main-header-right">
@@ -271,7 +274,7 @@
 											</div>
 										</div>
 				
-										<a class="dropdown-item" href="#" data-toggle="modal" data-target="#UserPasswordModal" ><i class="bx  bx-cog"></i>Edit profile</a>
+										<a class="dropdown-item" href="#" data-toggle="modal" data-target="#UserPasswordModal" ><i class="bx  bx-key"></i>Edit Password</a>
 										<a class="dropdown-item" href="{{ route('logout') }}"
 											onclick="event.preventDefault();document.getElementById('logout-form').submit();">
 											<i class="bx bx-log-out"></i>Logout
@@ -332,6 +335,7 @@
 					<span aria-hidden="true">&times;</span>
 				  </button>
 				</div>
+				<form autocomplete="off">
 				<div class="modal-body">
 					<div class="form-group col ">
 						<label class="bmd-label-floating form-required">Current Password </label>
@@ -352,6 +356,7 @@
 						</div>
 				  	</div>
 				</div>
+			</form >
 				<div class="modal-footer">
 				  <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
 				  <button type="button" class="btn btn-primary save_user_password">Save changes</button>

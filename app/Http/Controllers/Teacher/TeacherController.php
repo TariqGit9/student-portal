@@ -15,7 +15,8 @@ use App\Models\StudentMarks;
 use App\Models\TeacherMailsOfStudent;
 use App\Models\UserDetails\TeacherDetails;
 use App\Models\UserDetails\StudentDetails;
-
+use App\Models\ClassAttendance;
+use App\Models\ClassStudentAttendance;
 use App\Mail\Teacher\ReportStudent;
 use Mail;
 
@@ -47,8 +48,8 @@ class TeacherController extends Controller
                 
            $button= '<a  class="btn btn-success  btn-sm class_students"title="Class Students" data-class_id ="'. $data->class_id.'" style="color:white;"><i class="fa fa-users"></i></a>&nbsp;&nbsp;';  
            $button.= '<a class="btn btn-info btn-sm upload_student_marks"title="Upload Students Marks" data-class_id ="'. $data->class_id.'"data-subject_id ="'. $data->subject_id.'" style="color:white;"><i class="fa fa-list"></i></a>&nbsp;&nbsp;';  
-           $button.= '<a  class="btn btn-info btn-sm class_student_marks"title="Class Students Marks" data-class_id ="'. $data->class_id.' "data-subject_id ="'. $data->subject_id.'"style="color:white;"><i class="fa fa-file" ></i></a>&nbsp;&nbsp;';  
-        
+           $button.= '<a  class="btn btn-warning btn-sm class_student_marks"title="Class Students Marks" data-class_id ="'. $data->class_id.' "data-subject_id ="'. $data->subject_id.'"style="color:white;"><i class="fa fa-file" ></i></a>&nbsp;&nbsp;';  
+           $button.= '<a  class="btn btn-secondary btn-sm class_student_attendance"title="Class Students Attendance" data-class_id ="'. $data->class_id.' "data-subject_id ="'. $data->subject_id.'"style="color:white;"><i class="fa fa-list-alt " ></i></a>&nbsp;&nbsp;';  
            //class_student_marks  
            return $button;
                 
@@ -160,8 +161,6 @@ class TeacherController extends Controller
     }
     public function addStudentResult(Request $request)
     {
-
- 
         $data= $request->marks;
         if( $data){
             $assesment=StudentAssessment::create([
@@ -409,5 +408,56 @@ public function getStudentMarks(Request $request)
     
 
 }
+public function teacherInsertStudentAttendance(Request $request)
+{
+    $students = User::where('role_id',3)->whereHas('student_details' ,function ($q)use ($request){
+        $q->where('class_id',$request->class_id);
+    })->get(); 
+   
+    $subject = Subject::find($request->subject_id);
+    $class = Classes::find($request->class_id);
+    $types = ResultType::where([['school_id', Auth::user()->school->id],['status', 1]])->get();
+    if($class !=null && $subject!=null ){
+        return view('teacher.insert-students-attendance',compact('class','students','subject','types'));
+    }else{
+        return redirect()->route('home');
+    }
+}
+public function addStudentAttendance(Request $request)
+{
 
+    $data= $request->attendance;
+    if( $data){
+        $class_attendance=ClassAttendance::create([
+            'teacher_id' => Auth::user()->id,
+            'type' => $request->type,
+            'date' => $request->date,
+            'time' => $request->time,
+            'grade_id' => $request->grade_id,
+            'class_id' => $request->class_id,
+            'subject_id' => $request->subject_id,
+            'school_session_id'=>Auth::user()->school->school_session->id,
+            'ip_address' => $request->ip(),
+        ]);
+        foreach($data as $key=>$info){
+
+            $id= $info['id'];
+            $attendance=  $info['attendance'];
+            $marks = ClassStudentAttendance::create([
+                'attendance_id' => $class_attendance->id,
+                'student_id' => $id,
+                'attendance' => $attendance,
+                'ip_address' => $request->ip(),
+            ]);
+        }
+        return response()->json([
+            'success' =>true,
+            'msg' =>'Attendance added successfully',
+        ], 200);
+    }
+    return response()->json([
+        'success' =>false,
+        'msg' =>'Error',
+    ], 200);
+}
 }

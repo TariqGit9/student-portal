@@ -9,6 +9,8 @@ use App\Models\StudentMailsOfTeacher;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Mail\Student\ReportTeacher;
+use App\Models\ClassAttendance;
+use App\Models\ClassStudentAttendance;
 use Auth;
 //datatables
 use DataTables;
@@ -118,5 +120,56 @@ class StudentController extends Controller
             'success' => true,
             'result' => 'Reported successfully',
         ], 200);
+    }
+
+
+    public function studentAttendance()
+    {
+        $school =  Auth::user()->school;
+        $school_session = $school->school_session;
+        $class = Auth::user()->student_details->class;
+       
+        $grade = $class->grade;
+        $subjects = $grade->subjects;
+        
+        $student_subjects =  ClassAttendance::where([['school_session_id', $school_session->id], ['class_id', $class->id]])->pluck('subject_id')->unique()->toArray();
+        return view('student.courses.attendance',compact('student_subjects','class','subjects'));
+    }
+    public function getStudentSubjectAttendance(Request $request)
+    {
+       $school =  Auth::user()->school;
+       $school_session = $school->school_session;
+       $class = Auth::user()->student_details->class;
+       $result =  ClassAttendance::where([['school_session_id', $school_session->id], ['subject_id', $request->subject_id],['class_id', $class->id]])->orderBy('id', 'DESC')->get();
+      
+       return DataTables::of($result)
+       ->addColumn('date', function ($data) {
+         
+           return ' <div class="text-center">'.$data->date.'</div>';   
+       })
+       ->addColumn('time', function ($data) {
+     
+        return ' <div class="text-center">'.$data->time.'</div>';     
+        })
+       ->addColumn('attendance', function ($data) {
+        $button = ' <div class="text-center">';
+        if($data->login_student_attendance){
+            if($data->login_student_attendance->attendance =="Present"){
+                $button.= '<a  class="btn btn-success  btn-sm  "title="Present" style="color:white;" >Present</a>&nbsp;&nbsp;'; 
+            }elseif($data->login_student_attendance->attendance=="Leave"){
+                $button.= '<a  class="btn btn-secondary  btn-sm  "title="Leave" style="color:white;" >Leave</a>&nbsp;&nbsp;'; 
+            }elseif($data->login_student_attendance->attendance=="Absent"){
+                $button.= '<a  class="btn btn-danger  btn-sm  "title="Absent"  style="color:white;">Absent</a>&nbsp;&nbsp;'; 
+            }else{
+                return  $button."--";
+            }
+            return  $button.' </div>';
+        }else{
+            return  $button."-- </div>";
+        }
+           
+       })
+       ->rawColumns(['attendance','date','time'])
+       ->make(true);
     }
 }

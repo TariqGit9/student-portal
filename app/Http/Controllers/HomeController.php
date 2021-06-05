@@ -44,8 +44,6 @@ class HomeController extends Controller
     }
     public function changeUserPassword(Request $request)
     {
-        
-     
         if (Hash::check($request->current_password,Auth::user()->password)) {
 
             $user = User::find(Auth::user()->id);

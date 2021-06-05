@@ -147,6 +147,11 @@ Auth::routes(['register' => false]);
         Route::post('display-student-marks', 'TeacherController@getStudentMarks')->name('display-student-marks');
 
         Route::post('edit-marks', 'TeacherController@editMarks')->name('edit-marks');
+
+        Route::any('/teacher-insert-student-attendance', 'TeacherController@teacherInsertStudentAttendance')->name('teacher-insert-student-attendance');
+        Route::post('add-student-attendance', 'TeacherController@addStudentattendance')->name('add-student-attendance');
+
+
     });
 
     Route::group(['namespace' => 'Student', 'prefix' => 'student','middleware' => 'checkStudent'], function () {
@@ -157,10 +162,10 @@ Auth::routes(['register' => false]);
         Route::get('my-marks', 'StudentController@studentMarks')->name('my-marks');
         Route::get('teachers', 'StudentController@studentTeachers')->name('teachers');
         Route::post('get-student-marks', 'StudentController@getStudentMarks')->name('get-student-marks');
-
+        Route::get('my-attendance', 'StudentController@studentAttendance')->name('my-attendance');
         Route::post('report-teacher-to-admin', 'StudentController@reportTeacherToAdmin')->name('report-teacher-to-admin');
-
-
+        
+        Route::post('get-my-subject-attendance', 'StudentController@getStudentSubjectAttendance')->name('get-my-subject-attendance');
     });
 });
 // Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
