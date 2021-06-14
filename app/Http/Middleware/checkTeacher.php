@@ -16,12 +16,18 @@ class checkTeacher
      */
     public function handle(Request $request, Closure $next)
     {
-        if(Auth::check())
+        
+        if(Auth::user()->role_id == 2)
         {
-            if(Auth::user()->role_id ==2)
-            {
+            if(Auth::user()->school->status==1 && Auth::user()->status==1  ){
                 return $next($request);
-                // return redirect('admin/dashboard');
+            }else{
+                if(Auth::user()->school->status==1){
+                return response()->view('error.user_blocked');
+                }
+                else{
+                    return response()->view('error.school_blocked');
+                }
             }
         }
         return redirect('/login');

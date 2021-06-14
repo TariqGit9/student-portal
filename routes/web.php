@@ -100,7 +100,16 @@ Auth::routes(['register' => false]);
 
         Route::post('add-result-type', 'AdminController@addResultType')->name('add-result-type');
         Route::post('edit-result-type', 'AdminController@editResultType')->name('edit-result-type');
-        Route::post('change-result-type-status', 'AdminController@changeResultTypeStatus')->name('change-result-type-status');    
+        Route::post('change-result-type-status', 'AdminController@changeResultTypeStatus')->name('change-result-type-status'); 
+        
+
+        Route::get('/all-branches', 'AdminController@allBranches')->name('all-branches');
+        Route::get('/get-branches', 'AdminController@getBranches')->name('get-branches');
+        Route::post('get-branch-detail-admin', 'AdminController@getBranchDetail')->name('get-branch-detail-admin');
+        Route::post('add-branch-admin', 'AdminController@addBranch')->name('add-branch-admin');
+        Route::post('edit-branch-admin', 'AdminController@editBranch')->name('edit-branch-admin');
+        Route::post('change-school-branch', 'AdminController@changeSchoolBranch')->name('change-school-branch');
+        
     });
 
 
@@ -150,7 +159,7 @@ Auth::routes(['register' => false]);
 
         Route::any('/teacher-insert-student-attendance', 'TeacherController@teacherInsertStudentAttendance')->name('teacher-insert-student-attendance');
         Route::post('add-student-attendance', 'TeacherController@addStudentattendance')->name('add-student-attendance');
-
+        Route::post('get-student-subject-attendance', 'TeacherController@getStudentsSubjectAttendance')->name('get-student-subject-attendance');
 
     });
 

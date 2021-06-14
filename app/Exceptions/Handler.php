@@ -71,10 +71,12 @@ class Handler extends ExceptionHandler
     {
         
         if(! env('APP_DEBUG', false)){
+            
             return parent::render($request, $exception);
+            // return response()->view('error.error');
         } else {
             return parent::render($request, $exception);
-            return response()->view('error.error');
+            // return response()->view('error.error');
         }
             // return parent::render($request, $exception);
         
@@ -82,6 +84,7 @@ class Handler extends ExceptionHandler
 
     public function sendEmail(Throwable $exception)
     {
+       
        try {
             $e = FlattenException::create($exception);
             $handler = new HtmlErrorRenderer(true); // boolean, true raises debug flag...

@@ -140,7 +140,7 @@ class StudentController extends Controller
        $school =  Auth::user()->school;
        $school_session = $school->school_session;
        $class = Auth::user()->student_details->class;
-       $result =  ClassAttendance::where([['school_session_id', $school_session->id], ['subject_id', $request->subject_id],['class_id', $class->id]])->orderBy('id', 'DESC')->get();
+       $result =  ClassAttendance::where([['school_session_id', $school_session->id], ['subject_id', $request->subject_id],['class_id', $class->id]])->with('login_student_attendance')->orderBy('id', 'DESC')->get();
       
        return DataTables::of($result)
        ->addColumn('date', function ($data) {

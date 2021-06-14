@@ -261,7 +261,7 @@ $(document).on('click', '.editSubject', function() {
     ).then(function(response) {
   
     $('#editSubjectModal').modal('hide');
-    toastr.success('Success!', "Subject Added Successfully...", {
+    toastr.success('Success!', "Subject Edit Successfully...", {
             "positionClass": "toast-bottom-right"
         });
         $("#name").val(""); 
@@ -291,7 +291,7 @@ $(document).on('click', '.addSubject', function() {
     ).then(function(response) {
   
     $('#addSubjectModal').modal('hide');
-    toastr.success('Success!', "Class Added Successfully...", {
+    toastr.success('Success!', "Subject Added Successfully...", {
             "positionClass": "toast-bottom-right"
         });
         $("#name").val(""); 

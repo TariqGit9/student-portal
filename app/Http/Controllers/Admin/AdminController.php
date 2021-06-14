@@ -12,7 +12,8 @@ use App\Http\Controllers\Controller;
 use App\Models\TeacherMailsOfStudent;
 use App\Models\ResultType;
 use App\Models\StudentMailsOfTeacher;
-//Mail
+use App\Models\SchoolInformation;
+use Session;
 
 use App\Mail\RegisterTeacher;
 use Mail;
@@ -35,7 +36,7 @@ class AdminController extends Controller
     public function classes()
     {
       
-        $grades = ClassGrade::where('school_id',Auth::user()->school_id)->get();
+        $grades = ClassGrade::where('school_id',Session::get('school_id'))->get();
         return view('admin.class.classes', compact('grades'));
        
     }
@@ -46,12 +47,12 @@ class AdminController extends Controller
             [
                 'name' => $request->name,
                 'grade_id' => $request->grade,
-                'school_id' => Auth::user()->school_id,
+                'school_id' => Session::get('school_id'),
             ],
             [
                 'name' => $request->name,
                 'grade_id' => $request->grade,
-                'school_id' => Auth::user()->school_id,
+                'school_id' => Session::get('school_id'),
             ]);
         return response()->json([
             'result' => 'Added successfully',
@@ -80,7 +81,7 @@ class AdminController extends Controller
     public function getClasses()
     {
         $number=0;
-        $classes = Classes::where('school_id',Auth::user()->school_id)->get();
+        $classes = Classes::where('school_id',Session::get('school_id'))->get();
         return DataTables::of($classes)
         ->addColumn('action', function ($classes) {
                 
@@ -114,7 +115,7 @@ class AdminController extends Controller
     public function subjects()
     {
         //ClassGrade
-        $grades = ClassGrade::where('school_id',Auth::user()->school_id)->get();
+        $grades = ClassGrade::where('school_id',Session::get('school_id'))->get();
         return view('admin.class.subjects', compact('grades'));
     }
     public function addSubject(Request $request)
@@ -125,7 +126,7 @@ class AdminController extends Controller
                 'name' => $request->name,
                 'grade_id' => $request->grade,
                 'author' => $request->author,
-                'school_id' => Auth::user()->school_id,
+                'school_id' => Session::get('school_id'),
             ],
             [
                 'name' => $request->name,
@@ -133,7 +134,7 @@ class AdminController extends Controller
                 'type' => $request->type,
                 'author' => $request->author, 
                 'details' => $request->info,
-                'school_id' => Auth::user()->school_id,
+                'school_id' => Session::get('school_id'),
 
             ]);
         return response()->json([
@@ -143,7 +144,7 @@ class AdminController extends Controller
     public function getSubjects(Request $request)
     {
         $number=0;
-        $subjects = Subject::where('school_id',Auth::user()->school_id)->get();
+        $subjects = Subject::where('school_id',Session::get('school_id'))->get();
         if( $request->id){
             $class = Classes::find($request->id); 
             $subjects =   $class->grade->subjects;
@@ -277,12 +278,12 @@ class AdminController extends Controller
         $add_grade = ClassGrade::updateOrCreate(
             [
                 'name' => $request->name,
-                'school_id' => Auth::user()->school_id,
+                'school_id' => Session::get('school_id'),
                
             ],
             [
                 'name' => $request->name,
-                'school_id' => Auth::user()->school_id,
+                'school_id' => Session::get('school_id'),
             ]);
         return response()->json([
             'result' => 'Added successfully',
@@ -302,7 +303,7 @@ class AdminController extends Controller
     public function getGrades()
     {
         
-        $grades = ClassGrade::where('school_id',Auth::user()->school_id)->get();
+        $grades = ClassGrade::where('school_id',Session::get('school_id'))->get();
         return DataTables::of($grades)
         ->addColumn('action', function ($grades) {
                 
@@ -396,7 +397,7 @@ class AdminController extends Controller
             'password' => bcrypt( $request->password ),
             'role_id' => 2,
             'status' => 1,
-            'school_id' => Auth::user()->school_id,
+            'school_id' => Session::get('school_id'),
             'ip_address' => $request->ip(),
 
         ]);
@@ -431,7 +432,7 @@ class AdminController extends Controller
     public function getTeachers()
     {
         
-        $data = User::where([[ 'school_id' , Auth::user()->school_id],['role_id',2]])->get();
+        $data = User::where([[ 'school_id' , Session::get('school_id')],['role_id',2]])->get();
        
         return DataTables::of($data)
         ->addColumn('action', function ($data) {
@@ -551,7 +552,7 @@ class AdminController extends Controller
     public function getDeletedTeachers()
     {
         
-        $data = User::onlyTrashed()->where([[ 'school_id' , Auth::user()->school_id],['role_id',2]])->get();
+        $data = User::onlyTrashed()->where([[ 'school_id' , Session::get('school_id')],['role_id',2]])->get();
        
         return DataTables::of($data)
         ->addColumn('action', function ($data) {
@@ -591,7 +592,7 @@ class AdminController extends Controller
     //students
     public function students()
     {
-       $classes= Classes::where('school_id',Auth::user()->school_id)->get();
+       $classes= Classes::where('school_id',Session::get('school_id'))->get();
         return view('admin.student.student', compact('classes'));
     }
 
@@ -668,13 +669,13 @@ class AdminController extends Controller
             'password' => bcrypt( $request->password ),
             'role_id' => 3,
             'status' => 1,
-            'school_id' => Auth::user()->school_id,
+            'school_id' => Session::get('school_id'),
             'ip_address' => $request->ip(),
         ]);
    //TeacherDetails
         // $count=  StudentDetails::count();
         $count = StudentDetails::whereHas('student' ,function ($q)use ($request){
-            $q->where( 'school_id' , Auth::user()->school_id);
+            $q->where( 'school_id' , Session::get('school_id'));
         })->count();
         $count++;
         $userdetails = StudentDetails::updateOrCreate(
@@ -707,13 +708,13 @@ class AdminController extends Controller
         
       
         if($request->id){
-            $data = User::where([[ 'school_id' , Auth::user()->school_id],['role_id',3]])->whereHas('student_details' ,function ($q)use ($request){
+            $data = User::where([[ 'school_id' , Session::get('school_id')],['role_id',3]])->whereHas('student_details' ,function ($q)use ($request){
                 $q->where('class_id',$request->id);
             })->get();
             
         }
         else{
-            $data = User::where([[ 'school_id' , Auth::user()->school_id],['role_id',3]])->get();
+            $data = User::where([[ 'school_id' , Session::get('school_id')],['role_id',3]])->get();
         }
        
 
@@ -853,7 +854,7 @@ class AdminController extends Controller
     public function getDeletedStudents()
     {
         
-        $data = User::onlyTrashed()->where([[ 'school_id' , Auth::user()->school_id],['role_id',3]])->get();
+        $data = User::onlyTrashed()->where([[ 'school_id' , Session::get('school_id')],['role_id',3]])->get();
         // if($request->id){
         //     $data = User::where('role_id',3)->whereHas('student_details' ,function ($q)use ($request){
         //         $q->where('class_id',$request->id);
@@ -904,7 +905,7 @@ class AdminController extends Controller
     //Class Teachers
     public function classTeachers($id)
     {
-        $teachers = User::where([[ 'school_id' , Auth::user()->school_id],['role_id',2]])->get();
+        $teachers = User::where([[ 'school_id' , Session::get('school_id')],['role_id',2]])->get();
         return view('admin.class.class-teachers', compact('id','teachers'));
     
     }
@@ -1037,7 +1038,7 @@ class AdminController extends Controller
     public function getTeacherComplaints(Request $request)
     {
                 
-        $data = TeacherMailsOfStudent::where('school_id' , Auth::user()->school_id)->get();
+        $data = TeacherMailsOfStudent::where('school_id' , Session::get('school_id'))->get();
         return DataTables::of($data)
         ->addColumn('action', function ($data) {
             $button = '<a href="#" class="btn btn-info btn-sm openComplaint " data-toggle="modal" data-target="#editTeacherModal"   data-id="' . $data->id . '"><i class="fa fa-file"></i></a>&nbsp;&nbsp;';  
@@ -1130,7 +1131,7 @@ public function getResultTypes(Request $request)
 public function getSchoolResultTypes()
 {
     
-    $data = ResultType::where('school_id',Auth::user()->school_id)->get();
+    $data = ResultType::where('school_id',Session::get('school_id'))->get();
     return DataTables::of($data)
     ->addColumn('action', function ($data) {
             
@@ -1156,7 +1157,7 @@ public function addResultType(Request $request)
             [
             'name' => $request->name,
             'status' => 1,
-            'school_id' => Auth::user()->school_id,
+            'school_id' => Session::get('school_id'),
             'ip_address' => $request->ip(),
             ]);
 }
@@ -1200,7 +1201,7 @@ public function StudentsComplaintsOfTeacher()
 public function getStudentsComplaints(Request $request)
 {
             
-    $data = StudentMailsOfTeacher::where('school_id' , Auth::user()->school_id)->get();
+    $data = StudentMailsOfTeacher::where('school_id' , Session::get('school_id'))->get();
     return DataTables::of($data)
     ->addColumn('action', function ($data) {
         $button = '<a href="#" class="btn btn-info btn-sm openComplaint " data-toggle="modal" data-target="#editTeacherModal"   data-id="' . $data->id . '"><i class="fa fa-file"></i></a>&nbsp;&nbsp;';  
@@ -1259,6 +1260,220 @@ public function changeComplainStatusStudent(Request $request)
     return response()->json([
         'success' => true,
     ], 200);
+
+}
+public function allBranches()
+{
+   
+    return view('admin.dashboard.school-branches');
+}
+public function getbranches()
+{
+    $main_school_id = Auth::user()->school_id;
+    $data = SchoolInformation::where('id' ,$main_school_id )->orWhere('parent_school_id', '=',$main_school_id )->get();
+  
+    return DataTables::of($data)
+    ->addColumn('action', function ($data) {
+            $button = '<a href="#" class="btn btn-info btn-sm  edit_data"title="Edit" data-name= "' . $data->name . '" data-phone="' . $data->phone . '" data-phone2="' . $data->phone2 . '" data-email="' . $data->email . '" data-abbreviation="' . $data->abbreviation . '" data-avatar="' . $data->avatar . '" data-address="' . $data->address . '" data-id="' . $data->id . '"><i class="fa fa-edit"></i></a>&nbsp;&nbsp;';  
+            return $button;
+    })
+    ->addColumn('name', function ($data) {
+        if ($data->name === null) {
+            $text = "Not Available";
+            return $text;
+        } else {
+            $text = $data->name.'('. $data->abbreviation.')';
+            return $text;
+        }
+    })
+    ->addColumn('email', function ($data) {
+        if ($data->email === null) {
+            $text = "Not Available";
+            return $text;
+        } else {
+            $text = $data->email;
+            return $text;
+        }
+    })
+    ->addColumn('phone', function ($data) {
+        if ($data->phone === null) {
+            $text = "Not Available";
+            return $text;
+        } else {
+            $text ="<div > <p>". $data->phone."</p> <p> ".$data->phone2."<div>";
+            return $text;
+        }
+    })
+    ->addColumn('unique_id', function ($data) {
+        if ($data->school_unique_id === null) {
+            $text = "Not Available";
+            return $text;
+        } else {
+            $text = $data->school_unique_id;
+            return $text;
+        }
+    })
+    ->addColumn('image', function ($data) {
+     
+        $image = '<img src="' . asset("uploads/school_avatars/" . $data->avatar) . '" alt="logo" width="50" height="50">';
+        return $image;
+    })
+        ->rawColumns(['action','address','image','name','phone','email','unique_id'])
+        ->make(true);
+}
+public function getBranchDetail(Request $request)
+{
+
+    $school_info = SchoolInformation::find($request->id);
+    $details=$school_info->details;
+    $address=$school_info->address;
+    if( $details == null){
+        $details="Not Available";
+    }
+    if( $address == null){
+        $address="Not Available";
+    }
+    return response()->json([
+        'address' =>$address,
+        'details' =>$details,
+    ], 200);
+ 
+}
+public function addBranch(Request $request)
+{ 
+    $filename="default.webp";
+    if($request->hasFile('image')){
+        if(@is_array(getimagesize($request->image))){
+            $time = time();
+            $file=$request->image;
+            $extension = $file->getClientOriginalExtension();
+            $filename = $time."school_avatar" . '.' . $extension;
+            $resized_image = Image::make($file)->resize(200, 200)->encode($extension);
+          
+            Storage::disk(config('filesystems.default'))
+            ->put('school_avatars/' . $filename, $resized_image);
+
+        }
+        else{
+            return response()->json([
+                'success' => false,
+                'error' => "Not a Image.",
+            ]);
+
+        }
+    }
+
+  //  dd($request->all());
+ // where('email', $request->email) ->or
+    if($request->email){
+        $school = SchoolInformation::where('email', $request->email)->first();
+    }
+   
+  
+   if( $school){
+        if ($school->email==$request->email) {
+            return response()->json([
+                'success' => false,
+                'error' => "Email already Exists.",
+            ]);
+        }
+    }
+    $school = SchoolInformation::create(
+        [
+        'name' => $request->name,
+        'email' => $request->email,
+        'avatar' => $filename,
+        'parent_school_id' => Auth::user()->school_id,
+        'abbreviation' => $request->abbreviation,
+        'school_unique_id' => time().'-'.Auth::user()->school_id,
+        'phone' =>  $request->phone,
+        'phone2' =>  $request->phone2,
+        'address' =>  $request->address,
+        'details' => $request->school_details,
+        'ip_address' => $request->ip(),
+    ]);
+    $data = SchoolInformation::where('id' ,Auth::user()->school_id )->orWhere('parent_school_id', '=',Auth::user()->school_id )->get();
+    Session::put('all_branches', Auth::user()->school_id);
+    return response()->json([
+        'success' => true,
+        'result' => 'Added successfully',
+    ], 200);
+}
+public function editBranch(Request $request)
+{
+
+    $school = SchoolInformation::find($request->edit_id);
+   
+    $oldfile =$school->avatar;
+    $filename =$school->avatar;
+    if($request->hasFile('edit_image')){
+        if(@is_array(getimagesize($request->edit_image))){
+            $time = time();
+            $file=$request->edit_image;
+            $extension = $file->getClientOriginalExtension();
+            $filename = $time."school_avatar" . '.' . $extension;
+            $resized_image = Image::make($file)->resize(200, 200)->encode($extension);
+          
+            Storage::disk(config('filesystems.default'))
+            ->put('school_avatars/' . $filename, $resized_image);
+            if($school->avatar !="default.webp"){
+
+                $oldfileName = 'school_avatars/' . $oldfile;
+                if (Storage::exists($oldfileName)) {
+               
+                    Storage::delete($oldfileName);
+                }
+            }
+        }
+        else{
+            return response()->json([
+                'success' => false,
+                'error' => "Not a Image.",
+            ]);
+
+        }
+    }
+   
+    $school->name= $request->edit_name;
+    $school->email= $request->edit_email;
+    $school->abbreviation= $request->edit_abbreviation;
+    $school->phone= $request->edit_phone;
+    $school->phone2= $request->edit_phone2;
+    $school->address= $request->edit_address;
+    $school->details= $request->edit_details;
+    $school->avatar= $filename;
+    $school->save();
+
+    return response()->json([
+        'success' => true,
+        'result' => 'Edit successfully',
+    ], 200);
+}
+
+public function changeSchoolBranch(Request $request)
+{
+   
+    $school = SchoolInformation::where('school_unique_id',$request->branch)->first();
+    if($school){
+        if(Auth::user()->school_id == $school->parent_school_id || Auth::user()->school_id == $school->id){
+            Session::put('school_id', $school->id);
+            return response()->json([
+                'success' => true,
+                'result' => 'Edit successfully',
+            ], 200);
+        }
+        else{
+            return response()->json([
+                'success' => false,
+            ], 200);  
+        }
+    }else{
+        return response()->json([
+            'success' => false,
+        ], 200);  
+    }
+  
+ 
 
 }
 

@@ -42,15 +42,16 @@ class TeacherController extends Controller
     }
     public function getTeacherClass()
     {
+       
         $result = TeacherSubject::where('user_id',Auth::user()->id)->get(); 
         return DataTables::of($result)
         ->addColumn('action', function ($data) {
                 
            $button= '<a  class="btn btn-success  btn-sm class_students"title="Class Students" data-class_id ="'. $data->class_id.'" style="color:white;"><i class="fa fa-users"></i></a>&nbsp;&nbsp;';  
            $button.= '<a class="btn btn-info btn-sm upload_student_marks"title="Upload Students Marks" data-class_id ="'. $data->class_id.'"data-subject_id ="'. $data->subject_id.'" style="color:white;"><i class="fa fa-list"></i></a>&nbsp;&nbsp;';  
-           $button.= '<a  class="btn btn-warning btn-sm class_student_marks"title="Class Students Marks" data-class_id ="'. $data->class_id.' "data-subject_id ="'. $data->subject_id.'"style="color:white;"><i class="fa fa-file" ></i></a>&nbsp;&nbsp;';  
-           $button.= '<a  class="btn btn-secondary btn-sm class_student_attendance"title="Class Students Attendance" data-class_id ="'. $data->class_id.' "data-subject_id ="'. $data->subject_id.'"style="color:white;"><i class="fa fa-list-alt " ></i></a>&nbsp;&nbsp;';  
-           //class_student_marks  
+           $button.= '<a  class="btn btn-primary btn-sm class_student_marks"title="Class Students Marks" data-class_id ="'. $data->class_id.' "data-subject_id ="'. $data->subject_id.'"style="color:white;"><i class="fa fa-file" ></i></a>&nbsp;&nbsp;';  
+           $button.= '<a  class="btn btn-secondary btn-sm class_student_attendance"title="Mark Students Attendance" data-class_id ="'. $data->class_id.' "data-subject_id ="'. $data->subject_id.'"style="color:white;"><i class="fa fa-list-alt " ></i></a>&nbsp;&nbsp;';  
+           $button.= '<a  class="btn btn-warning btn-sm get_class_student_attendance"title="Class Students Attendance" data-class_id ="'. $data->class_id.' "data-subject_id ="'. $data->subject_id.'"style="color:white;"><i class="la la-calendar " ></i></a>&nbsp;&nbsp;';  
            return $button;
                 
         })
@@ -161,6 +162,11 @@ class TeacherController extends Controller
     }
     public function addStudentResult(Request $request)
     {
+        if(Auth::user()->school->school_session){
+            $school_session_id= Auth::user()->school->school_session->id;
+        }else{
+            $school_session_id=null;
+        }
         $data= $request->marks;
         if( $data){
             $assesment=StudentAssessment::create([
@@ -172,7 +178,7 @@ class TeacherController extends Controller
                 'test_date' => $request->date,
                 'description' => $request->description,
                 'status' =>0,
-                'school_session_id'=>Auth::user()->school->school_session->id,
+                'school_session_id'=>$school_session_id,
                 'passing_marks' => $request->passing_marks,
                 'total_marks' => $request->total_marks,
             ]);
@@ -215,7 +221,12 @@ public function classStudentResults(Request $request)
 //getClassAssesments
 public function getClassAssesments(Request $request)
 {
-    $result = StudentAssessment::where([['class_id',$request->class_id],['subject_id',$request->subject_id],['teacher_id',Auth::user()->id],['school_session_id',Auth::user()->school->school_session->id]])->get(); 
+    if(Auth::user()->school->school_session){
+        $school_session_id= Auth::user()->school->school_session->id;
+    }else{
+        $school_session_id=null;
+    }
+    $result = StudentAssessment::where([['class_id',$request->class_id],['subject_id',$request->subject_id],['teacher_id',Auth::user()->id],['school_session_id',$school_session_id]])->get(); 
    
 
         return DataTables::of($result)
@@ -372,13 +383,18 @@ public function getStudentMarks(Request $request)
     $student = User::find($request->student_id);
     $school =   $student->school;
     $school_session = $school->school_session;
+    if($school_session){
+      $school_session_id =$school_session->id;
+    }else{
+      $school_session_id = null;
+    }
     $school_result_types =  ResultType::where([['school_id', $school->id],['status', 1]])->get();
     $html="";
     $colors = array("primary","success",  "secondary", "warning","danger","primary","success",  "secondary", "warning","danger");
     $counter =0;
     $number =0;
     foreach($school_result_types as $result_type){
-        $student_marks_of_type = StudentAssessment::where([['school_session_id',$school_session->id],['type_id',$result_type->id],['subject_id',$request->id],['status', 1]])
+        $student_marks_of_type = StudentAssessment::where([['school_session_id',$school_session_id],['type_id',$result_type->id],['subject_id',$request->id],['status', 1]])
         ->whereHas('student_marks' ,function ($q)use ($request , $student){
             $q->where('student_id', $student->id);
         })->get();
@@ -427,20 +443,30 @@ public function addStudentAttendance(Request $request)
 {
 
     $data= $request->attendance;
+    if(Auth::user()->school->school_session){
+        $school_session= Auth::user()->school->school_session->id;
+    }else{
+        return response()->json([
+            'success' =>false,
+            'msg' =>'Session is not set',
+        ], 200);
+    }
     if( $data){
+        
+
         $class_attendance=ClassAttendance::create([
             'teacher_id' => Auth::user()->id,
             'type' => $request->type,
-            'date' => $request->date,
+            'date' =>$request->date,
             'time' => $request->time,
             'grade_id' => $request->grade_id,
             'class_id' => $request->class_id,
             'subject_id' => $request->subject_id,
-            'school_session_id'=>Auth::user()->school->school_session->id,
+            'school_session_id'=>$school_session,
             'ip_address' => $request->ip(),
         ]);
         foreach($data as $key=>$info){
-
+         
             $id= $info['id'];
             $attendance=  $info['attendance'];
             $marks = ClassStudentAttendance::create([
@@ -450,6 +476,7 @@ public function addStudentAttendance(Request $request)
                 'ip_address' => $request->ip(),
             ]);
         }
+    
         return response()->json([
             'success' =>true,
             'msg' =>'Attendance added successfully',
@@ -459,5 +486,47 @@ public function addStudentAttendance(Request $request)
         'success' =>false,
         'msg' =>'Error',
     ], 200);
+}
+public function getStudentsSubjectAttendance(Request $request)
+{ 
+//    $school =  Auth::user()->school;
+//    $school_session = $school->school_session;
+  
+//    $result =  ClassAttendance::where([['school_session_id', $school_session->id], ['subject_id', $request->subject_id],['class_id', $request->class_id]])->with('student_attendance')->latest()->orderBy('id', 'DESC')->get();
+//    $attendance = clone $result;
+
+   
+//    $class_students = User::where('role_id',3)->whereHas('student_details' ,function ($q)use ($request){
+//     $q->where('class_id',$request->class_id);
+//     })->get();
+ 
+//    $all_class_attendance = $result->load('student_attendance');
+//    dd( $result->load('student_attendance'));
+// //    $all_class_attendance = ClassStudentAttendance::whereHas('class_attendance' ,function ($q)use ($request){
+// //         $q->where([['subject_id', $request->subject_id],['class_id', $request->class_id]])->latest();
+// //     })->get();
+   
+//    return view('teacher.get-students-attendance',compact('result','all_class_attendance','attendance','class_students'));
+
+
+   $school =  Auth::user()->school;
+   $school_session = $school->school_session;
+  if($school_session){
+    $school_session_id =$school_session->id;
+  }else{
+    $school_session_id = null;
+  }
+   $result =  ClassAttendance::where([['school_session_id',  $school_session_id ], ['subject_id', $request->subject_id],['class_id', $request->class_id]])->with('student_attendance')->latest()->take(6)->orderBy('id', 'DESC')->get();
+   $attendance = clone $result;
+
+   
+   $class_students = User::where('role_id',3)->whereHas('student_details' ,function ($q)use ($request){
+    $q->where('class_id',$request->class_id);
+    })->get();
+   $all_class_attendance = ClassStudentAttendance::whereHas('class_attendance' ,function ($q)use ($request){
+        $q->where([['subject_id', $request->subject_id],['class_id', $request->class_id]])->latest()->take(6);
+    })->get();
+   
+   return view('teacher.get-students-attendance',compact('result','all_class_attendance','attendance','class_students'));
 }
 }

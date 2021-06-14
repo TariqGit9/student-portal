@@ -19,6 +19,7 @@ class ClassAttendance extends Model
     {
         return $this->hasOne('App\Models\ClassStudentAttendance', 'attendance_id', 'id')->where('student_id',  Auth::user()->id);
     }
+
     public function subject_details()
     {
         return $this->belongsTo('App\Models\Subject', 'subject_id', 'id')->withTrashed();

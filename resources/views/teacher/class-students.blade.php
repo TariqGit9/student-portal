@@ -355,7 +355,7 @@ $(document).on('click', '.viewDeleted', function() {
 $(document).on('click', '.viewMarks', function() {
 
 var id = $(this).data('id');
-alert(id);
+
 $(".student_id").val(id); 
 $('#view_student_marks').submit();
 

@@ -32,7 +32,14 @@
 				background-color: #F32013;
 				color: white;
 			}
-		
+			.selectpicker-custome-color{
+				
+					color: #242f48;
+					background-color: #e9e7f5;
+					border-color: #e9e7f5;
+				
+
+			}
 		</style>
 		<!-- Title -->
 		<title> {{$school_info->name}} Student Portal </title>
@@ -117,6 +124,9 @@
 						<li class="slide">
 							<a class="side-menu__item" href="{{route('home')}}"><svg xmlns="http://www.w3.org/2000/svg" class="side-menu__icon" viewBox="0 0 24 24" ><path d="M0 0h24v24H0V0z" fill="none"/><path d="M5 5h4v6H5zm10 8h4v6h-4zM5 17h4v2H5zM15 5h4v2h-4z" opacity=".3"/><path d="M3 13h8V3H3v10zm2-8h4v6H5V5zm8 16h8V11h-8v10zm2-8h4v6h-4v-6zM13 3v6h8V3h-8zm6 4h-4V5h4v2zM3 21h8v-6H3v6zm2-4h4v2H5v-2z"/></svg><span class="side-menu__label">Index</span></a>
 						</li>
+						<li class="slide">
+							<a class="side-menu__item" href="{{route('all-branches')}}"><svg xmlns="http://www.w3.org/2000/svg" class="side-menu__icon" viewBox="0 0 24 24" ><path d="M0 0h24v24H0V0z" fill="none"/><path d="M5 9h14V5H5v4zm2-3.5c.83 0 1.5.67 1.5 1.5S7.83 8.5 7 8.5 5.5 7.83 5.5 7 6.17 5.5 7 5.5zM5 19h14v-4H5v4zm2-3.5c.83 0 1.5.67 1.5 1.5s-.67 1.5-1.5 1.5-1.5-.67-1.5-1.5.67-1.5 1.5-1.5z" opacity=".3"/><path d="M20 13H4c-.55 0-1 .45-1 1v6c0 .55.45 1 1 1h16c.55 0 1-.45 1-1v-6c0-.55-.45-1-1-1zm-1 6H5v-4h14v4zm-12-.5c.83 0 1.5-.67 1.5-1.5s-.67-1.5-1.5-1.5-1.5.67-1.5 1.5.67 1.5 1.5 1.5zM20 3H4c-.55 0-1 .45-1 1v6c0 .55.45 1 1 1h16c.55 0 1-.45 1-1V4c0-.55-.45-1-1-1zm-1 6H5V5h14v4zM7 8.5c.83 0 1.5-.67 1.5-1.5S7.83 5.5 7 5.5 5.5 6.17 5.5 7 6.17 8.5 7 8.5z"/></svg><span class="side-menu__label">School Branch</span></a>
+						</li>
 						<li class="side-item side-item-category">User Managment</li>
 						<li class="slide">
 							<a class="side-menu__item" href="{{route('all-teachers')}}"><svg xmlns="http://www.w3.org/2000/svg" class="side-menu__icon" viewBox="0 0 24 24"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M13 4H6v16h12V9h-5V4zm3 14H8v-2h8v2zm0-6v2H8v-2h8z" opacity=".3"/><path d="M8 16h8v2H8zm0-4h8v2H8zm6-10H6c-1.1 0-2 .9-2 2v16c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm4 18H6V4h7v5h5v11z"/></svg><span class="side-menu__label">Teachers</span></a>
@@ -154,7 +164,7 @@
 
 
 						<li class="side-item side-item-category">Complaints</li>
-						<li class="slide">
+						<li class="slide ">
 							<a class="side-menu__item" data-toggle="slide" href="#"><svg xmlns="http://www.w3.org/2000/svg" class="side-menu__icon" viewBox="0 0 24 24" ><path d="M0 0h24v24H0V0z" fill="none"/><path d="M15 11V4H4v8.17l.59-.58.58-.59H6z" opacity=".3"/><path d="M21 6h-2v9H6v2c0 .55.45 1 1 1h11l4 4V7c0-.55-.45-1-1-1zm-5 7c.55 0 1-.45 1-1V3c0-.55-.45-1-1-1H3c-.55 0-1 .45-1 1v14l4-4h10zM4.59 11.59l-.59.58V4h11v7H5.17l-.58.59z"/></svg><span class="side-menu__label">Complaints</span> <i class="angle fe fe-chevron-down"></i></a>
 							<ul class="slide-menu">
 								<li><a class="slide-item" href="{{route('teacher-complaints')}}">Teacher Complaint</a></li>
@@ -185,8 +195,13 @@
 								<a class="open-toggle" href="#"><i class="header-icon fe fe-align-left" ></i></a>
 								<a class="close-toggle" href="#"><i class="header-icons fe fe-x"></i></a>
 							</div>
-							<div class="main-header-center ml-3 d-sm-none d-md-none d-lg-block">
-								{{-- <input class="form-control" placeholder="Search for anything..." type="search"> <button class="btn"><i class="fas fa-search d-none d-md-block"></i></button> --}}
+							<div class="ml-3 d-sm-none d-md-none d-lg-block">
+								{{-- <input class="" placeholder="Search for anything..." type="search"> <button class="btn"><i class="fas fa-search d-none d-md-block"></i></button> --}}
+								<select  id="school_branches" class="form-control selectpicker active remove_active" name= "school_branches">
+									@foreach( Session::get('all_branches') as $branch)
+										<option value="{{$branch->school_unique_id}}" @if( $branch->id == Session::get('school_id') ) selected @endif >{{$branch->name}}</option>
+									@endforeach
+								</select>
 							</div>
 						</div>
 						<div class="main-header-right">
@@ -471,6 +486,11 @@
 			theme: 'monokai'
 		}
 		});
+		setTimeout(function () {
+			$('.filter-option-inner-inner').addClass('text-dark');
+    }, 1000);
+	
+		
 	});
 
 	$(document).on('click', '.save_user_password', function() {
@@ -520,6 +540,34 @@
 
 
 	});
+
+	
+
+
+	$(document).on('change', '#school_branches', function() {
+		var branch=  $('#school_branches').val();
+		axios.post("{{route('change-school-branch')}}", {
+			branch: branch
+			}).then(function(response) {
+				if(response.data.success){
+					toastr.success('Success!', 'Branch Changed Successfully',{
+					"positionClass": "toast-bottom-right"
+					})
+					setTimeout(function () {
+						location.reload();		
+					}, 1000);
+				}else{
+					toastr.error('Error!', 'Invlaid Branch Requested ',{
+					"positionClass": "toast-bottom-right"
+					})
+					location.reload();		
+				}
+			});
+	});
+
+	
+
+
 	</script>
 
 
