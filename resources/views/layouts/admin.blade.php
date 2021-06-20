@@ -554,13 +554,13 @@
 					"positionClass": "toast-bottom-right"
 					})
 					setTimeout(function () {
-						location.reload();		
+						window.location.href = "{{ route('home')}}";
 					}, 1000);
 				}else{
 					toastr.error('Error!', 'Invlaid Branch Requested ',{
 					"positionClass": "toast-bottom-right"
 					})
-					location.reload();		
+					window.location.href = "{{ route('home')}}";
 				}
 			});
 	});

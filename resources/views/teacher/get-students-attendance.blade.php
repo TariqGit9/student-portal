@@ -46,7 +46,7 @@
           $first_row ="";
           $last_row = "";
         @endphp
-        <table id="table_id" width="100%" cellspacing="0" class="display">
+        <table id="table_id" width="100%" cellspacing="0" class="display text-center">
             <thead>
                 <tr>
                   <th>Name</th>
@@ -65,7 +65,7 @@
             <tbody>
             @foreach($class_students as $student)
                 <tr>
-                    <td>{{$student->name}}</td>
+                    <td><a href="javascript:void(0)" data-id="{{$student->id}}" title="Click to view this student attendance" class="btn btn-sm  viewAttendance mt-1"><h6 ><u>{{$student->name}}</u></h6></a></td>
                     @foreach($result as $data)
                         @php
                             $check = $all_class_attendance->where('attendance_id', $data->id)->where('student_id', $student->id)->first();
@@ -132,6 +132,10 @@ if($layout_user=='admin'){
   <input class="subject_id" name ="subject_id" type="hidden" value="{{ $subject_id }}">
   <input class="search_date" name ="search_date" id="search_date" type="hidden" value="">
 </form>
+<form id="view_student_attandence" method="post" action="view-student-attendance">
+  @csrf
+  <input  class="student_id" name ="student_id" type="hidden" value="">
+</form >
 @push('javascript')
 <script>
 $(document).ready( function () {
@@ -179,6 +183,17 @@ $(function(){
     var maxDate = year + '-' + month + '-' + day;    
     $('#date').attr('max', maxDate);
 });
+
+$(document).on('click', '.viewAttendance', function() {
+
+var id = $(this).data('id');
+
+$(".student_id").val(id); 
+$('#view_student_attandence').submit();
+
+
+});
+
 </script>
 @endpush
 @endsection

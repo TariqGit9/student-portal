@@ -1497,6 +1497,8 @@ public function getSubjectforManagment(Request $request)
     return DataTables::of($subjects)
     ->addColumn('action', function ($subjects)use ($request) {
         $button = '<a href="#" class="btn btn-info btn-sm  get_class_student_attendance "title="Attendance" data-class=' . $request->id . ' data-subject=' . $subjects->id . '><i class="fa fa-list-alt "></i></a>&nbsp;&nbsp;';  
+        $button .= '<a href="#" class="btn btn-success btn-sm  viewMarks " title="View Student Marks of all subjects" data-id="' . $data->id . '"><i class="fa fa-eye"></i></a>&nbsp;&nbsp;';  
+        
         return $button;
             
     })
@@ -1514,5 +1516,23 @@ public function getStudentsSubjectAttendance(Request $request)
 }
 
 
+public function studentAttendance(Request $request)
+{
+    $teacher_controller = new TeacherController;
+    $result = $teacher_controller->studentAttendance($request);
+    return $result;
+}
+public function getStudentSubjectAttendance(Request $request)
+{
+    $teacher_controller = new TeacherController;
+    $result = $teacher_controller->getStudentSubjectAttendance($request);
+    return $result;
+}
+public function getStudentAttendanceStats(Request $request)
+{
+    $teacher_controller = new TeacherController;
+    $result = $teacher_controller->getStudentAttendanceStats($request);
+    return $result;
+}
 
 }

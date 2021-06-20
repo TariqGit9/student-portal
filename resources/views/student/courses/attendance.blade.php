@@ -1,4 +1,4 @@
-@extends('layouts.student')
+@extends('layouts.'.$user_layout)
 @push('styles')
 @endpush
 @section('content')
@@ -6,7 +6,7 @@
 <div class="breadcrumb-header justify-content-between">
   <div class="my-auto">
     <div class="d-flex">
-      <h4 class="content-title mb-0 my-auto">Subjects </h4>
+      <h4 class="content-title mb-0 my-auto">Attendance @if($user_layout !='student') of {{$student->name}}  @endif </h4>
     </div>
   </div>
 </div>
@@ -123,18 +123,28 @@
 dataTableData( $("#subject").val());
 getStats($("#subject").val());
 
-
-
 function dataTableData(subject){
     $("#table_data").dataTable().fnDestroy();
+    @if($user_layout=='student')
+    var url ="{{route('get-my-subject-attendance')}}";
+    @elseif($user_layout=='teacher')
+    var url ="{{route('get-student-subject-attendance-teacher')}}";
+    @elseif($user_layout=='admin')
+    var url ="{{route('get-student-subject-attendance-admin')}}";
+    @endif
 
     table=$('#table_data').DataTable({
         processing: true,
         serverSide: false,
         ajax: {
-            url: "{{route('get-my-subject-attendance')}}", type: 'post',
+            url: url,
+          
+            type: 'post',
             data: {
             subject_id: subject,
+            @if($user_layout !='student')
+              student_id: {{$student->id}},
+            @endif
             "_token": "{{ csrf_token() }}",
         }
         },
@@ -156,21 +166,29 @@ function dataTableData(subject){
 }
 
 function getStats(subject){
-var url = "{{route('get-my-subject-attendance-stats')}}";
+  
+  @if($user_layout=='student')
+    var url = "{{route('get-my-subject-attendance-stats')}}";
+    @elseif($user_layout=='teacher')
+    var url ="{{route('get-student-subject-attendance-teacher-stats')}}";
+    @elseif($user_layout=='admin')
+    var url ="{{route('get-student-subject-attendance-admin-stats')}}";
+    @endif
+
 
 
 	axios.post(url, {
-		subject_id: subject 
+		subject_id: subject ,
+    @if($user_layout !='student')
+      student_id: {{$student->id}},
+    @endif
+
 		}).then(function(response) {
 			$('.all-presents').text(response.data.result_present);
       $('.all-absents').text(response.data.result_absents);
       $('.all-leaves').text(response.data.result_leaves);
     });
 }
-
-
-
-
 
 $('#subject').on('change', function() {
    dataTableData($("#subject").val());

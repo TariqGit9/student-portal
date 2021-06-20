@@ -50,7 +50,6 @@ background: url('https://cdn.rawgit.com/DataTables/DataTables/6c7ada53ebc228ea9b
     </div>
   </div>
 </div>
-  
 
 
   <form id="get_class_student_attendance" method="post" action="{{route('admin-get-student-subject-attendance')}}">
@@ -100,6 +99,7 @@ $(document).on('click', '.get_class_student_attendance', function() {
   
   $('#get_class_student_attendance').submit();
 });
+
 
 
 

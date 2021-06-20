@@ -117,7 +117,11 @@
   <input  class="student_id" name ="student_id" type="hidden" value="">
 
 </form >
+<form id="view_student_attandence" method="post" action="view-student-attendance">
+  @csrf
+  <input  class="student_id" name ="student_id" type="hidden" value="">
 
+</form >
 @push('javascript')
 <script>
         var x= $("#id").val();
@@ -361,6 +365,18 @@ $('#view_student_marks').submit();
 
 
 });
+
+$(document).on('click', '.viewAttendance', function() {
+
+var id = $(this).data('id');
+
+$(".student_id").val(id); 
+$('#view_student_attandence').submit();
+
+
+});
+
+
 </script>
 @endpush
 @endsection

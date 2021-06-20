@@ -133,7 +133,8 @@ class StudentController extends Controller
         $subjects = $grade->subjects;
         
         $student_subjects =  ClassAttendance::where([['school_session_id', $school_session->id], ['class_id', $class->id]])->pluck('subject_id')->unique()->toArray();
-        return view('student.courses.attendance',compact('student_subjects','class','subjects'));
+        $user_layout ="student";
+        return view('student.courses.attendance',compact('user_layout','student_subjects','class','subjects'));
     }
     public function getStudentSubjectAttendance(Request $request)
     {
@@ -188,9 +189,9 @@ class StudentController extends Controller
             $q->where([['attendance','Absent']]);    
             })->count();
             
-        $result_absents =  ClassAttendance::where([['school_session_id', $school_session->id], ['subject_id', $request->subject_id],['class_id', $class->id]])->whereHas('login_student_attendance' ,function ($q){
-                $q->where([['attendance','Absent']]);    
-                })->count();
+        // $result_absents =  ClassAttendance::where([['school_session_id', $school_session->id], ['subject_id', $request->subject_id],['class_id', $class->id]])->whereHas('login_student_attendance' ,function ($q){
+        //     $q->where([['attendance','Present'],['student_id',Auth::user()->id]]);      
+        //         })->count();
         // $result_present =  ClassAttendance::where([['school_session_id', $school_session->id], ['subject_id', $request->subject_id],['class_id', $class->id]])->whereHas('student_attendance' ,function ($q){
         //     $q->where([['attendance','Present'],['student_id',Auth::user()->id]]);    
         //     })->count();

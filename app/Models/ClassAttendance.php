@@ -32,9 +32,6 @@ class ClassAttendance extends Model
     {
         return $this->belongsTo('App\Models\ClassGrade');
     }
-    public function student_attendance_id($id)
-    {
-        return $this->hasOne('App\Models\ClassStudentAttendance', 'attendance_id', 'id')->where('student_id',  $id);
-    }
+
   
 }
