@@ -39,6 +39,10 @@ Auth::routes(['register' => false]);
         Route::post('edit-subject', 'AdminController@editSubject')->name('edit-subject');
         Route::post('del-subject', 'AdminController@deleteSubject')->name('del-subject');
         Route::post('get-subject-detail', 'AdminController@getSubjectDetail')->name('get-subject-detail');
+
+        Route::any('/get-subject-for-managment', 'AdminController@getSubjectforManagment')->name('get-subject-for-managment');
+        Route::post('admin-get-student-subject-attendance', 'AdminController@getStudentsSubjectAttendance')->name('admin-get-student-subject-attendance');
+        
         //grades 
         Route::get('grades', 'AdminController@grades')->name('grades');
         Route::get('/get-grades', 'AdminController@getGrades')->name('get-grades');
@@ -109,7 +113,8 @@ Auth::routes(['register' => false]);
         Route::post('add-branch-admin', 'AdminController@addBranch')->name('add-branch-admin');
         Route::post('edit-branch-admin', 'AdminController@editBranch')->name('edit-branch-admin');
         Route::post('change-school-branch', 'AdminController@changeSchoolBranch')->name('change-school-branch');
-        
+        Route::any('admin-get-student-subject-attendance', 'AdminController@getStudentsSubjectAttendance')->name('admin-get-student-subject-attendance');
+        Route::any('class-subject-managment/{id}', 'AdminController@classSubjectManagment')->name('class-subject-managment');
     });
 
 
@@ -131,7 +136,7 @@ Auth::routes(['register' => false]);
 
         Route::post('add-session', 'SuperAdminController@addSessions')->name('add-session');
         Route::post('change-school-session', 'SuperAdminController@changeSchoolSession')->name('change-school-session');
-        // 
+
     });
 
     Route::group(['namespace' => 'Teacher', 'prefix' => 'teacher','middleware' => 'checkTeacher'], function () {
@@ -175,6 +180,9 @@ Auth::routes(['register' => false]);
         Route::post('report-teacher-to-admin', 'StudentController@reportTeacherToAdmin')->name('report-teacher-to-admin');
         
         Route::post('get-my-subject-attendance', 'StudentController@getStudentSubjectAttendance')->name('get-my-subject-attendance');
+
+        Route::post('get-my-subject-attendance-stats', 'StudentController@getStudentAttendanceStats')->name('get-my-subject-attendance-stats');
+        
     });
 });
 // Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');

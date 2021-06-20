@@ -18,8 +18,10 @@ use App\Models\UserDetails\StudentDetails;
 use App\Models\ClassAttendance;
 use App\Models\ClassStudentAttendance;
 use App\Mail\Teacher\ReportStudent;
+use App\Models\SchoolSession;
+use App\Models\SchoolInformation;
 use Mail;
-
+use Session;
 //files Images
 use Intervention\Image\Facades\Image;
 use Illuminate\Support\Facades\Storage;
@@ -434,7 +436,9 @@ public function teacherInsertStudentAttendance(Request $request)
     $class = Classes::find($request->class_id);
     $types = ResultType::where([['school_id', Auth::user()->school->id],['status', 1]])->get();
     if($class !=null && $subject!=null ){
-        return view('teacher.insert-students-attendance',compact('class','students','subject','types'));
+        $school =  Auth::user()->school;
+        $school_session = $school->school_session;
+        return view('teacher.insert-students-attendance',compact('class','students','subject','types','school_session'));
     }else{
         return redirect()->route('home');
     }
@@ -452,8 +456,6 @@ public function addStudentAttendance(Request $request)
         ], 200);
     }
     if( $data){
-        
-
         $class_attendance=ClassAttendance::create([
             'teacher_id' => Auth::user()->id,
             'type' => $request->type,
@@ -489,44 +491,158 @@ public function addStudentAttendance(Request $request)
 }
 public function getStudentsSubjectAttendance(Request $request)
 { 
-//    $school =  Auth::user()->school;
-//    $school_session = $school->school_session;
+    $first_check=false;
+    $last_check=false;
+    $date = null;
+    $class_id =$request->class_id;
+    $subject_id =$request->subject_id;
   
-//    $result =  ClassAttendance::where([['school_session_id', $school_session->id], ['subject_id', $request->subject_id],['class_id', $request->class_id]])->with('student_attendance')->latest()->orderBy('id', 'DESC')->get();
-//    $attendance = clone $result;
-
+    if(Auth::user()->role_id==2){
+        $school =  Auth::user()->school;
+        $school_session = $school->school_session;
+        $layout_user = "teacher";
+      
+    }
+    else if (Auth::user()->role_id==1){
+        $school_session = Session::get('school_id');
+        $layout_user = "admin";
+        // $school_session = SchoolSession::find($school_session);
+        $school = SchoolInformation::find($school_session);
+        $school_session = $school->school_session;
+        
+    }
+    if($school_session){
+        $school_session_id =$school_session->id;
+    }else{
+        $school_session_id = null;
+    }
    
-//    $class_students = User::where('role_id',3)->whereHas('student_details' ,function ($q)use ($request){
-//     $q->where('class_id',$request->class_id);
-//     })->get();
- 
-//    $all_class_attendance = $result->load('student_attendance');
-//    dd( $result->load('student_attendance'));
-// //    $all_class_attendance = ClassStudentAttendance::whereHas('class_attendance' ,function ($q)use ($request){
-// //         $q->where([['subject_id', $request->subject_id],['class_id', $request->class_id]])->latest();
-// //     })->get();
-   
-//    return view('teacher.get-students-attendance',compact('result','all_class_attendance','attendance','class_students'));
+    if($request->last_row){
+        $result =  ClassAttendance::where([['school_session_id',  $school_session_id ], ['subject_id', $request->subject_id],['class_id', $request->class_id],['id', '<', $request->last_row]])->with('student_attendance')->latest()->take(6)->orderBy('id', 'DESC')->get();
+        $all_class_attendance = ClassStudentAttendance::whereHas('class_attendance' ,function ($q)use ($request ,  $school_session_id){
+        $q->where([['school_session_id',  $school_session_id ],['subject_id', $request->subject_id],['class_id', $request->class_id],['id', '<', $request->last_row]])->latest()->take(6);
+        })->get();
+        $last_attendance  =  ClassAttendance::where([['school_session_id',  $school_session_id ], ['subject_id', $request->subject_id],['class_id', $request->class_id],['id', '<', $request->last_row]])->with('student_attendance')->count();
+        $first_check=true;
+        if($last_attendance>6){
+            $last_check=true;
+        }
+       
+    }else if($request->first_row){
+        
+        $result =  ClassAttendance::where([['school_session_id',  $school_session_id ], ['subject_id', $request->subject_id],['class_id', $request->class_id],['id', '>', $request->first_row]])->with('student_attendance')->take(6)->get();
+        $result =  $result->reverse(); 
+        $all_class_attendance = ClassStudentAttendance::whereHas('class_attendance' ,function ($q)use ($request ,  $school_session_id){
+        $q->where([['school_session_id',  $school_session_id ],['subject_id', $request->subject_id],['class_id', $request->class_id],['id', '>',$request->first_row]])->take(6);
+        })->get();  
+        $last_attendance  =  ClassAttendance::where([['school_session_id',  $school_session_id ], ['subject_id', $request->subject_id],['class_id', $request->class_id],['id', '>', $request->first_row]])->with('student_attendance')->count();
+        $last_check=true; 
+        if($last_attendance>6){
+            $first_check=true;
+        }
+    }else if($request->search_date){
 
+        $make_date=date_create($request->search_date);
 
-   $school =  Auth::user()->school;
-   $school_session = $school->school_session;
-  if($school_session){
-    $school_session_id =$school_session->id;
-  }else{
-    $school_session_id = null;
-  }
-   $result =  ClassAttendance::where([['school_session_id',  $school_session_id ], ['subject_id', $request->subject_id],['class_id', $request->class_id]])->with('student_attendance')->latest()->take(6)->orderBy('id', 'DESC')->get();
-   $attendance = clone $result;
-
-   
-   $class_students = User::where('role_id',3)->whereHas('student_details' ,function ($q)use ($request){
+        $date = date_format($make_date,"j-n-Y");
+       
+        $result =  ClassAttendance::where([['school_session_id',  $school_session_id ], ['subject_id', $request->subject_id],['class_id', $request->class_id],['date',$date]])->with('student_attendance')->get();
+       
+        $all_class_attendance = ClassStudentAttendance::whereHas('class_attendance' ,function ($q)use ($request ,  $school_session_id , $date){
+        $q->where([['school_session_id',  $school_session_id ],['subject_id', $request->subject_id],['class_id', $request->class_id],['date',$date]]);
+        })->get();  
+       
+    }else{
+        $result =  ClassAttendance::where([['school_session_id',  $school_session_id ], ['subject_id', $request->subject_id],['class_id', $request->class_id]])->with('student_attendance')->latest()->take(6)->orderBy('id', 'DESC')->get();
+        $last_attendance  =  ClassAttendance::where([['school_session_id',  $school_session_id ], ['subject_id', $request->subject_id],['class_id', $request->class_id]])->with('student_attendance')->count();
+        if($last_attendance>6){
+            $last_check=true;
+        }
+        $all_class_attendance = ClassStudentAttendance::whereHas('class_attendance' ,function ($q)use ($request ,  $school_session_id){
+        $q->where([['school_session_id',  $school_session_id ],['subject_id', $request->subject_id],['class_id', $request->class_id]])->latest()->take(6);
+        })->get();
+    } 
+    $class_students = User::where('role_id',3)->whereHas('student_details' ,function ($q)use ($request){
     $q->where('class_id',$request->class_id);
     })->get();
-   $all_class_attendance = ClassStudentAttendance::whereHas('class_attendance' ,function ($q)use ($request){
-        $q->where([['subject_id', $request->subject_id],['class_id', $request->class_id]])->latest()->take(6);
-    })->get();
-   
-   return view('teacher.get-students-attendance',compact('result','all_class_attendance','attendance','class_students'));
+   if($layout_user == 'teacher'){
+     
+        return view('teacher.get-students-attendance',compact('layout_user','result','all_class_attendance','date','class_students','last_check','first_check','class_id','subject_id'));
+   }else{
+        $response = view('teacher.get-students-attendance',compact('layout_user','result','all_class_attendance','date','class_students','last_check','first_check','class_id','subject_id'));
+        return $response; 
+   }
 }
+
+    public function getStudentSubjectAttendance(Request $request)
+    {
+       $school =  Auth::user()->school;
+       $school_session = $school->school_session;
+       $class = Auth::user()->student_details->class;
+       $result =  ClassAttendance::where([['school_session_id', $school_session->id], ['subject_id', $request->subject_id],['class_id', $class->id]])->with('login_student_attendance')->orderBy('id', 'DESC')->get();
+      
+       return DataTables::of($result)
+       ->addColumn('date', function ($data) {
+         
+           return ' <div class="text-center">'.$data->date.'</div>';   
+       })
+       ->addColumn('time', function ($data) {
+     
+        return ' <div class="text-center">'.$data->time.'</div>';     
+        })
+       ->addColumn('attendance', function ($data) {
+        $button = ' <div class="text-center">';
+        if($data->login_student_attendance){
+            if($data->login_student_attendance->attendance =="Present"){
+                $button.= '<a  class="btn btn-success  btn-sm  "title="Present" style="color:white;" >Present</a>&nbsp;&nbsp;'; 
+            }elseif($data->login_student_attendance->attendance=="Leave"){
+                $button.= '<a  class="btn btn-secondary  btn-sm  "title="Leave" style="color:white;" >Leave</a>&nbsp;&nbsp;'; 
+            }elseif($data->login_student_attendance->attendance=="Absent"){
+                $button.= '<a  class="btn btn-warning  btn-sm  "title="Absent"  style="color:white;">Absent</a>&nbsp;&nbsp;'; 
+            }else{
+                return  $button."--";
+            }
+            return  $button.' </div>';
+        }else{
+            return  $button."-- </div>";
+        }
+           
+       })
+       ->rawColumns(['attendance','date','time'])
+       ->make(true);
+    }
+    public function getStudentAttendanceStats(Request $request)
+    {
+       $school =  Auth::user()->school;
+       $school_session = $school->school_session;
+
+       $class = Auth::user()->student_details->class;
+       $result_present =  ClassAttendance::where([['school_session_id', $school_session->id], ['subject_id', $request->subject_id],['class_id', $class->id]])->whereHas('login_student_attendance' ,function ($q){
+        $q->where([['attendance','Present']]);    
+        })->count();
+        $result_leaves =  ClassAttendance::where([['school_session_id', $school_session->id], ['subject_id', $request->subject_id],['class_id', $class->id]])->whereHas('login_student_attendance' ,function ($q){
+            $q->where([['attendance','Leave']]);    
+            })->count();
+        $result_absents =  ClassAttendance::where([['school_session_id', $school_session->id], ['subject_id', $request->subject_id],['class_id', $class->id]])->whereHas('login_student_attendance' ,function ($q){
+            $q->where([['attendance','Absent']]);    
+            })->count();
+            
+        $result_absents =  ClassAttendance::where([['school_session_id', $school_session->id], ['subject_id', $request->subject_id],['class_id', $class->id]])->whereHas('login_student_attendance' ,function ($q){
+                $q->where([['attendance','Absent']]);    
+                })->count();
+        // $result_present =  ClassAttendance::where([['school_session_id', $school_session->id], ['subject_id', $request->subject_id],['class_id', $class->id]])->whereHas('student_attendance' ,function ($q){
+        //     $q->where([['attendance','Present'],['student_id',Auth::user()->id]]);    
+        //     })->count();
+
+        return response()->json([
+            'success' => true,
+            'result_present' => $result_present,
+            'result_leaves' => $result_leaves,
+            'result_absents' => $result_absents,
+        ], 200);
+
+    }
+
+
+
 }

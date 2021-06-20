@@ -6,7 +6,7 @@
 <div class="breadcrumb-header justify-content-between">
   <div class="my-auto">
     <div class="d-flex">
-      <h4 class="content-title mb-0 my-auto">Class  </h4>
+      <h4 class="content-title mb-0 my-auto">Class Attendance </h4>
     </div>
   </div>
 </div>
@@ -15,6 +15,13 @@
         <!--div-->
         <div class="card">
             <div class="card-body">
+                @if(! $school_session)
+                    <div class="card bg-danger text-white">
+                        <div class="card-body">
+                            School Session is not started yet , Please contact to the administration...
+                        </div>
+                    </div>
+                @endif
                 <div class="main-content-label mg-b-5">
                     Details
                 </div>
@@ -99,8 +106,9 @@
                         </tbody>
                     </table>
                 </div><!-- bd -->
+            @if( $school_session)
               <button type="button" class="btn btn-primary add-marks">Save changes</button>
-
+            @endif
             </div><!-- bd -->
         </div><!-- bd -->
     </div>
@@ -137,9 +145,15 @@ $(document).on('click', '.add-marks', function() {
                     axios.post("{{route('add-student-attendance')}}",
                         $('#submit_attendance').serialize()
                     ).then(function(response) {
+                     if(response.data.success==true){
                         toastr.success('Success!', "Attendance Saved Successfully...", {
                             "positionClass": "toast-bottom-right"
                         });
+                     }else{
+                        toastr.error('Error!', "School Session is not started yet Please contact to the administration...", {
+                            "positionClass": "toast-bottom-right"
+                        });
+                     }
                     });
                 }else{
                     return;

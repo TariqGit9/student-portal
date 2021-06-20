@@ -159,7 +159,7 @@ class StudentController extends Controller
             }elseif($data->login_student_attendance->attendance=="Leave"){
                 $button.= '<a  class="btn btn-secondary  btn-sm  "title="Leave" style="color:white;" >Leave</a>&nbsp;&nbsp;'; 
             }elseif($data->login_student_attendance->attendance=="Absent"){
-                $button.= '<a  class="btn btn-danger  btn-sm  "title="Absent"  style="color:white;">Absent</a>&nbsp;&nbsp;'; 
+                $button.= '<a  class="btn btn-warning  btn-sm  "title="Absent"  style="color:white;">Absent</a>&nbsp;&nbsp;'; 
             }else{
                 return  $button."--";
             }
@@ -172,4 +172,38 @@ class StudentController extends Controller
        ->rawColumns(['attendance','date','time'])
        ->make(true);
     }
+    public function getStudentAttendanceStats(Request $request)
+    {
+       $school =  Auth::user()->school;
+       $school_session = $school->school_session;
+
+       $class = Auth::user()->student_details->class;
+       $result_present =  ClassAttendance::where([['school_session_id', $school_session->id], ['subject_id', $request->subject_id],['class_id', $class->id]])->whereHas('login_student_attendance' ,function ($q){
+        $q->where([['attendance','Present']]);    
+        })->count();
+        $result_leaves =  ClassAttendance::where([['school_session_id', $school_session->id], ['subject_id', $request->subject_id],['class_id', $class->id]])->whereHas('login_student_attendance' ,function ($q){
+            $q->where([['attendance','Leave']]);    
+            })->count();
+        $result_absents =  ClassAttendance::where([['school_session_id', $school_session->id], ['subject_id', $request->subject_id],['class_id', $class->id]])->whereHas('login_student_attendance' ,function ($q){
+            $q->where([['attendance','Absent']]);    
+            })->count();
+            
+        $result_absents =  ClassAttendance::where([['school_session_id', $school_session->id], ['subject_id', $request->subject_id],['class_id', $class->id]])->whereHas('login_student_attendance' ,function ($q){
+                $q->where([['attendance','Absent']]);    
+                })->count();
+        // $result_present =  ClassAttendance::where([['school_session_id', $school_session->id], ['subject_id', $request->subject_id],['class_id', $class->id]])->whereHas('student_attendance' ,function ($q){
+        //     $q->where([['attendance','Present'],['student_id',Auth::user()->id]]);    
+        //     })->count();
+
+        return response()->json([
+            'success' => true,
+            'result_present' => $result_present,
+            'result_leaves' => $result_leaves,
+            'result_absents' => $result_absents,
+        ], 200);
+
+    }
+
+
+
 }

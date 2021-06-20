@@ -27,6 +27,12 @@ use File;
 use Auth;
 //datatables
 use DataTables;
+
+//TeacherController
+
+use App\Http\Controllers\Teacher\TeacherController;
+
+
 class AdminController extends Controller
 {
     public function admin()
@@ -89,11 +95,9 @@ class AdminController extends Controller
                 // $button = '<a href="#" class="btn btn-danger btn-sm  deleteClass"title="Delete" data-id=' . $classes->id . '><i class="fa fa-trash"></i></a>&nbsp;&nbsp;';  
                 $button = '<a href="'.route("class-subjects", $classes->id).'" class="btn btn-info btn-sm "title="Class Subjects "><i class="fa fa-book-open"></i></a>&nbsp;&nbsp;';  
                 $button .= '<a href="'.route("class-teachers", $classes->id).'" class="btn btn-warning btn-sm "title="Class Teachers "><i class="fa fa-pen"></i></a>&nbsp;&nbsp;';  
-             
                 $button .= '<a href="'.route("class-students", $classes->id).'" class="btn btn-success btn-sm "title="Class Students"><i class="fa fa-users"></i></a>&nbsp;&nbsp;';  
-              
+                $button .= '<a href="'.route("class-subject-managment", $classes->id).'" class="btn btn-secondary btn-sm "title="Class Attendance / Marks"><i class="icon ion-md-filing"></i></a>&nbsp;&nbsp;';  
                 return $button;
-                
         })->addColumn('grade', function ($classes) {
             // //gemolith/public/storage/images/
             if ($classes->grade == null) {
@@ -144,11 +148,11 @@ class AdminController extends Controller
     public function getSubjects(Request $request)
     {
         $number=0;
-        $subjects = Subject::where('school_id',Session::get('school_id'))->get();
         if( $request->id){
             $class = Classes::find($request->id); 
             $subjects =   $class->grade->subjects;
-
+        }else{
+            $subjects = Subject::where('school_id',Session::get('school_id'))->get();
         }
         return DataTables::of($subjects)
         ->addColumn('action', function ($subjects)use ($request) {
@@ -1476,5 +1480,39 @@ public function changeSchoolBranch(Request $request)
  
 
 }
+//
+public function classSubjectManagment($id)
+{ 
+    return view('admin.class.class-subject-managment', compact('id'));
+
+}
+
+public function getSubjectforManagment(Request $request)
+{
+    
+
+    $class = Classes::find($request->id); 
+    $subjects = $class->grade->subjects;
+
+    return DataTables::of($subjects)
+    ->addColumn('action', function ($subjects)use ($request) {
+        $button = '<a href="#" class="btn btn-info btn-sm  get_class_student_attendance "title="Attendance" data-class=' . $request->id . ' data-subject=' . $subjects->id . '><i class="fa fa-list-alt "></i></a>&nbsp;&nbsp;';  
+        return $button;
+            
+    })
+        ->rawColumns(['action'])
+        ->make(true);
+}
+
+
+public function getStudentsSubjectAttendance(Request $request)
+{ 
+    $teacher_controller = new TeacherController;
+    $result = $teacher_controller->getStudentsSubjectAttendance($request);
+    return $result;
+
+}
+
+
 
 }
