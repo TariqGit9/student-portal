@@ -13,6 +13,8 @@
   background: url('https://cdn.rawgit.com/DataTables/DataTables/6c7ada53ebc228ea9bc28b1b216e793b1825d188/examples/resources/details_close.png') no-repeat center center;
   
   
+
+  
   }
 </style>
 @endpush
