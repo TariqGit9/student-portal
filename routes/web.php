@@ -121,7 +121,8 @@ Auth::routes(['register' => false]);
 
         Route::post('get-student-subject-attendance-admin-stats', 'AdminController@getStudentAttendanceStats')->name('get-student-subject-attendance-admin-stats');
         
-
+        Route::post('student-marks-admin', 'AdminController@studentMarks')->name('student-marks-admin');
+        Route::post('display-student-marks-admin', 'AdminController@getStudentMarks')->name('display-student-marks-admin');
 
 
 
@@ -164,23 +165,15 @@ Auth::routes(['register' => false]);
         Route::post('toggle-assessments-status', 'TeacherController@toggleAssessmentsStatus')->name('toggle-assessments-status');
         Route::any('assesment-class-student', 'TeacherController@assesmentClassStudent')->name('assesment-class-student');
         Route::post('get-class-assesments-result', 'TeacherController@getClassAssesmentsResults')->name('get-class-assesments-result');
-
-
         Route::post('report-student-to-admin', 'TeacherController@reportStudentToAdmin')->name('report-student-to-admin');
         Route::post('student-marks', 'TeacherController@studentMarks')->name('student-marks');
         Route::post('display-student-marks', 'TeacherController@getStudentMarks')->name('display-student-marks');
-        
         Route::post('view-student-attendance', 'TeacherController@studentAttendance')->name('view-student-attendance');
-
         Route::post('edit-marks', 'TeacherController@editMarks')->name('edit-marks');
-
         Route::any('/teacher-insert-student-attendance', 'TeacherController@teacherInsertStudentAttendance')->name('teacher-insert-student-attendance');
         Route::post('add-student-attendance', 'TeacherController@addStudentattendance')->name('add-student-attendance');
         Route::post('get-student-subject-attendance', 'TeacherController@getStudentsSubjectAttendance')->name('get-student-subject-attendance');
-
-        
         Route::post('get-student-subject-attendance-teacher', 'TeacherController@getStudentSubjectAttendance')->name('get-student-subject-attendance-teacher');
-
         Route::post('get-student-subject-attendance-teacher-stats', 'TeacherController@getStudentAttendanceStats')->name('get-student-subject-attendance-teacher-stats');
         
 
