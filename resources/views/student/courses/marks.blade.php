@@ -58,6 +58,9 @@ function getData(id){
 	@elseif(Auth::user()->role_id==2)
 	var url = "{{route('display-student-marks')}}";
   var student_id = "{{$student->id}}";
+  @elseif(Auth::user()->role_id==1)
+	var url = "{{route('display-student-marks-admin')}}";
+  var student_id = "{{$student->id}}";
 	@endif
 	axios.post(url, {
 			id: id ,student_id: student_id 

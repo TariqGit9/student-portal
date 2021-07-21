@@ -90,10 +90,9 @@
                         <thead>
                             <tr>
                                 <th>ID</th>
-                                <th>Registration Number</th>
+                                <th>Reg Number</th>
                                 <th>Name</th>
                                 <th >Marks Obtained</th>
-                           
                             </tr>
                         </thead>
                         <tbody>

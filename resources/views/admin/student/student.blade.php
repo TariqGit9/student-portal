@@ -309,6 +309,13 @@
     </div>
   </div>
 </div>
+
+<form id="view_student_marks" method="post" action="student-marks-admin">
+  @csrf
+  <input  class="student_id" name ="student_id" type="hidden" value="">
+
+</form >
+
 @push('javascript')
 <script>
         $.ajaxSetup({
@@ -810,6 +817,17 @@ $(document).on('click', '.save_password', function() {
 
 
 });
+$(document).on('click', '.viewMarks', function() {
+
+var id = $(this).data('id');
+
+$(".student_id").val(id); 
+$('#view_student_marks').submit();
+
+
+});
+
+
 
 </script>
 @endpush

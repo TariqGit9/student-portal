@@ -79,7 +79,7 @@
                         <thead>
                             <tr>
                                 <th>#</th>
-                                <th>Registration Number</th>
+                                <th>Reg Number</th>
                                 <th>Name</th>
                                 <th >Status</th>
                            

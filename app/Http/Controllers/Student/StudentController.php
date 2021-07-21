@@ -35,6 +35,7 @@ class StudentController extends Controller
         $school_session = $school->school_session;
         $school_result_types =  ResultType::where([['school_id', $school->id],['status', 1]])->get();
         $html="";
+        $html_footer_data ="";
         $colors = array("primary","success",  "secondary", "warning","danger","primary","success",  "secondary", "warning","danger");
         $counter =0;
         $number =0;
@@ -55,14 +56,27 @@ class StudentController extends Controller
                         $obt_marks= $obt_marks + $final_result->obtained_marks;
                     }
                 }
-              
+                $percentage = '--';
+                if( $total_marks !=0 &&  $total_marks != null ){
+                    $percentage = $obt_marks / $total_marks ;
+                    $percentage = $percentage * 100 ;
+                    $percentage =number_format((float)$percentage, 2, '.', '');
+                }
+                
 
                 $user_id = Auth::user()->id;
                 $data =  view('student.courses.tables-view.marks-tables-view',compact('result_type','number','obt_marks','total_marks','student_marks_of_type','counter','colors','user_id'))->render();
                 $html= $html. $data;
+           
+                $footer_data =  view('student.courses.tables-view.result-footer',compact('percentage','result_type','obt_marks','total_marks','counter','colors','user_id'))->render();
+                $html_footer_data = $html_footer_data. $footer_data;
                 $counter++;
             }
         }
+        $html_footer =' <div class="row"> ';
+        $html_footer_end =' </div>';
+        $html_footer =$html_footer .$html_footer_data.$html_footer_end;
+        $html = $html.$html_footer;
         return response()->json([
             'success' => $html,
         ], 200);

@@ -728,7 +728,8 @@ class AdminController extends Controller
         ->addColumn('action', function ($data) {
                 
                 // $button = '<a href="#" class="btn btn-info btn-sm  editGrade "title="edit" data-id=' . $grades->id . '><i class="fa fa-edit"></i></a>&nbsp;&nbsp;';  
-                $button = '<a href="#" class="btn btn-info btn-sm  editStudent " data-toggle="modal" data-target="#editStudentModal" data-email="' . $data->email . '"  data-id="' . $data->id . '" data-name="' . $data->name . '"data-avatar="' . $data->avatar . '"data-user_name="' . $data->user_name . '"data-phone="' . $data->student_details->phone .'"data-ephone="' . $data->student_details->emergency_phone .'"data-class="' . $data->student_details->class_id . '"data-address_main="' . $data->student_details->address_line_main .'"data-address_sec="' . $data->student_details->address_line_secondary .'"><i class="fa fa-edit"></i></a>&nbsp;&nbsp;';  
+                $button = '<a href="#" class="btn btn-secondary btn-sm  viewMarks " title="View Student Marks of all subjects" data-id="' . $data->id . '"><i class="fa fa-book"></i></a>&nbsp;&nbsp;';  
+                $button .= '<a href="#" class="btn btn-info btn-sm  editStudent " data-toggle="modal" data-target="#editStudentModal" data-email="' . $data->email . '"  data-id="' . $data->id . '" data-name="' . $data->name . '"data-avatar="' . $data->avatar . '"data-user_name="' . $data->user_name . '"data-phone="' . $data->student_details->phone .'"data-ephone="' . $data->student_details->emergency_phone .'"data-class="' . $data->student_details->class_id . '"data-address_main="' . $data->student_details->address_line_main .'"data-address_sec="' . $data->student_details->address_line_secondary .'"><i class="fa fa-edit"></i></a>&nbsp;&nbsp;';  
                 $button .= '<a href="#" class="btn btn-danger btn-sm   deleteStudent"title="Delete" data-id=' . $data->id . '><i class="fa fa-trash"></i></a>&nbsp;&nbsp;';  
                 $button .= '<a href="#" class="btn btn-success btn-sm   changeStudentPassword"title="Change Password" data-id=' . $data->id . '" data-name="' . $data->user_name . '"><i class="fa fa-key"></i></a>&nbsp;&nbsp;';  
                 return $button;
@@ -1497,8 +1498,7 @@ public function getSubjectforManagment(Request $request)
     return DataTables::of($subjects)
     ->addColumn('action', function ($subjects)use ($request) {
         $button = '<a href="#" class="btn btn-info btn-sm  get_class_student_attendance "title="Attendance" data-class=' . $request->id . ' data-subject=' . $subjects->id . '><i class="fa fa-list-alt "></i></a>&nbsp;&nbsp;';  
-        $button .= '<a href="#" class="btn btn-success btn-sm  viewMarks " title="View Student Marks of all subjects" data-id="' . $data->id . '"><i class="fa fa-eye"></i></a>&nbsp;&nbsp;';  
-        
+       
         return $button;
             
     })
@@ -1534,5 +1534,16 @@ public function getStudentAttendanceStats(Request $request)
     $result = $teacher_controller->getStudentAttendanceStats($request);
     return $result;
 }
-
+public function studentMarks(Request $request)
+{
+    $teacher_controller = new TeacherController;
+    $result = $teacher_controller->studentMarks($request);
+    return $result;
+}
+public function getStudentMarks(Request $request)
+{
+    $teacher_controller = new TeacherController;
+    $result = $teacher_controller->getStudentMarks($request);
+    return $result;
+}
 }
