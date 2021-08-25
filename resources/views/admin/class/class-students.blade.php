@@ -14,8 +14,9 @@
   
   
 
-  
+
   }
+  
 </style>
 @endpush
 @section('content')
