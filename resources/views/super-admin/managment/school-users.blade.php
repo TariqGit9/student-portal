@@ -216,30 +216,16 @@ $('#table_data tbody').on('click', 'td.details-control', function() {
     var id = $(this).data('id');
     
     if (row.child.isShown()) {
-        // This row is already open - close it
         row.child.hide();
         tr.removeClass('shown');
     } else {
-        // Open this row
-        // row.child(  ).show();
-
         format(row.data()).then((data) => {
-          
-
             var html=data.html;
-         
-           
             row.child(html).show();
         });
-
         tr.addClass('shown');
     }
 });
-
-
-
-
-
 
 $('#user_roles').on('change', function() {
    

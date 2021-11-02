@@ -43,7 +43,6 @@
                       <th >Avatar</th>
                       <th >Name</th>
                       <th >User Name</th>
-                     
                       <th >Phone</th>
                       <th >Action</th>
                   </tr>

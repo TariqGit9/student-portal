@@ -86,7 +86,6 @@ class TeacherController extends Controller
             $data = User::where('role_id',3)->whereHas('student_details' ,function ($q)use ($request){
                 $q->where('class_id',$request->id);
             })->get();
-            
         }
         
         return DataTables::of($data)
