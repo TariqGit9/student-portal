@@ -16,8 +16,11 @@ class CreateClassFeesTable extends Migration
         Schema::create('class_fees', function (Blueprint $table) {
             $table->id();
             $table->string('type')->nullable();
-            $table->unsignedBigInteger('school_id')->nullable();
 
+            $table->unsignedBigInteger('school_id')->nullable();
+            $table->unsignedBigInteger('school_session_id')->nullable();
+
+            
             $table->string('date')->nullable();
             $table->string('expiry_date')->nullable();
              
@@ -27,8 +30,6 @@ class CreateClassFeesTable extends Migration
             $table->double('fee_charge', 15, 8);
             $table->double('late_fee_charge', 15, 8);
 
-            $table->unsignedBigInteger('school_id')->nullable();
-            $table->unsignedBigInteger('school_session_id')->nullable();
 
             $table->string('ip_address')->nullable();
             
