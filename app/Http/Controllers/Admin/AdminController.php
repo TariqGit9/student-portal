@@ -96,7 +96,7 @@ class AdminController extends Controller
                 $button = '<a href="'.route("class-subjects", $classes->id).'" class="btn btn-info btn-sm "title="Class Subjects "><i class="fa fa-book-open"></i></a>&nbsp;&nbsp;';  
                 $button .= '<a href="'.route("class-teachers", $classes->id).'" class="btn btn-warning btn-sm "title="Class Teachers "><i class="fa fa-pen"></i></a>&nbsp;&nbsp;';  
                 $button .= '<a href="'.route("class-students", $classes->id).'" class="btn btn-success btn-sm "title="Class Students"><i class="fa fa-users"></i></a>&nbsp;&nbsp;';  
-                $button .= '<a href="'.route("class-subject-managment", $classes->id).'" class="btn btn-secondary btn-sm "title="Class Attendance "><i class="icon ion-md-filing"></i></a>&nbsp;&nbsp;';  
+                $button .= '<a href="'.route("class-subject-managment", $classes->id).'" class="btn btn-secondary btn-sm "title="Class Attendance "><i class="fa fa-calendar"></i></a>&nbsp;&nbsp;';  
                 $button .= '<a href="'.route("class-subject-managment", $classes->id).'" class="btn bg-dark btn-sm text-white "title="Class Fee "><i class="icon ion-md-filing"></i></a>&nbsp;&nbsp;';  
                 return $button;
         })->addColumn('grade', function ($classes) {
@@ -861,18 +861,6 @@ class AdminController extends Controller
     {
         
         $data = User::onlyTrashed()->where([[ 'school_id' , Session::get('school_id')],['role_id',3]])->get();
-        // if($request->id){
-        //     $data = User::where('role_id',3)->whereHas('student_details' ,function ($q)use ($request){
-        //         $q->where('class_id',$request->id);
-        //     })->get();
-            
-        // }
-        // else{
-        //     $data = User::where('role_id',3)->get();
-        // }
-       
-
-
 
         return DataTables::of($data)
         ->addColumn('action', function ($data) {

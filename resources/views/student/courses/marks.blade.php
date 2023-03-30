@@ -20,7 +20,7 @@
                     <select class="form-control selectpicker  col-6" data-live-search="true" name="subject" id="subject" required>
                       @if($subjects)
                         @foreach($subjects as $subject )
-                        <option value="{{$subject->id}}">{{$subject->name}} &nbsp;&nbsp;&nbsp;&nbsp;  / &nbsp;&nbsp;&nbsp;&nbsp;  {{$subject->teacher_subject->teacher_details->name}}</span></option>
+                        <option value="{{$subject->id}}">{{$subject->name}} &nbsp;&nbsp;&nbsp;&nbsp;  / &nbsp;&nbsp;&nbsp;&nbsp; @if(@$subject->teacher_subject) {{@$subject->teacher_subject->teacher_details->name}} @else No teacher assigned @endif</span></option>
                         @endforeach
                       @endif
                     </select>

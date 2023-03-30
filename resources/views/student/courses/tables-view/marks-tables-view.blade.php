@@ -18,20 +18,21 @@
                 </thead>
                 <tbody>
                 @foreach($student_marks_of_type as $marks )
-                    <tr>
+                    @php 
+                        $final_result = 0;
+                        if($marks->student_marks){
+                            $final_result =$marks->student_marks->where('student_id',$user_id)->first();
+                        }
+                    @endphp
+                    <tr @if($marks->student_marks)  @if($marks->passing_marks > $final_result->obtained_marks) class="bg-danger"@endif @endif >
                 
                         <th scope="row">{{++$number}}</th>
                         <td>{{$marks->description}}</td>
                         <td>{{$marks->test_date}}</td>
-                        @php 
-                            $final_result = 0;
-                            if($marks->student_marks){
-                                $final_result =$marks->student_marks->where('student_id',$user_id)->first();
-                            }
-                        @endphp
+
 
                         @if($marks->student_marks)
-                            <td>{{$final_result->obtained_marks}}</td>
+                            <td  >{{$final_result->obtained_marks}}</td>
                        
                         @endif
                         <td>{{$marks->total_marks}}</td>
