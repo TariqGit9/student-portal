@@ -97,7 +97,7 @@ class AdminController extends Controller
                 $button .= '<a href="'.route("class-teachers", $classes->id).'" class="btn btn-warning btn-sm "title="Class Teachers "><i class="fa fa-pen"></i></a>&nbsp;&nbsp;';  
                 $button .= '<a href="'.route("class-students", $classes->id).'" class="btn btn-success btn-sm "title="Class Students"><i class="fa fa-users"></i></a>&nbsp;&nbsp;';  
                 $button .= '<a href="'.route("class-subject-managment", $classes->id).'" class="btn btn-secondary btn-sm "title="Class Attendance "><i class="fa fa-calendar"></i></a>&nbsp;&nbsp;';  
-                $button .= '<a href="'.route("class-subject-managment", $classes->id).'" class="btn bg-dark btn-sm text-white "title="Class Fee "><i class="icon ion-md-filing"></i></a>&nbsp;&nbsp;';  
+                $button .= '<a href="#" class="btn bg-primary btn-sm text-white view-class-fees" title="Class Fees" data-class="'.$classes->id.'"><i class="fa fa-dollar-sign"></i></a>&nbsp;&nbsp;';  
                 return $button;
         })->addColumn('grade', function ($classes) {
             // //gemolith/public/storage/images/

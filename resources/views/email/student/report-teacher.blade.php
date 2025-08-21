@@ -1,3 +1,3 @@
-{{$student->name}}
-{{Auth::user()->name}}
-{!!$data!!}
+{{ $student->name }}
+{{ Auth::user()->name }}
+{{ $data }}

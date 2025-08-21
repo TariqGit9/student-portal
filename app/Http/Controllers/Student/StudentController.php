@@ -6,6 +6,8 @@ use App\Models\TeacherSubject;
 use App\Models\ResultType;
 use App\Models\User;
 use App\Models\StudentMailsOfTeacher;
+use App\Models\ClassFee;
+use App\Models\ClassStudentFee;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Mail\Student\ReportTeacher;
@@ -219,6 +221,63 @@ class StudentController extends Controller
 
     }
 
+    public function myFees()
+    {
+        $student = Auth::user();
+        $class = $student->student_details->class;
+        
+        // Get all fees for the student's class
+        $fees = ClassFee::where([
+            ['school_id', $student->school_id],
+            ['class_id', $class->id]
+        ])->with('class')->get();
 
+        $feeData = [];
+        foreach ($fees as $fee) {
+            $payment = ClassStudentFee::where([
+                ['student_id', $student->id],
+                ['fee_id', $fee->id]
+            ])->first();
+
+            $isPastDue = now()->greaterThan($fee->expiry_date);
+            $totalFee = $isPastDue && !$payment ? $fee->fee_charge + $fee->late_fee_charge : $fee->fee_charge;
+            
+            $feeData[] = [
+                'id' => $fee->id,
+                'type' => $fee->type,
+                'amount' => $totalFee,
+                'paid' => $payment ? $payment->amount_paid : 0,
+                'due' => $payment ? $payment->amount_left : $totalFee,
+                'due_date' => $fee->date,
+                'expiry_date' => $fee->expiry_date,
+                'status' => $payment && $payment->amount_left == 0 ? 'Paid' : ($payment ? 'Partial' : 'Unpaid'),
+                'is_late' => $isPastDue && (!$payment || $payment->amount_left > 0),
+                'date_paid' => $payment ? $payment->date_paid : null
+            ];
+        }
+
+        return view('student.fees.index', compact('feeData', 'class'));
+    }
+
+    public function feeDetails($id)
+    {
+        $student = Auth::user();
+        $fee = ClassFee::findOrFail($id);
+        
+        // Verify this fee belongs to student's class
+        if ($fee->class_id != $student->student_details->class_id) {
+            abort(403, 'Unauthorized access to fee details');
+        }
+
+        $payment = ClassStudentFee::where([
+            ['student_id', $student->id],
+            ['fee_id', $fee->id]
+        ])->first();
+
+        $isPastDue = now()->greaterThan($fee->expiry_date);
+        $totalFee = $isPastDue && !$payment ? $fee->fee_charge + $fee->late_fee_charge : $fee->fee_charge;
+
+        return view('student.fees.details', compact('fee', 'payment', 'totalFee', 'isPastDue'));
+    }
 
 }

@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Eloquent\Attributes\ScopedBy;
 
 
 class User extends Authenticatable
@@ -18,12 +19,17 @@ class User extends Authenticatable
      *
      * @var array
      */
-    // protected $fillable = [
-    //     'name',
-    //     'email',
-    //     'password',
-    // ];
-    protected $guarded = [];
+    protected $fillable = [
+        'name',
+        'email',
+        'user_name',
+        'password',
+        'avatar',
+        'role_id',
+        'school_information_id',
+        'status',
+        'email_verified_at'
+    ];
     /**
      * The attributes that should be hidden for arrays.
      *

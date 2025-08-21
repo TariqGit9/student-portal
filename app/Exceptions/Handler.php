@@ -7,6 +7,10 @@ use App\Mail\SuperAdminEmail\Error;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Symfony\Component\ErrorHandler\ErrorRenderer\HtmlErrorRenderer;
 use Symfony\Component\ErrorHandler\Exception\FlattenException;
+use App\Exceptions\CustomException;
+use Illuminate\Validation\ValidationException;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 use Mail;
 use Throwable;
@@ -69,17 +73,94 @@ class Handler extends ExceptionHandler
      */
     public function render($request, Throwable $exception)
     {
-        
-        if(! env('APP_DEBUG', false)){
-            
-            return parent::render($request, $exception);
-            // return response()->view('error.error');
+        // Handle custom exceptions
+        if ($exception instanceof CustomException) {
+            return $this->handleCustomException($request, $exception);
+        }
+
+        // Handle validation exceptions
+        if ($exception instanceof ValidationException) {
+            return $this->handleValidationException($request, $exception);
+        }
+
+        // Handle model not found exceptions
+        if ($exception instanceof ModelNotFoundException || $exception instanceof NotFoundHttpException) {
+            return $this->handleNotFoundException($request, $exception);
+        }
+
+        // Handle 404 errors gracefully
+        if ($this->isHttpException($exception) && $exception->getStatusCode() == 404) {
+            return response()->view('error.error', ['message' => 'Page not found'], 404);
+        }
+
+        // Default handling for production vs development
+        if (!env('APP_DEBUG', false)) {
+            return response()->view('error.error', ['message' => 'Something went wrong'], 500);
         } else {
             return parent::render($request, $exception);
-            // return response()->view('error.error');
         }
-            // return parent::render($request, $exception);
-        
+    }
+
+    /**
+     * Handle custom exceptions
+     */
+    private function handleCustomException($request, CustomException $exception)
+    {
+        if ($request->expectsJson()) {
+            return response()->json([
+                'success' => false,
+                'error' => $exception->getErrorCode(),
+                'message' => $exception->getMessage()
+            ], $exception->getStatusCode());
+        }
+
+        // Handle specific exception types with custom views
+        $errorCode = $exception->getErrorCode();
+        if ($errorCode === 'SCHOOL_BLOCKED') {
+            return response()->view('error.school_blocked', [], 403);
+        }
+        if ($errorCode === 'USER_BLOCKED') {
+            return response()->view('error.user_blocked', [], 403);
+        }
+
+        return response()->view('error.error', [
+            'message' => $exception->getMessage()
+        ], $exception->getStatusCode());
+    }
+
+    /**
+     * Handle validation exceptions
+     */
+    private function handleValidationException($request, ValidationException $exception)
+    {
+        if ($request->expectsJson()) {
+            return response()->json([
+                'success' => false,
+                'error' => 'VALIDATION_FAILED',
+                'message' => 'Validation failed',
+                'errors' => $exception->errors()
+            ], 422);
+        }
+
+        return parent::render($request, $exception);
+    }
+
+    /**
+     * Handle not found exceptions
+     */
+    private function handleNotFoundException($request, $exception)
+    {
+        if ($request->expectsJson()) {
+            return response()->json([
+                'success' => false,
+                'error' => 'NOT_FOUND',
+                'message' => 'Resource not found'
+            ], 404);
+        }
+
+        return response()->view('error.error', [
+            'message' => 'The requested resource was not found'
+        ], 404);
     }
 
     public function sendEmail(Throwable $exception)

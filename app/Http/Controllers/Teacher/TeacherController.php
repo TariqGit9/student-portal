@@ -288,7 +288,11 @@ public function reportStudentToAdmin(Request $request)
     $teacher=  Auth::user();
     $student= User::find($request->student_id);
     
-    Mail::to('m.tariq.sarfraz.007@gmail.com')->send(new ReportStudent($student,$teacher,$report));
+    // Send email to school admin instead of hardcoded personal email
+    $adminEmail = Auth::user()->school->admin_email ?? config('mail.from.address');
+    if ($adminEmail) {
+        Mail::to($adminEmail)->send(new ReportStudent($student, $teacher, $report));
+    }
     return response()->json([
         'success' => true,
         'result' => 'Reported successfully',

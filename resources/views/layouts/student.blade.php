@@ -7,6 +7,7 @@
 		<meta http-equiv="X-UA-Compatible" content="IE=edge">
 		<meta name="Description" content="Bootstrap Responsive Admin Web Dashboard HTML5 Template">
 		<meta name="Author" content="Spruko Technologies Private Limited">
+		<meta name="csrf-token" content="{{ csrf_token() }}">
 		<meta name="Keywords" content="admin,admin dashboard,admin dashboard template,admin panel template,admin template,admin theme,bootstrap 4 admin template,bootstrap 4 dashboard,bootstrap admin,bootstrap admin dashboard,bootstrap admin panel,bootstrap admin template,bootstrap admin theme,bootstrap dashboard,bootstrap form template,bootstrap panel,bootstrap ui kit,dashboard bootstrap 4,dashboard design,dashboard html,dashboard template,dashboard ui kit,envato templates,flat ui,html,html and css templates,html dashboard template,html5,jquery html,premium,premium quality,sidebar bootstrap 4,template admin bootstrap 4"/>
 		@stack('styles')
 		<style>
@@ -120,6 +121,16 @@
 						</li>
 						<li class="slide">
 							<a class="side-menu__item"   href="{{route('my-attendance')}}"><svg xmlns="http://www.w3.org/2000/svg" class="side-menu__icon" viewBox="0 0 24 24"><path d="M0 0h24v24H0V0z" fill="none"></path><path d="M13 4H6v16h12V9h-5V4zm3 14H8v-2h8v2zm0-6v2H8v-2h8z" opacity=".3"></path><path d="M8 16h8v2H8zm0-4h8v2H8zm6-10H6c-1.1 0-2 .9-2 2v16c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm4 18H6V4h7v5h5v11z"></path></svg><span class="side-menu__label">Attendance</span></a>
+						</li>
+
+						<li class="side-item side-item-category">Financial</li>
+						<li class="slide">
+							<a class="side-menu__item" href="{{route('student.fees')}}">
+								<svg xmlns="http://www.w3.org/2000/svg" class="side-menu__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+									<path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
+								</svg>
+								<span class="side-menu__label">My Fees</span>
+							</a>
 						</li>
 					</ul>
 				</div>
@@ -367,6 +378,15 @@
 
 		<!-- JQuery min js -->
 		<script src="{{asset('assets/plugins/jquery/jquery.min.js')}}"></script>
+		
+		<!-- Global AJAX Setup for CSRF Token -->
+		<script>
+			$.ajaxSetup({
+				headers: {
+					'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+				}
+			});
+		</script>
 
 		<!-- Bootstrap Bundle js -->
 		<script src="{{asset('assets/plugins/bootstrap/js/bootstrap.bundle.min.js')}}"></script>
@@ -403,6 +423,12 @@
 
 		{{-- axios --}}
 		<script src="{{asset('assets/js/axios.min.js')}}"></script>
+		
+		<!-- Configure Axios with CSRF Token -->
+		<script>
+			axios.defaults.headers.common['X-CSRF-TOKEN'] = $('meta[name="csrf-token"]').attr('content');
+			axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
+		</script>
 	
 		
 		<script src="{{asset('assets/plugins/datatable/js/jquery.dataTables.min.js')}}"></script>

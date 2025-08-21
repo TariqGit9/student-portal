@@ -8,6 +8,7 @@
 		<meta name="Description" content="Bootstrap Responsive Admin Web Dashboard HTML5 Template">
 		<meta name="Author" content="Spruko Technologies Private Limited">
 		<meta name="Keywords" content="admin,admin dashboard,admin dashboard template,admin panel template,admin template,admin theme,bootstrap 4 admin template,bootstrap 4 dashboard,bootstrap admin,bootstrap admin dashboard,bootstrap admin panel,bootstrap admin template,bootstrap admin theme,bootstrap dashboard,bootstrap form template,bootstrap panel,bootstrap ui kit,dashboard bootstrap 4,dashboard design,dashboard html,dashboard template,dashboard ui kit,envato templates,flat ui,html,html and css templates,html dashboard template,html5,jquery html,premium,premium quality,sidebar bootstrap 4,template admin bootstrap 4"/>
+		<meta name="csrf-token" content="{{ csrf_token() }}">
 		@stack('styles')
 		<style>
 			.form-required:after {
@@ -161,7 +162,15 @@
 						
 						</li>
 
-
+						<li class="side-item side-item-category">Financial Management</li>
+						<li class="slide">
+							<a class="side-menu__item" href="{{route('admin.fees')}}">
+								<svg xmlns="http://www.w3.org/2000/svg" class="side-menu__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+									<path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
+								</svg>
+								<span class="side-menu__label">Fee Management</span>
+							</a>
+						</li>
 
 						<li class="side-item side-item-category ">Complaints</li>
 						<li class="slide ">
@@ -422,6 +431,22 @@
 
 		<!-- JQuery min js -->
 		<script src="{{asset('assets/plugins/jquery/jquery.min.js')}}"></script>
+		
+		<!-- Global AJAX Setup for CSRF Token -->
+		<script>
+			// jQuery AJAX Setup
+			$.ajaxSetup({
+				headers: {
+					'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+				}
+			});
+			
+			// Axios Setup (if axios is loaded)
+			if (typeof axios !== 'undefined') {
+				axios.defaults.headers.common['X-CSRF-TOKEN'] = $('meta[name="csrf-token"]').attr('content');
+				axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
+			}
+		</script>
 
 		<!-- Bootstrap Bundle js -->
 		<script src="{{asset('assets/plugins/bootstrap/js/bootstrap.bundle.min.js')}}"></script>
@@ -465,6 +490,13 @@
 
 		{{-- axios --}}
 		<script src="{{asset('assets/js/axios.min.js')}}"></script>
+		
+		<!-- Configure Axios with CSRF Token -->
+		<script>
+			axios.defaults.headers.common['X-CSRF-TOKEN'] = $('meta[name="csrf-token"]').attr('content');
+			axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
+		</script>
+		
 		<script src="{{asset('assets/js/bootstrap-select.js')}}"></script>
 		<script src="{{asset('assets/js/summernote.js')}}"></script>
 		<script src="{{asset('assets/js/sweetalert.js')}}"></script>

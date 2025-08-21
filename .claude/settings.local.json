@@ -1,0 +1,17 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(php artisan make:request:*)",
+      "Bash(php artisan:*)",
+      "Bash(grep:*)",
+      "Bash(mkdir:*)",
+      "Bash(/mnt/c/wamp64/bin/php/php8.1.28/php.exe -v)",
+      "Bash(/mnt/c/wamp64/bin/php/php8.1.28/php.exe artisan route:clear)"
+    ],
+    "deny": [],
+    "additionalDirectories": [
+      "/usr/bin",
+      "/mnt/c/wamp64/bin/php"
+    ]
+  }
+}
