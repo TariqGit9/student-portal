@@ -39,12 +39,48 @@
 				color: white;
 			}
 		
+			.main-sidebar-header .desktop-logo {
+				display: flex;
+				align-items: center;
+			}
+			.main-sidebar-header .desktop-logo .logo-img {
+				height: 36px;
+				width: 36px;
+				object-fit: contain;
+			}
+			.main-sidebar-header .desktop-logo .logo-text {
+				margin-left: 10px;
+				font-weight: 700;
+				font-size: 15px;
+				line-height: 1.2;
+				white-space: nowrap;
+			}
+			.main-sidebar-header .desktop-logo .logo-text { color: #fff; }
+			.main-sidebar-header .desktop-logo .logo-text .text-accent { color: #0074d9; }
+			.main-sidebar-header .logo-icon.mobile-logo img.logo-icon {
+				height: 2.8rem;
+				width: 2.8rem;
+				object-fit: contain;
+			}
+			.responsive-logo img.logo-1,
+			.responsive-logo img.dark-logo-1 {
+				height: 2.5rem;
+				width: auto;
+				max-width: 150px;
+				object-fit: contain;
+			}
+			.responsive-logo img.logo-2,
+			.responsive-logo img.dark-logo-2 {
+				height: 2.5rem;
+				width: 2.5rem;
+				object-fit: contain;
+			}
 		</style>
 		<!-- Title -->
 		<title> {{$school_info->name}} Student Portal </title>
 
 		<!-- Favicon -->
-		<link rel="icon" href="{{asset('assets/img/brand/favicon.png')}}" type="image/x-icon"/>
+		<link rel="icon" href="{{asset('assets/img/logo/small_logo.png')}}" type="image/x-icon"/>
 
 		<!-- Icons css -->
 		<link href="{{asset('assets/css/icons.css')}}" rel="stylesheet">
@@ -77,9 +113,15 @@
 		<link href="{{asset('assets/css/toastr.min.css')}}" rel="stylesheet">
 
 
+		<script>
+			(function(){var t=localStorage.getItem('theme');if(t==='dark')document.documentElement.classList.add('dark-theme-pending');})();
+		</script>
 	</head>
 
 	<body class="main-body app sidebar-mini">
+		<script>
+			if(document.documentElement.classList.contains('dark-theme-pending')){document.body.classList.add('dark-theme');document.documentElement.classList.remove('dark-theme-pending');}
+		</script>
 
 		<!-- Loader -->
 		<div id="global-loader">
@@ -94,10 +136,10 @@
 			<div class="app-sidebar__overlay" data-toggle="sidebar"></div>
 			<aside class="app-sidebar sidebar-scroll">
 				<div class="main-sidebar-header active">
-					<a class="desktop-logo logo-light active" href="index.html"><img src="{{asset('assets/img/brand/logo.png')}}" class="main-logo" alt="logo"></a>
-					<a class="desktop-logo logo-dark active" href="index.html"><img src="{{asset('assets/img/brand/logo-white.png')}}" class="main-logo dark-theme" alt="logo"></a>
-					<a class="logo-icon mobile-logo icon-light active" href="index.html"><img src="{{asset('assets/img/brand/favicon.png')}}" class="logo-icon" alt="logo"></a>
-					<a class="logo-icon mobile-logo icon-dark active" href="index.html"><img src="{{asset('assets/img/brand/favicon-white.png')}}" class="logo-icon dark-theme" alt="logo"></a>
+					<a class="desktop-logo logo-light active" href="index.html"><img src="{{asset('assets/img/logo/small_logo_dark.png')}}" class="logo-img" alt="logo"><span class="logo-text">The Student <span class="text-accent">Portal</span></span></a>
+					<a class="desktop-logo logo-dark active" href="index.html"><img src="{{asset('assets/img/logo/small_logo_dark.png')}}" class="logo-img" alt="logo"><span class="logo-text">The Student <span class="text-accent">Portal</span></span></a>
+					<a class="logo-icon mobile-logo icon-light active" href="index.html"><img src="{{asset('assets/img/logo/small_logo_dark.png')}}" class="logo-icon" alt="logo"></a>
+					<a class="logo-icon mobile-logo icon-dark active" href="index.html"><img src="{{asset('assets/img/logo/small_logo.png')}}" class="logo-icon" alt="logo"></a>
 				</div>
 				<div class="main-sidemenu">
 					<div class="app-sidebar__user clearfix">
@@ -134,10 +176,10 @@
 					<div class="container-fluid">
 						<div class="main-header-left ">
 							<div class="responsive-logo">
-								<a href="index.html"><img src="{{asset('assets/img/brand/logo.png')}}" class="logo-1" alt="logo"></a>
-								<a href="index.html"><img src="{{asset('assets/img/brand/logo-white.png')}}" class="dark-logo-1" alt="logo"></a>
-								<a href="index.html"><img src="{{asset('assets/img/brand/favicon.png')}}" class="logo-2" alt="logo"></a>
-								<a href="index.html"><img src="{{asset('assets/img/brand/favicon.png')}}" class="dark-logo-2" alt="logo"></a>
+								<a href="index.html"><img src="{{asset('assets/img/logo/small_logo.png')}}" class="logo-1" alt="logo"></a>
+								<a href="index.html"><img src="{{asset('assets/img/logo/small_logo_dark.png')}}" class="dark-logo-1" alt="logo"></a>
+								<a href="index.html"><img src="{{asset('assets/img/logo/small_logo.png')}}" class="logo-2" alt="logo"></a>
+								<a href="index.html"><img src="{{asset('assets/img/logo/small_logo_dark.png')}}" class="dark-logo-2" alt="logo"></a>
 							</div>
 							<div class="app-sidebar__toggle" data-toggle="sidebar">
 								<a class="open-toggle" href="#"><i class="header-icon fe fe-align-left" ></i></a>
@@ -259,6 +301,12 @@
 								</div>
 
 
+								<div class="nav-item main-header-notification">
+									<a class="new nav-link theme-toggle" href="#">
+										<svg xmlns="http://www.w3.org/2000/svg" class="header-icon-svgs theme-icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
+										<svg xmlns="http://www.w3.org/2000/svg" class="header-icon-svgs theme-icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:none;"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="4.22" x2="19.78" y2="5.64"></line></svg>
+									</a>
+								</div>
 								<div class="nav-item full-screen fullscreen-button">
 									<a class="new nav-link full-screen-link" href="#"><svg xmlns="http://www.w3.org/2000/svg" class="header-icon-svgs" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-maximize"><path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"></path></svg></a>
 								</div>
@@ -488,5 +536,28 @@
 
 
 		@stack('javascript');
+
+		<script>
+		(function(){
+			var toggle = document.querySelector('.theme-toggle');
+			var moon = toggle ? toggle.querySelector('.theme-icon-moon') : null;
+			var sun = toggle ? toggle.querySelector('.theme-icon-sun') : null;
+			function applyIcon(){
+				if(!moon||!sun) return;
+				var isDark = document.body.classList.contains('dark-theme');
+				moon.style.display = isDark ? 'none' : '';
+				sun.style.display = isDark ? '' : 'none';
+			}
+			applyIcon();
+			if(toggle){
+				toggle.addEventListener('click', function(e){
+					e.preventDefault();
+					document.body.classList.toggle('dark-theme');
+					localStorage.setItem('theme', document.body.classList.contains('dark-theme') ? 'dark' : 'light');
+					applyIcon();
+				});
+			}
+		})();
+		</script>
 	</body>
 </html>
