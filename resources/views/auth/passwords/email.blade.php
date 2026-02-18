@@ -1,45 +1,35 @@
 @extends('layouts.auth')
 
 @section('content')
+<div class="auth-form-wrapper">
+    <h2>Reset Password</h2>
+    <p class="auth-subtitle">Enter your email to receive a reset link</p>
 
-    <div class="wrap-login100 p-t-30 p-b-50">
-        <span class="login100-form-title p-b-41">
-        {{ __('Reset Password') }}
-        </span>
+    @if (session('status'))
+        <div class="alert-success">{{ session('status') }}</div>
+    @endif
 
-        
-        @if (session('status'))
-        <div class="alert alert-success" role="alert">
-            {{ session('status') }}
-        </div>
-        @endif
-        <form class="login100-form validate-form p-b-33 p-t-5"  method="POST"  action="{{ route('password.email') }}">
-            @csrf
-            <div class="wrap-input100 validate-input" >
-                <input id="email" type="text" class="input100"
-                name="email" value="{{ old('user_name') ?: old('email') }}" placeholder='Email' required autofocus>
-                <span class="focus-input100" data-placeholder="&#xe82a;"></span>
-            </div>
-            <div class="text-center">
+    <form method="POST" action="{{ route('password.email') }}">
+        @csrf
+
+        <div class="form-group">
+            <label for="email">Email Address</label>
+            <input id="email" type="email"
+                class="form-input{{ $errors->has('email') ? ' is-invalid' : '' }}"
+                name="email" value="{{ old('email') }}" required autofocus
+                placeholder="Enter your email address">
             @error('email')
-                    <span style="color:red" class="text-center">
-                        <span  role="alert">
-                            <strong>{{ $message }}</strong>
-                        </span>
-                    </span>
-                @enderror
-            </div>
-                
-            <div class="container-login100-form-btn m-t-32">
-                <button type="submit"  class="login100-form-btn">
-                    Reset Password
-                </button>
-                <br><br>
-                <span class="text-center">
-                    <span style="color:red;" ><strong>Note </strong></span>: If you are not registered with an Email Please contact your School administration.
-                </span>
-            </div>
+                <span class="auth-error">{{ $message }}</span>
+            @enderror
+        </div>
 
-        </form>
-    </div>
+        <button type="submit" class="auth-btn">Send Reset Link</button>
+
+        <p class="auth-note">
+            <strong>Note:</strong> If you are not registered with an email, please contact your school administration.
+        </p>
+
+        <a class="auth-link" href="{{ route('login') }}">Back to login</a>
+    </form>
+</div>
 @endsection

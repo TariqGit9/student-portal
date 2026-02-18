@@ -55,7 +55,8 @@
 				line-height: 1.2;
 				white-space: nowrap;
 			}
-			.main-sidebar-header .desktop-logo .logo-text { color: #fff; }
+			.main-sidebar-header .desktop-logo.logo-light .logo-text { color: #1a2b4a; }
+			.main-sidebar-header .desktop-logo.logo-dark .logo-text { color: #fff; }
 			.main-sidebar-header .desktop-logo .logo-text .text-accent { color: #0074d9; }
 			.main-sidebar-header .logo-icon.mobile-logo img.logo-icon {
 				height: 2.8rem;
@@ -136,10 +137,10 @@
 			<div class="app-sidebar__overlay" data-toggle="sidebar"></div>
 			<aside class="app-sidebar sidebar-scroll">
 				<div class="main-sidebar-header active">
-					<a class="desktop-logo logo-light active" href="index.html"><img src="{{asset('assets/img/logo/small_logo_dark.png')}}" class="logo-img" alt="logo"><span class="logo-text">The Student <span class="text-accent">Portal</span></span></a>
+					<a class="desktop-logo logo-light active" href="index.html"><img src="{{asset('assets/img/logo/small_logo.png')}}" class="logo-img" alt="logo"><span class="logo-text">The Student <span class="text-accent">Portal</span></span></a>
 					<a class="desktop-logo logo-dark active" href="index.html"><img src="{{asset('assets/img/logo/small_logo_dark.png')}}" class="logo-img" alt="logo"><span class="logo-text">The Student <span class="text-accent">Portal</span></span></a>
-					<a class="logo-icon mobile-logo icon-light active" href="index.html"><img src="{{asset('assets/img/logo/small_logo_dark.png')}}" class="logo-icon" alt="logo"></a>
-					<a class="logo-icon mobile-logo icon-dark active" href="index.html"><img src="{{asset('assets/img/logo/small_logo.png')}}" class="logo-icon" alt="logo"></a>
+					<a class="logo-icon mobile-logo icon-light active" href="index.html"><img src="{{asset('assets/img/logo/small_logo.png')}}" class="logo-icon" alt="logo"></a>
+					<a class="logo-icon mobile-logo icon-dark active" href="index.html"><img src="{{asset('assets/img/logo/small_logo_dark.png')}}" class="logo-icon" alt="logo"></a>
 				</div>
 				<div class="main-sidemenu">
 					<div class="app-sidebar__user clearfix">
