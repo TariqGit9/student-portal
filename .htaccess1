@@ -1,0 +1,18 @@
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    RewriteBase /student-portal/
+
+    # Redirect /public URLs to root (browser redirect)
+    RewriteCond %{THE_REQUEST} ^GET.*public/ [NC]
+    RewriteRule ^public/(.*)$ /$1 [L,R=301]
+
+    # Internally rewrite all requests to public folder
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteRule ^(.*)$ public/$1 [L]
+
+    # If file exists in public, serve it
+    RewriteCond %{REQUEST_FILENAME} -d [OR]
+    RewriteCond %{REQUEST_FILENAME} -f
+    RewriteRule ^(.*)$ public/$1 [L]
+</IfModule>

@@ -420,13 +420,17 @@ class AdminController extends Controller
             'display_info_status' => 1,
             'subject_specialities' => $request->subject_specialities,
         ]);
-        Mail::to($request->email)->send(new RegisterTeacher($request->user_name,$request->password,$user));
 
-
+        $emailWarning = '';
+        try {
+            Mail::to($request->email)->send(new RegisterTeacher($request->user_name,$request->password,$user));
+        } catch (\Exception $e) {
+            $emailWarning = ' (Warning: Email notification could not be sent)';
+        }
 
         return response()->json([
             'success' => true,
-            'result' => 'Added successfully',
+            'result' => 'Added successfully' . $emailWarning,
         ], 200);
     }
 //teachers

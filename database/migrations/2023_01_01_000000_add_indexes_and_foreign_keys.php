@@ -18,23 +18,23 @@ class AddIndexesAndForeignKeys extends Migration
             $table->index('email');
             $table->index('user_name');
             $table->index('role_id');
-            $table->index('school_information_id');
+            $table->index('school_id');
             $table->index('status');
-            $table->index(['role_id', 'school_information_id']);
-            $table->index(['status', 'school_information_id']);
+            $table->index(['role_id', 'school_id']);
+            $table->index(['status', 'school_id']);
         });
 
         // Add foreign keys to users table
         Schema::table('users', function (Blueprint $table) {
             $table->foreign('role_id')->references('id')->on('roles')->onDelete('restrict');
-            $table->foreign('school_information_id')->references('id')->on('school_information')->onDelete('cascade');
+            $table->foreign('school_id')->references('id')->on('school_information')->onDelete('cascade');
         });
 
         // Add indexes to student_details table
         Schema::table('student_details', function (Blueprint $table) {
             $table->index('user_id');
             $table->index('class_id');
-            $table->index('registration_id');
+            $table->index('reg_no');
             $table->index('father_cnic');
             $table->index('phone');
             $table->index(['class_id', 'deleted_at']);
@@ -61,7 +61,7 @@ class AddIndexesAndForeignKeys extends Migration
 
         // Add indexes to classes table
         Schema::table('classes', function (Blueprint $table) {
-            $table->index('class_grade_id');
+            $table->index('grade_id');
             $table->index('school_id');
             $table->index('status');
             $table->index(['school_id', 'status']);
@@ -69,7 +69,7 @@ class AddIndexesAndForeignKeys extends Migration
 
         // Add foreign keys to classes table
         Schema::table('classes', function (Blueprint $table) {
-            $table->foreign('class_grade_id')->references('id')->on('class_grades')->onDelete('restrict');
+            $table->foreign('grade_id')->references('id')->on('class_grades')->onDelete('restrict');
             $table->foreign('school_id')->references('id')->on('school_information')->onDelete('cascade');
         });
 
@@ -88,15 +88,15 @@ class AddIndexesAndForeignKeys extends Migration
 
         // Add indexes to teacher_subjects table
         Schema::table('teacher_subjects', function (Blueprint $table) {
-            $table->index('teacher_id');
+            $table->index('user_id');
             $table->index('subject_id');
             $table->index('class_id');
-            $table->index(['teacher_id', 'class_id']);
+            $table->index(['user_id', 'class_id']);
         });
 
         // Add foreign keys to teacher_subjects table
         Schema::table('teacher_subjects', function (Blueprint $table) {
-            $table->foreign('teacher_id')->references('id')->on('users')->onDelete('cascade');
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->foreign('subject_id')->references('id')->on('subjects')->onDelete('cascade');
             $table->foreign('class_id')->references('id')->on('classes')->onDelete('cascade');
         });
@@ -168,19 +168,19 @@ class AddIndexesAndForeignKeys extends Migration
         // Add indexes to class_fees table
         Schema::table('class_fees', function (Blueprint $table) {
             $table->index('class_id');
-            $table->index('session_id');
-            $table->index(['class_id', 'session_id']);
+            $table->index('school_session_id');
+            $table->index(['class_id', 'school_session_id']);
         });
 
         // Add foreign keys to class_fees table
         Schema::table('class_fees', function (Blueprint $table) {
             $table->foreign('class_id')->references('id')->on('classes')->onDelete('cascade');
-            $table->foreign('session_id')->references('id')->on('school_sessions')->onDelete('cascade');
+            $table->foreign('school_session_id')->references('id')->on('school_sessions')->onDelete('cascade');
         });
 
         // Add indexes to class_student_fees table
         Schema::table('class_student_fees', function (Blueprint $table) {
-            $table->index('class_fee_id');
+            $table->index('fee_id');
             $table->index('student_id');
             $table->index('status');
             $table->index(['student_id', 'status']);
@@ -188,7 +188,7 @@ class AddIndexesAndForeignKeys extends Migration
 
         // Add foreign keys to class_student_fees table
         Schema::table('class_student_fees', function (Blueprint $table) {
-            $table->foreign('class_fee_id')->references('id')->on('class_fees')->onDelete('cascade');
+            $table->foreign('fee_id')->references('id')->on('class_fees')->onDelete('cascade');
             $table->foreign('student_id')->references('id')->on('users')->onDelete('cascade');
         });
 
@@ -222,7 +222,7 @@ class AddIndexesAndForeignKeys extends Migration
         // Drop foreign keys first
         Schema::table('users', function (Blueprint $table) {
             $table->dropForeign(['role_id']);
-            $table->dropForeign(['school_information_id']);
+            $table->dropForeign(['school_id']);
         });
 
         Schema::table('student_details', function (Blueprint $table) {
@@ -235,7 +235,7 @@ class AddIndexesAndForeignKeys extends Migration
         });
 
         Schema::table('classes', function (Blueprint $table) {
-            $table->dropForeign(['class_grade_id']);
+            $table->dropForeign(['grade_id']);
             $table->dropForeign(['school_id']);
         });
 
@@ -245,7 +245,7 @@ class AddIndexesAndForeignKeys extends Migration
         });
 
         Schema::table('teacher_subjects', function (Blueprint $table) {
-            $table->dropForeign(['teacher_id']);
+            $table->dropForeign(['user_id']);
             $table->dropForeign(['subject_id']);
             $table->dropForeign(['class_id']);
         });
@@ -277,11 +277,11 @@ class AddIndexesAndForeignKeys extends Migration
 
         Schema::table('class_fees', function (Blueprint $table) {
             $table->dropForeign(['class_id']);
-            $table->dropForeign(['session_id']);
+            $table->dropForeign(['school_session_id']);
         });
 
         Schema::table('class_student_fees', function (Blueprint $table) {
-            $table->dropForeign(['class_fee_id']);
+            $table->dropForeign(['fee_id']);
             $table->dropForeign(['student_id']);
         });
 
@@ -294,16 +294,16 @@ class AddIndexesAndForeignKeys extends Migration
             $table->dropIndex(['email']);
             $table->dropIndex(['user_name']);
             $table->dropIndex(['role_id']);
-            $table->dropIndex(['school_information_id']);
+            $table->dropIndex(['school_id']);
             $table->dropIndex(['status']);
-            $table->dropIndex(['role_id', 'school_information_id']);
-            $table->dropIndex(['status', 'school_information_id']);
+            $table->dropIndex(['role_id', 'school_id']);
+            $table->dropIndex(['status', 'school_id']);
         });
 
         Schema::table('student_details', function (Blueprint $table) {
             $table->dropIndex(['user_id']);
             $table->dropIndex(['class_id']);
-            $table->dropIndex(['registration_id']);
+            $table->dropIndex(['reg_no']);
             $table->dropIndex(['father_cnic']);
             $table->dropIndex(['phone']);
             $table->dropIndex(['class_id', 'deleted_at']);
@@ -317,7 +317,7 @@ class AddIndexesAndForeignKeys extends Migration
         });
 
         Schema::table('classes', function (Blueprint $table) {
-            $table->dropIndex(['class_grade_id']);
+            $table->dropIndex(['grade_id']);
             $table->dropIndex(['school_id']);
             $table->dropIndex(['status']);
             $table->dropIndex(['school_id', 'status']);
@@ -330,10 +330,10 @@ class AddIndexesAndForeignKeys extends Migration
         });
 
         Schema::table('teacher_subjects', function (Blueprint $table) {
-            $table->dropIndex(['teacher_id']);
+            $table->dropIndex(['user_id']);
             $table->dropIndex(['subject_id']);
             $table->dropIndex(['class_id']);
-            $table->dropIndex(['teacher_id', 'class_id']);
+            $table->dropIndex(['user_id', 'class_id']);
         });
 
         Schema::table('student_marks', function (Blueprint $table) {
@@ -369,12 +369,12 @@ class AddIndexesAndForeignKeys extends Migration
 
         Schema::table('class_fees', function (Blueprint $table) {
             $table->dropIndex(['class_id']);
-            $table->dropIndex(['session_id']);
-            $table->dropIndex(['class_id', 'session_id']);
+            $table->dropIndex(['school_session_id']);
+            $table->dropIndex(['class_id', 'school_session_id']);
         });
 
         Schema::table('class_student_fees', function (Blueprint $table) {
-            $table->dropIndex(['class_fee_id']);
+            $table->dropIndex(['fee_id']);
             $table->dropIndex(['student_id']);
             $table->dropIndex(['status']);
             $table->dropIndex(['student_id', 'status']);

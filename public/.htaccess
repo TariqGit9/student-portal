@@ -9,15 +9,6 @@
     RewriteCond %{HTTP:Authorization} .
     RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
 
-    # Serve static files from public directory
-    RewriteCond %{REQUEST_URI} ^/student-portal/(assets|auth-assets|css|js|uploads|old-assets)/(.*)$ [NC]
-    RewriteRule ^(assets|auth-assets|css|js|uploads|old-assets)/(.*)$ public/$1/$2 [L]
-
-    # Serve common static files from public directory
-    RewriteCond %{REQUEST_URI} \.(css|js|png|jpg|jpeg|gif|ico|svg|woff|woff2|ttf|eot|webp)$ [NC]
-    RewriteCond public%{REQUEST_URI} -f
-    RewriteRule ^(.*)$ public/$1 [L]
-
     # Redirect Trailing Slashes If Not A Folder...
     RewriteCond %{REQUEST_FILENAME} !-d
     RewriteCond %{REQUEST_URI} (.+)/$

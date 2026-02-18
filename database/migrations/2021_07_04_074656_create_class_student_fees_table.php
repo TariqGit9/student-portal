@@ -33,6 +33,8 @@ class CreateClassStudentFeesTable extends Migration
             $table->double('fees_left', 15, 8);
             $table->string('fees_left_description');
 
+            $table->integer('status')->default(0);
+
             $table->unsignedBigInteger('school_id')->nullable();
             $table->unsignedBigInteger('school_session_id')->nullable();
 

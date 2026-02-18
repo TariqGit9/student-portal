@@ -6,7 +6,15 @@
       "Bash(grep:*)",
       "Bash(mkdir:*)",
       "Bash(/mnt/c/wamp64/bin/php/php8.1.28/php.exe -v)",
-      "Bash(/mnt/c/wamp64/bin/php/php8.1.28/php.exe artisan route:clear)"
+      "Bash(/mnt/c/wamp64/bin/php/php8.1.28/php.exe artisan route:clear)",
+      "Bash(if [ -f .env ])",
+      "Bash(then echo \"exists\")",
+      "Bash(else echo \"not found\")",
+      "Bash(fi)",
+      "Bash(php:*)",
+      "Bash(composer --version:*)",
+      "Bash(composer install:*)",
+      "Bash(npm install:*)"
     ],
     "deny": [],
     "additionalDirectories": [

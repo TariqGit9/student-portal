@@ -19,6 +19,7 @@ class CreateStudentDetailsTable extends Migration
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->string('class_id');
             $table->string('reg_no');
+            $table->string('father_cnic')->nullable();
             $table->string('phone');
             $table->string('emergency_phone');
             $table->string('address_line_main');

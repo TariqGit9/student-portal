@@ -17,8 +17,10 @@ class CreateTeacherDetailsTable extends Migration
             $table->id();
             $table->unsignedBigInteger('user_id')->nullable();
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+            $table->string('cnic')->nullable();
             $table->string('phone');
             $table->string('emergency_phone');
+            $table->string('qualification')->nullable();
             $table->string('address_line_main');
             $table->string('address_line_secondary')->nullable();
             $table->integer('display_info_status')->default(1);
