@@ -15,41 +15,32 @@
       <!--div-->
       <div class="card">
           <div class="card-body">
-              <div class="main-content-label mg-b-5 text-center">
-                <span class="mr-3">  Subjects / Teacher : </span>
-                  <select class="form-control selectpicker  col-6" data-live-search="true" name="subject" id="subject" required>
+              <div class="main-content-label mg-b-5">
+                <label class="font-weight-bold mb-2">Subjects / Teacher :</label>
+                  <select class="form-control selectpicker w-100" data-live-search="true" name="subject" id="subject" required>
                     @if($subjects)
                       @foreach($subjects as $subject )
                       @if (in_array($subject->id, $student_subjects))
-                        <option value="{{$subject->id}}">{{$subject->name}} &nbsp;&nbsp;&nbsp;&nbsp;    / &nbsp;&nbsp;&nbsp;&nbsp; @if(@$subject->teacher_subject) {{@$subject->teacher_subject->teacher_details->name}} @else No teacher assigned @endif</span></option>
+                        <option value="{{$subject->id}}">{{$subject->name}}  /  @if(@$subject->teacher_subject) {{@$subject->teacher_subject->teacher_details->name}} @else No teacher assigned @endif</option>
                       @endif
                       @endforeach
                     @endif
                   </select>
               </div>
         
-              <div class=" mt-5 mg-b-5 ">
-                <div class="col-xl-12 ">
-                  <div class="col-xl-12">
-                    <div class="card">
-
-                      <div class="card-body">
-                        <div class="table-responsive">
-                          <table class="table datatable" id="table_data" width="100%" cellspacing="0">
-                            <tbody>  
-                                <thead class=" text-primary" >
-                                    <tr>
-                                        <th class="text-center">Date</th>
-                                        <th class="text-center">Time</th>
-                                        <th class="text-center">Attendance</th>
-                                    </tr>
-                                </thead>
-                            </tbody>
-                          </table>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
+              <div class="mt-4">
+                <div class="table-responsive">
+                  <table class="table datatable" id="table_data" width="100%" cellspacing="0">
+                    <tbody>
+                        <thead class=" text-primary" >
+                            <tr>
+                                <th class="text-center">Date</th>
+                                <th class="text-center">Time</th>
+                                <th class="text-center">Attendance</th>
+                            </tr>
+                        </thead>
+                    </tbody>
+                  </table>
                 </div>
               </div>
               <div class="row row-sm justify-content-center">
