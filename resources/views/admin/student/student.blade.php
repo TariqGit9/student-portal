@@ -819,10 +819,10 @@ $(document).on('click', '.save_password', function() {
 });
 $(document).on('click', '.viewMarks', function() {
 
-var id = $(this).data('id');
+  var id = $(this).data('id');
+  $(".student_id").val(id); 
+  $('#view_student_marks').submit();
 
-$(".student_id").val(id); 
-$('#view_student_marks').submit();
 
 
 });

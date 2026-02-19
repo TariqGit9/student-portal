@@ -23,7 +23,7 @@ use App\Models\SchoolInformation;
 use Mail;
 use Session;
 //files Images
-use Intervention\Image\Facades\Image;
+use Intervention\Image\ImageManager;
 use Illuminate\Support\Facades\Storage;
 use File;
 
@@ -91,8 +91,9 @@ class TeacherController extends Controller
         return DataTables::of($data)
         ->addColumn('action', function ($data) {
                 
-                $button = '<a href="#" class="btn btn-info btn-sm  getStudentdetailsReport " title="Report to Principle" data-toggle="modal" data-target="#student_report" data-name="' . $data->name . '" data-user_name="' . $data->user_name . '"  data-reg-no="' . $data->student_details->reg_no . '" data-id="' . $data->id . '"><i class="fa fa-envelope"></i></a>&nbsp;&nbsp;';  
-                $button .= '<a href="#" class="btn btn-success btn-sm  viewMarks " title="View Student Marks of all subjects" data-id="' . $data->id . '"><i class="fa fa-eye"></i></a>&nbsp;&nbsp;';  
+                // Report button hidden for now
+                // $button = '<a href="#" class="btn btn-info btn-sm  getStudentdetailsReport " title="Report to Principle" data-toggle="modal" data-target="#student_report" data-name="' . $data->name . '" data-user_name="' . $data->user_name . '"  data-reg-no="' . $data->student_details->reg_no . '" data-id="' . $data->id . '"><i class="fa fa-envelope"></i></a>&nbsp;&nbsp;';
+                $button = '<a href="#" class="btn btn-success btn-sm  viewMarks " title="View Student Marks of all subjects" data-id="' . $data->id . '"><i class="fa fa-eye"></i></a>&nbsp;&nbsp;';  
                 $button .= '<a href="#" class="btn btn-warning btn-sm  viewAttendance " title="View Student Attendance of all subjects" data-id="' . $data->id . '"><i class="la la-calendar "></i></a>&nbsp;&nbsp;';  
                 return   $button ;
                 

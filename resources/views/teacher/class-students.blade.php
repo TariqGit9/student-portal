@@ -56,7 +56,7 @@
 </div>
  
 
-{{-- //Edit  --}}
+{{-- Report student modal hidden for now
 <div class="modal fade " id="student_report" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-lg" role="document">
     <div class="modal-content">
@@ -75,7 +75,7 @@
           </div>
           <input type="hidden" class="form-control" id="student_id" name="student_id" aria-describedby="emailHelp">
           <input type="hidden" class="form-control" value="{{$id}}" id="class_id" name="class_id" aria-describedby="emailHelp">
-         
+
           <div class="form-group col">
             <label class="bmd-label-floating form-required">User Name</label>
             <input type="text" class="form-control" id="user_name" name="user_name" aria-describedby="emailHelp" disabled>
@@ -84,14 +84,14 @@
             <label class="bmd-label-floating form-required">Reg number</label>
             <input type="text" class="form-control" id="reg_no" name="reg_no" aria-describedby="emailHelp" disabled>
           </div>
-        
-         
+
+
         </div>
         <div class="form-row">
           <div class="form-group col">
             <label class="bmd-label-floating">Title</label>
             <input type="text" class="form-control" id="title" name="title" aria-describedby="emailHelp" >
-           
+
           </div>
         </div>
         <div class="form-row">
@@ -111,6 +111,7 @@
     </div>
   </div>
 </div>
+--}}
 
 <form id="view_student_marks" method="post" action="student-marks">
   @csrf
@@ -263,6 +264,7 @@ $(document).on('click', '.genrate_password', function() {
 
 
 
+/* Report handlers hidden for now
 $(document).on('click', '.getStudentdetailsReport', function() {
 
 var edit_id = $(this).data('id');
@@ -270,16 +272,16 @@ var edit_name = $(this).data('name');
 var edit_user_name = $(this).data('user_name');
 var edit_reg_no = $(this).data('reg-no');
 
-$("#student_id").val(edit_id); 
-$("#name").val(edit_name); 
-$("#user_name").val(edit_user_name); 
-$("#reg_no").val(edit_reg_no); 
+$("#student_id").val(edit_id);
+$("#name").val(edit_name);
+$("#user_name").val(edit_user_name);
+$("#reg_no").val(edit_reg_no);
 
 
 });
 
 $(document).on('click', '.sendreport', function() {
-  
+
     var form = $("#report_student");
     var formData = new FormData(form[0]);
     if($("#title").val()=='' ){
@@ -299,14 +301,14 @@ $(document).on('click', '.sendreport', function() {
     axios.post("{{route('report-student-to-admin')}}",
         formData
     ).then(function(response) {
-  
+
     if(response.data.success){
       $('#please_wait').modal('hide');
 
       $('#student_report').modal('hide');
       toastr.success('Success!', 'Student Reported Successfully',{
               "positionClass": "toast-bottom-right"
-          })      
+          })
           $(".summernote").summernote("code", "");
 
     }
@@ -314,13 +316,14 @@ $(document).on('click', '.sendreport', function() {
 
       toastr.warning('Warning!', response.data.error,{
               "positionClass": "toast-bottom-right"
-          })  
-  
+          })
+
 
     }
     });
 
 });
+*/
 $(document).on('click', '.deletestudent', function() {
     var id = $(this).data('id');
     Swal.fire({

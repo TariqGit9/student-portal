@@ -10,7 +10,7 @@ use App\Models\UserDetails\TeacherDetails;
 use App\Models\UserDetails\StudentDetails;
 use App\Models\UserDetails\AdminDetails;
 //files Images
-use Intervention\Image\Facades\Image;
+use Intervention\Image\ImageManager;
 use Illuminate\Support\Facades\Storage;
 use App\Models\SchoolSession;
 use File;
@@ -87,8 +87,8 @@ class SuperAdminController extends Controller
             }
         })
         ->addColumn('image', function ($data) {
-         
-            $image = '<img src="' . asset("uploads/school_avatars/" . $data->avatar) . '" alt="logo" width="50" height="50">';
+            $avatar = $data->avatar ?: 'default.webp';
+            $image = '<img src="' . asset("uploads/school_avatars/" . $avatar) . '" alt="logo" width="50" height="50">';
             return $image;
         })
             ->rawColumns(['action','address','image','name','phone','email','unique_id'])
@@ -121,7 +121,7 @@ class SuperAdminController extends Controller
                 $file=$request->image;
                 $extension = $file->getClientOriginalExtension();
                 $filename = $time."school_avatar" . '.' . $extension;
-                $resized_image = Image::make($file)->resize(200, 200)->encode($extension);
+                $resized_image = ImageManager::gd()->read($file)->cover(200, 200)->encodeByExtension($extension);
               
                 Storage::disk(config('filesystems.default'))
                 ->put('school_avatars/' . $filename, $resized_image);
@@ -183,7 +183,7 @@ class SuperAdminController extends Controller
                 $file=$request->edit_image;
                 $extension = $file->getClientOriginalExtension();
                 $filename = $time."school_avatar" . '.' . $extension;
-                $resized_image = Image::make($file)->resize(200, 200)->encode($extension);
+                $resized_image = ImageManager::gd()->read($file)->cover(200, 200)->encodeByExtension($extension);
               
                 Storage::disk(config('filesystems.default'))
                 ->put('school_avatars/' . $filename, $resized_image);
@@ -367,6 +367,65 @@ class SuperAdminController extends Controller
             'success' => true,
         ], 200);
     }
+    public function addSchoolUser(Request $request)
+    {
+        $role_id = $request->role_id;
+        $school_id = $request->school_id;
+
+        if (!$role_id || !$school_id || !in_array($role_id, [1, 2, 3])) {
+            return response()->json(['success' => false, 'error' => 'Invalid role or school.']);
+        }
+
+        if ($request->email) {
+            $user = User::where('email', $request->email)->orWhere('user_name', $request->user_name)->first();
+        } else {
+            $user = User::where('user_name', $request->user_name)->first();
+        }
+
+        if ($user) {
+            if ($user->user_name == $request->user_name) {
+                return response()->json(['success' => false, 'error' => 'User Name already Exists.']);
+            }
+            if ($user->email == $request->email) {
+                return response()->json(['success' => false, 'error' => 'Email already Exists.']);
+            }
+        }
+
+        $user = User::create([
+            'name' => $request->name,
+            'user_name' => $request->user_name,
+            'email' => $request->email,
+            'avatar' => 'default.webp',
+            'password' => bcrypt($request->password),
+            'role_id' => $role_id,
+            'status' => 1,
+            'school_id' => $school_id,
+            'ip_address' => $request->ip(),
+        ]);
+
+        $detailsData = [
+            'user_id' => $user->id,
+            'phone' => $request->phone,
+            'emergency_phone' => $request->emergency_phone,
+            'address_line_main' => $request->address_line_main,
+            'address_line_secondary' => $request->address_line_secondary,
+        ];
+
+        if ($role_id == 1) {
+            AdminDetails::updateOrCreate(['user_id' => $user->id], $detailsData);
+        } elseif ($role_id == 2) {
+            TeacherDetails::updateOrCreate(['user_id' => $user->id], $detailsData);
+        } elseif ($role_id == 3) {
+            StudentDetails::updateOrCreate(['user_id' => $user->id], $detailsData);
+        }
+
+        $roleNames = [1 => 'Admin', 2 => 'Teacher', 3 => 'Student'];
+        return response()->json([
+            'success' => true,
+            'result' => $roleNames[$role_id] . ' added successfully',
+        ], 200);
+    }
+
     public function allSchoolSessions(Request $request)
     {
         if(!$request->school_id){

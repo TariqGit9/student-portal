@@ -23,6 +23,7 @@ Route::get('/home', [HomeController::class, 'index'])->name('home');
 
 Auth::routes();
 Auth::routes(['register' => false]);
+Route::get('/login/{school_uid?}', [App\Http\Controllers\Auth\LoginController::class, 'showLoginForm'])->name('login');
 
     Route::group(['middleware' => 'auth'], function () {
 
@@ -155,6 +156,7 @@ Auth::routes(['register' => false]);
         Route::any('view-all-school-users', [SuperAdminController::class, 'allSchoolUsers'])->name('view-all-school-users');
         Route::any('get-school-users', [SuperAdminController::class, 'getSchoolUsers'])->name('get-school-users');
         Route::post('block-user-super-admin', [SuperAdminController::class, 'changeUserStatus'])->name('block-user-super-admin');
+        Route::post('add-school-user', [SuperAdminController::class, 'addSchoolUser'])->name('add-school-user');
         Route::any('get-user-details', [SuperAdminController::class, 'getUserDetails'])->name('get-user-details');
         Route::any('view-all-school-sessions', [SuperAdminController::class, 'allSchoolSessions'])->name('view-all-school-sessions');
         Route::post('get-school-session', [SuperAdminController::class, 'getSchoolSessions'])->name('get-school-session');
@@ -213,7 +215,9 @@ Auth::routes(['register' => false]);
         
         // Student Fee Routes
         Route::get('my-fees', [StudentController::class, 'myFees'])->name('student.fees');
+        Route::get('get-my-fees', [StudentController::class, 'getMyFees'])->name('student.get-my-fees');
         Route::get('fee-details/{id}', [StudentController::class, 'feeDetails'])->name('student.fee.details');
+        Route::get('get-fee-details/{id}', [StudentController::class, 'getFeeDetails'])->name('student.get-fee-details');
     });
 });
 // Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');

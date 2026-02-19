@@ -35,7 +35,7 @@
     </div>
   </div>
 </div>
-{{-- //Edit  --}}
+{{-- Report teacher modal hidden for now
 <div class="modal fade " id="student_report" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-lg" role="document">
     <div class="modal-content">
@@ -58,7 +58,7 @@
           <div class="form-group col">
             <label class="bmd-label-floating">Title</label>
             <input type="text" class="form-control" id="title" name="title" aria-describedby="emailHelp" >
-           
+
           </div>
         </div>
         <div class="form-row">
@@ -78,6 +78,7 @@
     </div>
   </div>
 </div>
+--}}
 
 @push('javascript')
 <script>
@@ -105,6 +106,7 @@
         }
         ]
 });
+/* Report handlers hidden for now
 $(document).on('click', '.getStudentdetailsReport', function() {
 
 var id = $(this).data('id');
@@ -112,14 +114,14 @@ var name = $(this).data('name');
 var subject = $(this).data('subject');
 
 
-$("#teacher_id").val(id); 
-$("#name").val(name); 
-$("#subject").val(subject); 
+$("#teacher_id").val(id);
+$("#name").val(name);
+$("#subject").val(subject);
 
 
 });
 $(document).on('click', '.sendreport', function() {
-  
+
   var form = $("#report_student");
   var formData = new FormData(form[0]);
   if($("#title").val()=='' ){
@@ -146,7 +148,7 @@ $(document).on('click', '.sendreport', function() {
     $('#student_report').modal('hide');
     toastr.success('Success!', 'Student Reported Successfully',{
             "positionClass": "toast-bottom-right"
-        })      
+        })
         $(".summernote").summernote("code", "");
 
   }
@@ -154,13 +156,14 @@ $(document).on('click', '.sendreport', function() {
 
     toastr.warning('Warning!', response.data.error,{
             "positionClass": "toast-bottom-right"
-        })  
+        })
 
 
   }
   });
 
 });
+*/
 </script>
 @endpush
 @endsection

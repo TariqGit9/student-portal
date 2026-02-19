@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-	<title>Login - The Student Portal</title>
+	<title>{{ isset($school) && $school ? 'Login - ' . $school->name : 'Login - The Student Portal' }}</title>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="icon" type="image/png" href="{{asset('assets/img/logo/small_logo.png')}}"/>
@@ -188,6 +188,47 @@
 			line-height: 1.6;
 		}
 
+		/* ---- School Branding ---- */
+		.school-brand-logo {
+			width: 120px;
+			height: 120px;
+			object-fit: cover;
+			border-radius: 50%;
+			border: 4px solid rgba(255,255,255,0.9);
+			box-shadow: 0 8px 24px rgba(0,0,0,0.25);
+			margin-bottom: 24px;
+			background: #fff;
+		}
+
+		.school-brand-name {
+			font-family: Ubuntu-Bold, sans-serif;
+			font-size: 28px;
+			color: #fff;
+			text-align: center;
+			margin-bottom: 6px;
+			text-shadow: 0 2px 8px rgba(0,0,0,0.3);
+			line-height: 1.3;
+		}
+
+		.school-brand-divider {
+			width: 60px;
+			height: 3px;
+			background: rgba(255,255,255,0.5);
+			border-radius: 2px;
+			margin: 16px auto;
+		}
+
+		.school-brand-powered {
+			font-size: 13px;
+			color: rgba(255,255,255,0.6);
+			text-align: center;
+		}
+
+		.school-brand-powered span {
+			color: rgba(255,255,255,0.85);
+			font-family: Ubuntu-Bold, sans-serif;
+		}
+
 		/* ---- Mobile ---- */
 		@media (max-width: 768px) {
 			.auth-container {
@@ -214,6 +255,20 @@
 				font-size: 13px;
 			}
 
+			.school-brand-logo {
+				width: 80px;
+				height: 80px;
+				margin-bottom: 12px;
+			}
+
+			.school-brand-name {
+				font-size: 20px;
+			}
+
+			.school-brand-divider {
+				margin: 10px auto;
+			}
+
 			.auth-form-side {
 				padding: 32px 24px;
 			}
@@ -227,9 +282,16 @@
 			@yield('content')
 		</div>
 		<div class="auth-brand-side">
-			<img src="{{asset('assets/img/logo/small_logo_dark.png')}}" class="auth-brand-logo" alt="The Student Portal">
-			<h1 class="auth-brand-title">The Student <span class="accent">Portal</span></h1>
-			<p class="auth-brand-tagline">Manage your academic journey in one place — grades, attendance, and more.</p>
+			@if(isset($school) && $school)
+				<img src="{{asset('uploads/school_avatars/' . ($school->avatar ?: 'default.webp'))}}" class="school-brand-logo" alt="{{ $school->name }}">
+				<h1 class="school-brand-name">{{ $school->name }}</h1>
+				<div class="school-brand-divider"></div>
+				<p class="school-brand-powered">Powered by <span>The Student Portal</span></p>
+			@else
+				<img src="{{asset('assets/img/logo/small_logo_dark.png')}}" class="auth-brand-logo" alt="The Student Portal">
+				<h1 class="auth-brand-title">The Student <span class="accent">Portal</span></h1>
+				<p class="auth-brand-tagline">Manage your academic journey in one place — grades, attendance, and more.</p>
+			@endif
 		</div>
 	</div>
 

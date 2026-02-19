@@ -20,7 +20,7 @@ use Mail;
 //Request
 use Illuminate\Http\Request;
 //files Images
-use Intervention\Image\Facades\Image;
+use Intervention\Image\ImageManager;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Hash;
 use File;
@@ -343,7 +343,7 @@ class AdminController extends Controller
                 $file=$request->image;
                 $extension = $file->getClientOriginalExtension();
                 $filename = $time."teacher_avatar" . '.' . $extension;
-                $resized_image = Image::make($file)->resize(200, 200)->encode($extension);
+                $resized_image = ImageManager::gd()->read($file)->cover(200, 200)->encodeByExtension($extension);
               
                 Storage::disk(config('filesystems.default'))
                 ->put('teacher_avatars/' . $filename, $resized_image);
@@ -499,7 +499,7 @@ class AdminController extends Controller
                 $file=$request->edit_image;
                 $extension = $file->getClientOriginalExtension();
                 $filename = $time."teacher_avatar" . '.' . $extension;
-                $resized_image = Image::make($file)->resize(200, 200)->encode($extension);
+                $resized_image = ImageManager::gd()->read($file)->cover(200, 200)->encodeByExtension($extension);
               
                 Storage::disk(config('filesystems.default'))
                 ->put('teacher_avatars/' . $filename, $resized_image);
@@ -614,7 +614,7 @@ class AdminController extends Controller
                 $file=$request->image;
                 $extension = $file->getClientOriginalExtension();
                 $filename = $time."student_avatar" . '.' . $extension;
-                $resized_image = Image::make($file)->resize(200, 200)->encode($extension);
+                $resized_image = ImageManager::gd()->read($file)->cover(200, 200)->encodeByExtension($extension);
               
                 Storage::disk(config('filesystems.default'))
                 ->put('student_avatars/' . $filename, $resized_image);
@@ -802,7 +802,7 @@ class AdminController extends Controller
                 $file=$request->edit_image;
                 $extension = $file->getClientOriginalExtension();
                 $filename = $time."student_avatar" . '.' . $extension;
-                $resized_image = Image::make($file)->resize(200, 200)->encode($extension);
+                $resized_image = ImageManager::gd()->read($file)->cover(200, 200)->encodeByExtension($extension);
               
                 Storage::disk(config('filesystems.default'))
                 ->put('student_avatars/' . $filename, $resized_image);
@@ -1346,7 +1346,7 @@ public function addBranch(Request $request)
             $file=$request->image;
             $extension = $file->getClientOriginalExtension();
             $filename = $time."school_avatar" . '.' . $extension;
-            $resized_image = Image::make($file)->resize(200, 200)->encode($extension);
+            $resized_image = ImageManager::gd()->read($file)->cover(200, 200)->encodeByExtension($extension);
           
             Storage::disk(config('filesystems.default'))
             ->put('school_avatars/' . $filename, $resized_image);
@@ -1410,7 +1410,7 @@ public function editBranch(Request $request)
             $file=$request->edit_image;
             $extension = $file->getClientOriginalExtension();
             $filename = $time."school_avatar" . '.' . $extension;
-            $resized_image = Image::make($file)->resize(200, 200)->encode($extension);
+            $resized_image = ImageManager::gd()->read($file)->cover(200, 200)->encodeByExtension($extension);
           
             Storage::disk(config('filesystems.default'))
             ->put('school_avatars/' . $filename, $resized_image);

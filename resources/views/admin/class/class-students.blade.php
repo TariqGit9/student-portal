@@ -24,7 +24,7 @@
 <div class="breadcrumb-header justify-content-between">
   <div class="my-auto">
     <div class="d-flex">
-      <h4 class="content-title mb-0 my-auto">students</h4><span class="text-muted mt-1 tx-13 ml-2 mb-0"></span>
+      <h4 class="content-title mb-0 my-auto">Students</h4><span class="text-muted mt-1 tx-13 ml-2 mb-0"></span>
     </div>
   </div>
 </div>
@@ -293,6 +293,14 @@
     </div>
   </div>
 </div>
+<form id="view_student_marks" method="post" action="{{ route('student-marks-admin') }}">
+  @csrf
+  <input class="student_id" name="student_id" type="hidden" value="">
+</form>
+<form id="view_student_attandence" method="post" action="{{ route('view-student-attendance') }}">
+  @csrf
+  <input class="student_id" name="student_id" type="hidden" value="">
+</form>
 <input type="hidden" id="id" value="{{$id}}">
 @push('javascript')
 <script>
@@ -748,6 +756,18 @@ $(document).on('click', '.deletestudent', function() {
 $(document).on('click', '.viewDeleted', function() {
 
   location.href = "{{route('deleted-students')}}";
+});
+
+$(document).on('click', '.viewMarks', function() {
+  var id = $(this).data('id');
+  $(".student_id").val(id);
+  $('#view_student_marks').submit();
+});
+
+$(document).on('click', '.viewAttendance', function() {
+  var id = $(this).data('id');
+  $(".student_id").val(id);
+  $('#view_student_attandence').submit();
 });
 
 $(document).on('click', '.changeStudentPassword', function() {

@@ -24,7 +24,7 @@
                             $final_result =$marks->student_marks->where('student_id',$user_id)->first();
                         }
                     @endphp
-                    <tr @if($marks->student_marks)  @if($marks->passing_marks > $final_result->obtained_marks) class="bg-danger"@endif @endif >
+                    <tr @if($marks->student_marks)  @if($marks->passing_marks > $final_result->obtained_marks) style="background-color: #db7689; color: #fff;"@endif @endif >
                 
                         <th scope="row">{{++$number}}</th>
                         <td>{{$marks->description}}</td>

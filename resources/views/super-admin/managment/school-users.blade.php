@@ -40,7 +40,7 @@
                 </select>
             </span>
             <span class="float-right " >
-                <button type="button" id="add_admin" class="btn btn-secondary" data-toggle="modal" data-target=".addAdmin">Add Admin</button>
+                <button type="button" id="add_user_btn" class="btn btn-secondary" data-toggle="modal" data-target=".addAdmin">Add Admin</button>
             </span>
         </i>
 
@@ -70,7 +70,7 @@
     <div class="modal-dialog modal-lg" role="document">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title" id="exampleModalLabel">Add a student </h5>
+          <h5 class="modal-title" id="modalTitle">Add Admin</h5>
           <button type="button" class="close" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">&times;</span>
           </button>
@@ -228,18 +228,13 @@ $('#table_data tbody').on('click', 'td.details-control', function() {
 });
 
 $('#user_roles').on('change', function() {
-   
-    if($('#user_roles').val()!=1){
-        
-        $('#add_admin').addClass('d-none');
-    }else{
-        $('#add_admin').removeClass('d-none');
-        
-    }
-    dataTableData($('#user_roles').val());
+    var role = $('#user_roles').val();
+    var roleNames = {1: 'Admin', 2: 'Teacher', 3: 'Student'};
+    var roleName = roleNames[role] || 'User';
+    $('#add_user_btn').text('Add ' + roleName);
+    $('#modalTitle').text('Add ' + roleName);
+    dataTableData(role);
     $('.user-titles').text($("#user_roles option:selected").text());
-
-  
 });
 
 $(document).on('click', '.genrate_password', function() {
@@ -322,36 +317,32 @@ $(document).on('click', '.addstudent', function() {
   }
    var form = $("#addAdminForm");
    var formData = new FormData(form[0]);
-  // var formData = new FormData();
-   var imagefile = document.querySelector('#image');
-   formData.append("image", imagefile.files[0]);
+   formData.append("role_id", $('#user_roles').val());
+   formData.append("school_id", {{$school_id}});
 
-   $('#please_wait').modal('show');
-   $('.addStudent').attr("disabled", true);
-   axios.post("{{route('add-student')}}",
+   var roleNames = {1: 'Admin', 2: 'Teacher', 3: 'Student'};
+   var roleName = roleNames[$('#user_roles').val()] || 'User';
+
+   $('.addstudent').attr("disabled", true);
+   axios.post("{{route('add-school-user')}}",
        formData
    ).then(function(response) {
      $('.addstudent').attr("disabled", false);
-     $('#please_wait').modal('hide');
    if(response.data.success){
 
-     $('#addstudentModal').modal('hide');
-    
-     toastr.success('Success!', 'Student added Successfully',{
+     $('.addAdmin').modal('hide');
+
+     toastr.success('Success!', roleName + ' added Successfully',{
              "positionClass": "toast-bottom-right"
-         })      
-         $("#email").val(""); 
-         $("#name").val(""); 
-         $("#user_name").val(""); 
-         $("#phone").val(""); 
-         $("#address_line_main").val(""); 
-         $("#address_line_secondary").val(""); 
-         $("#emergency_phone").val(""); 
-         $("#password").val(""); 
-         $("#phone").val(""); 
-         $(".selectpicker").val('default');
-         $(".selectpicker").selectpicker("refresh");
-         $(".summernote").summernote("code", "");
+         })
+         $("#email").val("");
+         $("#name").val("");
+         $("#user_name").val("");
+         $("#phone").val("");
+         $("#address_line_main").val("");
+         $("#address_line_secondary").val("");
+         $("#emergency_phone").val("");
+         $("#password").val("");
          dataTableData($('#user_roles').val());
 
    }
@@ -359,7 +350,7 @@ $(document).on('click', '.addstudent', function() {
 
      toastr.warning('Warning!', response.data.error,{
              "positionClass": "toast-bottom-right"
-         })  
+         })
      if(response.data.error=="User Name already Exists."){
        $("#user_name").focus();
        return;

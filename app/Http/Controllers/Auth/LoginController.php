@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\Controller;
 use App\Providers\RouteServiceProvider;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
+use App\Models\SchoolInformation;
 use Auth;
 class LoginController extends Controller
 {
@@ -76,5 +77,14 @@ class LoginController extends Controller
     public function username()
     {
         return $this->username;
+    }
+
+    public function showLoginForm($school_uid = null)
+    {
+        $school = null;
+        if ($school_uid) {
+            $school = SchoolInformation::where('school_unique_id', $school_uid)->first();
+        }
+        return view('auth.login', compact('school'));
     }
 }

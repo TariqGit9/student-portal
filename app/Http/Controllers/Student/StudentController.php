@@ -101,7 +101,9 @@ class StudentController extends Controller
         $result = $grade->subjects;
             return DataTables::of($result)
             ->addColumn('action', function ($data) {
-                $button = '<a href="#" class="btn btn-info btn-sm getStudentdetailsReport" title="Report to Principle" data-toggle="modal" data-target="#student_report" data-name="' . $data->teacher_subject->teacher_details->name . '" data-id="' . $data->teacher_subject->teacher_details->id . '"  data-subject="' . $data->teacher_subject->name .  '"><i class="fa fa-envelope"></i></a>&nbsp;&nbsp;';  
+                // Report button hidden for now
+                // $button = '<a href="#" class="btn btn-info btn-sm getStudentdetailsReport" title="Report to Principle" data-toggle="modal" data-target="#student_report" data-name="' . $data->teacher_subject->teacher_details->name . '" data-id="' . $data->teacher_subject->teacher_details->id . '"  data-subject="' . $data->teacher_subject->name .  '"><i class="fa fa-envelope"></i></a>&nbsp;&nbsp;';
+                $button = '';
                 return $button;
                     
             })
@@ -223,10 +225,14 @@ class StudentController extends Controller
 
     public function myFees()
     {
+        return view('student.fees.index');
+    }
+
+    public function getMyFees()
+    {
         $student = Auth::user();
         $class = $student->student_details->class;
-        
-        // Get all fees for the student's class
+
         $fees = ClassFee::where([
             ['school_id', $student->school_id],
             ['class_id', $class->id]
@@ -241,32 +247,44 @@ class StudentController extends Controller
 
             $isPastDue = now()->greaterThan($fee->expiry_date);
             $totalFee = $isPastDue && !$payment ? $fee->fee_charge + $fee->late_fee_charge : $fee->fee_charge;
-            
+            $paid = $payment ? $payment->amount_paid : 0;
+            $due = $payment ? $payment->amount_left : $totalFee;
+
             $feeData[] = [
                 'id' => $fee->id,
                 'type' => $fee->type,
                 'amount' => $totalFee,
-                'paid' => $payment ? $payment->amount_paid : 0,
-                'due' => $payment ? $payment->amount_left : $totalFee,
-                'due_date' => $fee->date,
-                'expiry_date' => $fee->expiry_date,
+                'amount_formatted' => currency($totalFee),
+                'paid' => $paid,
+                'paid_formatted' => currency($paid),
+                'due' => $due,
+                'due_formatted' => currency($due),
+                'due_date' => \Carbon\Carbon::parse($fee->date)->format('M d, Y'),
                 'status' => $payment && $payment->amount_left == 0 ? 'Paid' : ($payment ? 'Partial' : 'Unpaid'),
                 'is_late' => $isPastDue && (!$payment || $payment->amount_left > 0),
-                'date_paid' => $payment ? $payment->date_paid : null
+                'details_url' => route('student.fee.details', $fee->id),
             ];
         }
 
-        return view('student.fees.index', compact('feeData', 'class'));
+        return response()->json([
+            'success' => true,
+            'class_name' => $class->name,
+            'fees' => $feeData,
+        ]);
     }
 
     public function feeDetails($id)
     {
+        return view('student.fees.details', ['feeId' => $id]);
+    }
+
+    public function getFeeDetails($id)
+    {
         $student = Auth::user();
-        $fee = ClassFee::findOrFail($id);
-        
-        // Verify this fee belongs to student's class
+        $fee = ClassFee::with('class')->findOrFail($id);
+
         if ($fee->class_id != $student->student_details->class_id) {
-            abort(403, 'Unauthorized access to fee details');
+            return response()->json(['success' => false, 'message' => 'Unauthorized'], 403);
         }
 
         $payment = ClassStudentFee::where([
@@ -277,7 +295,36 @@ class StudentController extends Controller
         $isPastDue = now()->greaterThan($fee->expiry_date);
         $totalFee = $isPastDue && !$payment ? $fee->fee_charge + $fee->late_fee_charge : $fee->fee_charge;
 
-        return view('student.fees.details', compact('fee', 'payment', 'totalFee', 'isPastDue'));
+        $data = [
+            'type' => $fee->type,
+            'class_name' => $fee->class->name,
+            'original_amount' => currency($fee->fee_charge),
+            'late_fee' => $fee->late_fee_charge > 0 && $isPastDue ? currency($fee->late_fee_charge) : null,
+            'total_amount' => currency($totalFee),
+            'due_date' => \Carbon\Carbon::parse($fee->date)->format('M d, Y'),
+            'expiry_date' => \Carbon\Carbon::parse($fee->expiry_date)->format('M d, Y'),
+            'is_past_due' => $isPastDue,
+            'late_fee_charge' => $fee->late_fee_charge,
+        ];
+
+        $paymentData = null;
+        if ($payment) {
+            $paymentData = [
+                'amount_paid' => currency($payment->amount_paid),
+                'amount_left' => currency($payment->amount_left),
+                'amount_left_raw' => $payment->amount_left,
+                'date_paid' => \Carbon\Carbon::parse($payment->date_paid)->format('M d, Y g:i A'),
+                'status' => $payment->amount_left == 0 ? 'Paid' : 'Partial',
+                'description' => $payment->amount_description,
+            ];
+        }
+
+        return response()->json([
+            'success' => true,
+            'fee' => $data,
+            'payment' => $paymentData,
+            'total_fee_formatted' => currency($totalFee),
+        ]);
     }
 
 }

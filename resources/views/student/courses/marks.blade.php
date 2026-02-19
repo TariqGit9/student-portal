@@ -5,10 +5,19 @@
 <!-- breadcrumb -->
 <div class="breadcrumb-header justify-content-between">
   <div class="my-auto">
-    <div class="d-flex">
-      <h4 class="content-title mb-0 my-auto">{{$class->name}} subjects </h4>
+    <div class="d-flex align-items-center">
+      <h4 class="content-title mb-0 my-auto">{{$class->name}} Subjects</h4>
     </div>
   </div>
+  @if(isset($student))
+  <div class="d-flex align-items-center">
+    <img src="{{ asset('uploads/student_avatars/' . $student->avatar) }}" alt="" class="rounded-circle" width="40" height="40" style="object-fit: cover;">
+    <div class="ml-3">
+      <h6 class="mb-0">{{ $student->name }}</h6>
+      <small class="text-muted">Reg# {{ $student->student_details->reg_no }}</small>
+    </div>
+  </div>
+  @endif
 </div>
 <div class="row">
     <div class="col-md-12 col-xl-12 col-xs-12 col-sm-12">

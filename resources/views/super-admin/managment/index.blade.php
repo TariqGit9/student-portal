@@ -523,7 +523,8 @@ $(document).on('click', '.edit_data', function() {
       $("#edit_details").summernote("code", response.data.details);
       
       var path="{{asset('uploads/school_avatars/')}}";
-      $("#edit_image_display").attr("src",path+"/"+avatar);
+      var avatarFile = avatar ? avatar : 'default.webp';
+      $("#edit_image_display").attr("src",path+"/"+avatarFile);
     
       $('#editSchoolModel').modal('show');
     }).catch(function(error) {

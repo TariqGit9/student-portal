@@ -315,13 +315,14 @@ class FeeController extends Controller
             
             $report[] = [
                 'class' => $class->name,
+                'class_id' => $class->id,
                 'total_expected' => $totalExpected,
                 'total_collected' => $totalCollected,
                 'total_pending' => $totalPending,
                 'collection_rate' => $totalExpected > 0 ? round(($totalCollected / $totalExpected) * 100, 2) : 0
             ];
         }
-        
-        return view('admin.fee.report', compact('report'));
+
+        return view('admin.fee.report', compact('report', 'classes'));
     }
 }
