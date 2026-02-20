@@ -6,6 +6,7 @@ use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\Student\StudentController;
 use App\Http\Controllers\Teacher\TeacherController;
 use App\Http\Controllers\SuperAdmin\SuperAdminController;
+use App\Http\Controllers\NotificationController;
 
 /*
 |--------------------------------------------------------------------------
@@ -28,6 +29,12 @@ Route::get('/login/{school_uid?}', [App\Http\Controllers\Auth\LoginController::c
     Route::group(['middleware' => 'auth'], function () {
 
         Route::post('change-user-password', [HomeController::class, 'changeUserPassword'])->name('change-user-password');
+
+        // Notifications (shared across all roles)
+        Route::get('get-notifications', [NotificationController::class, 'getNotifications'])->name('get-notifications');
+        Route::post('store-notification', [NotificationController::class, 'storeNotification'])->name('store-notification');
+        Route::post('update-notification', [NotificationController::class, 'updateNotification'])->name('update-notification');
+        Route::post('delete-notification', [NotificationController::class, 'deleteNotification'])->name('delete-notification');
 
         Route::group(['prefix' => 'admin','middleware' => 'checkAdmin'], function () {
         Route::get('/', [AdminController::class, 'admin'])->name('home');

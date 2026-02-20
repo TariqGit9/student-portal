@@ -1,92 +1,156 @@
 <!DOCTYPE html>
 <html lang="en">
 	<head>
-
 		<meta charset="UTF-8">
 		<meta name='viewport' content='width=device-width, initial-scale=1.0, user-scalable=0'>
 		<meta http-equiv="X-UA-Compatible" content="IE=edge">
-		<meta name="Description" content="Bootstrap Responsive Admin Web Dashboard HTML5 Template">
-		<meta name="Author" content="Spruko Technologies Private Limited">
-		<meta name="Keywords" content="admin,admin dashboard,admin dashboard template,admin panel template,admin template,admin theme,bootstrap 4 admin template,bootstrap 4 dashboard,bootstrap admin,bootstrap admin dashboard,bootstrap admin panel,bootstrap admin template,bootstrap admin theme,bootstrap dashboard,bootstrap form template,bootstrap panel,bootstrap ui kit,dashboard bootstrap 4,dashboard design,dashboard html,dashboard template,dashboard ui kit,envato templates,flat ui,html,html and css templates,html dashboard template,html5,jquery html,premium,premium quality,sidebar bootstrap 4,template admin bootstrap 4"/>
 
 		<!-- Favicon -->
 		<link rel="icon" href="{{asset('assets/img/logo/small_logo.png')}}" type="image/x-icon"/>
 
 		<!-- Title -->
-		<title>Student Portal</title>
+		<title>School Unavailable - Student Portal</title>
 
-		<!--- Internal Fontawesome css-->
-		<link href="{{asset('assets/plugins/fontawesome-free/css/all.min.css')}}" rel="stylesheet">
+		<!-- Google Fonts -->
+		<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 
-		<!---Ionicons css-->
-		<link href="{{asset('assets/plugins/ionicons/css/ionicons.min.css')}}" rel="stylesheet">
-
-		<!---Internal Typicons css-->
-		<link href="{{asset('assets/plugins/typicons.font/typicons.css')}}" rel="stylesheet">
-
-		<!---Internal Feather css-->
-		<link href="{{asset('assets/plugins/feather/feather.css')}}" rel="stylesheet">
-
-		<!---Internal Falg-icons css-->
-		<link href="{{asset('assets/plugins/flag-icon-css/css/flag-icon.min.css')}}" rel="stylesheet">
-
-		<!-- Style css -->
-		<link href="{{asset('assets/css/style.css')}}" rel="stylesheet">
-
-		<!-- Dark-mode css -->
-		<link href="{{asset('assets/css/style-dark.css')}}" rel="stylesheet">
-
-		<!---Skinmodes css-->
-		<link href="{{asset('assets/css/skin-modes.css')}}" rel="stylesheet" />
-
-
+		<style>
+			* { margin: 0; padding: 0; box-sizing: border-box; }
+			body {
+				font-family: 'Inter', sans-serif;
+				min-height: 100vh;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+				padding: 20px;
+			}
+			.blocked-container {
+				background: #fff;
+				border-radius: 20px;
+				box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
+				max-width: 520px;
+				width: 100%;
+				padding: 50px 40px;
+				text-align: center;
+			}
+			.logos {
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				gap: 20px;
+				margin-bottom: 35px;
+			}
+			.logo-img {
+				width: 70px;
+				height: 70px;
+				object-fit: contain;
+				border-radius: 14px;
+			}
+			.school-logo-img {
+				width: 70px;
+				height: 70px;
+				object-fit: contain;
+				border-radius: 50%;
+				border: 2px solid #e9ecef;
+			}
+			.logo-divider {
+				width: 1px;
+				height: 50px;
+				background: #dee2e6;
+			}
+			.icon-wrapper {
+				width: 80px;
+				height: 80px;
+				background: #fff3f3;
+				border-radius: 50%;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				margin: 0 auto 25px;
+			}
+			.icon-wrapper svg {
+				width: 40px;
+				height: 40px;
+				color: #e74c3c;
+			}
+			h1 {
+				font-size: 22px;
+				font-weight: 700;
+				color: #2d3436;
+				margin-bottom: 12px;
+			}
+			.message {
+				font-size: 15px;
+				color: #636e72;
+				line-height: 1.6;
+				margin-bottom: 30px;
+			}
+			.school-name {
+				font-weight: 600;
+				color: #2d3436;
+			}
+			.logout-btn {
+				display: inline-block;
+				padding: 12px 36px;
+				background: #6c5ce7;
+				color: #fff;
+				border: none;
+				border-radius: 10px;
+				font-size: 15px;
+				font-weight: 600;
+				text-decoration: none;
+				cursor: pointer;
+				transition: all 0.2s ease;
+			}
+			.logout-btn:hover {
+				background: #5a4bd1;
+				transform: translateY(-1px);
+				box-shadow: 0 5px 15px rgba(108, 92, 231, 0.3);
+			}
+			.footer-text {
+				margin-top: 30px;
+				font-size: 12px;
+				color: #b2bec3;
+			}
+		</style>
 	</head>
 
-	<body class="main-body bg-primary-transparent">
-
-
-		<!-- Page -->
-		<div class="page">
-		
-			<!-- Main-error-wrapper -->
-			<div class="main-error-wrapper  page page-h ">
-				<img src="{{asset('assets/img/media/blocked.jpg')}}" class="error-page"  alt="error">
-                <p></p>
-				<h2>Sorry ! Your School is not available at the moment.</h2>
-				<a class="dropdown-item" href="{{ route('logout') }}"
-										onclick="event.preventDefault();
-													  document.getElementById('logout-form').submit();">Logout</a>
-				<form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
-					@csrf
-				</form>
+	<body>
+		<div class="blocked-container">
+			<div class="logos">
+				<img src="{{asset('assets/img/logo/small_logo.png')}}" class="logo-img" alt="Student Portal">
+				@if(Auth::check() && Auth::user()->school && Auth::user()->school->avatar)
+					<div class="logo-divider"></div>
+					<img src="{{asset('uploads/school_avatars/' . Auth::user()->school->avatar)}}" class="school-logo-img" alt="{{ Auth::user()->school->name ?? 'School' }}">
+				@endif
 			</div>
-			<!-- /Main-error-wrapper -->
-			
+
+			<div class="icon-wrapper">
+				<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+					<path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+				</svg>
+			</div>
+
+			<h1>School Temporarily Unavailable</h1>
+			<p class="message">
+				@if(Auth::check() && Auth::user()->school)
+					<span class="school-name">{{ Auth::user()->school->name }}</span> is currently not available.
+				@else
+					Your school is currently not available.
+				@endif
+				<br>Please contact your school administration for more information.
+			</p>
+
+			<a href="{{ route('logout') }}" class="logout-btn"
+				onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+				Back to Login
+			</a>
+			<form id="logout-form" action="{{ route('logout') }}" method="POST" style="display:none;">
+				@csrf
+			</form>
+
+			<p class="footer-text">The Student Portal</p>
 		</div>
-		<!-- End Page -->
-
-
-		<!-- JQuery min js -->
-		<script src="{{asset('assets/plugins/jquery/jquery.min.js')}}"></script>
-
-		<!-- Bootstrap Bundle js -->
-		<script src="{{asset('assets/plugins/bootstrap/js/bootstrap.bundle.min.js')}}/"></script>
-
-		<!-- Ionicons js -->
-		<script src="{{asset('assets/plugins/ionicons/ionicons.js')}}"></script>
-
-		<!-- Moment js -->
-		<script src="{{asset('assets/plugins/moment/moment.js')}}"></script>
-
-		<!-- eva-icons js -->
-		<script src="{{asset('assets/js/eva-icons.min.js')}}"></script>
-
-		<!-- Rating js-->
-		<script src="{{asset('assets/plugins/rating/jquery.rating-stars.js')}}"></script>
-		<script src="{{asset('assets/plugins/rating/jquery.barrating.js')}}"></script>
-
-		<!-- custom js -->
-		<script src="{{asset('assets/js/custom.js')}}"></script>
-
 	</body>
 </html>
