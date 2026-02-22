@@ -20,6 +20,8 @@ use App\Models\ClassStudentAttendance;
 use App\Mail\Teacher\ReportStudent;
 use App\Models\SchoolSession;
 use App\Models\SchoolInformation;
+use App\Models\TeacherAttendance;
+use App\Models\TeacherAttendanceDetail;
 use Mail;
 use Session;
 //files Images
@@ -387,17 +389,23 @@ public function studentMarks(Request $request)
     }else if(Auth::user()->role_id==2){
         $user = 'teacher';
     }
-    return view('student.courses.marks',compact('subjects','class','student','user'));
+    $sessions = SchoolSession::where('school_id', $student->school_id)->orderBy('id', 'DESC')->get();
+    $active_session_id = optional($student->school->school_session)->id;
+    return view('student.courses.marks',compact('subjects','class','student','user','sessions','active_session_id'));
 }
 public function getStudentMarks(Request $request)
 {
     $student = User::find($request->student_id);
     $school =   $student->school;
-    $school_session = $school->school_session;
-    if($school_session){
-      $school_session_id =$school_session->id;
+    if($request->session_id){
+      $school_session_id = $request->session_id;
     }else{
-      $school_session_id = null;
+      $school_session = $school->school_session;
+      if($school_session){
+        $school_session_id =$school_session->id;
+      }else{
+        $school_session_id = null;
+      }
     }
     $school_result_types =  ResultType::where([['school_id', $school->id],['status', 1]])->get();
     $html="";
@@ -708,6 +716,73 @@ public function getStudentAttendanceStats(Request $request)
 
 }
 
+// Teacher views own attendance
+public function myAttendance()
+{
+    $school = Auth::user()->school;
+    $school_session = $school ? $school->school_session : null;
+    return view('teacher.my-attendance', compact('school_session'));
+}
 
+public function getMyAttendance(Request $request)
+{
+    $school = Auth::user()->school;
+    $school_session = $school ? $school->school_session : null;
+    $school_session_id = $school_session ? $school_session->id : null;
+
+    $result = TeacherAttendance::where('school_session_id', $school_session_id)
+        ->whereHas('teacher_attendance_details', function ($q) {
+            $q->where('teacher_id', Auth::user()->id);
+        })->with(['teacher_attendance_details' => function ($q) {
+            $q->where('teacher_id', Auth::user()->id);
+        }])->orderBy('id', 'DESC')->get();
+
+    return DataTables::of($result)
+        ->addColumn('date', function ($data) {
+            return $data->date;
+        })
+        ->addColumn('time', function ($data) {
+            return $data->time;
+        })
+        ->addColumn('attendance', function ($data) {
+            $detail = $data->teacher_attendance_details->first();
+            if (!$detail) return '--';
+            $color = $detail->attendance == 'Present' ? 'success' : ($detail->attendance == 'Leave' ? 'secondary' : 'warning');
+            return '<a class="btn btn-' . $color . ' btn-sm" style="color:white;">' . $detail->attendance . '</a>';
+        })
+        ->addColumn('on_time', function ($data) {
+            $detail = $data->teacher_attendance_details->first();
+            if (!$detail) return '--';
+            if ($detail->attendance != 'Present') return '<span class="text-muted">--</span>';
+            return $detail->on_time ? '<span class="badge badge-success">On Time</span>' : '<span class="badge badge-danger">Late</span>';
+        })
+        ->rawColumns(['attendance', 'on_time'])
+        ->make(true);
+}
+
+public function getMyAttendanceStats()
+{
+    $school = Auth::user()->school;
+    $school_session = $school ? $school->school_session : null;
+    $school_session_id = $school_session ? $school_session->id : null;
+
+    $base = TeacherAttendanceDetail::where('teacher_id', Auth::user()->id)
+        ->whereHas('teacher_attendance', function ($q) use ($school_session_id) {
+            $q->where('school_session_id', $school_session_id);
+        });
+
+    $present = (clone $base)->where('attendance', 'Present')->count();
+    $absent = (clone $base)->where('attendance', 'Absent')->count();
+    $leave = (clone $base)->where('attendance', 'Leave')->count();
+    $late = (clone $base)->where('attendance', 'Present')->where('on_time', false)->count();
+
+    return response()->json([
+        'success' => true,
+        'present' => $present,
+        'absent' => $absent,
+        'leave' => $leave,
+        'late' => $late,
+    ], 200);
+}
 
 }

@@ -137,6 +137,19 @@ Route::get('/login/{school_uid?}', [App\Http\Controllers\Auth\LoginController::c
         Route::post('student-marks-admin', [AdminController::class, 'studentMarks'])->name('student-marks-admin');
         Route::post('display-student-marks-admin', [AdminController::class, 'getStudentMarks'])->name('display-student-marks-admin');
 
+        // School Sessions
+        Route::get('school-sessions', [AdminController::class, 'schoolSessions'])->name('admin-school-sessions');
+        Route::post('get-school-sessions', [AdminController::class, 'getSchoolSessions'])->name('admin-get-school-sessions');
+        Route::post('add-school-session', [AdminController::class, 'addSchoolSession'])->name('admin-add-session');
+        Route::post('change-school-session', [AdminController::class, 'changeSchoolSession'])->name('admin-change-school-session');
+
+        // Teacher Attendance (admin marks)
+        Route::get('mark-teacher-attendance', [AdminController::class, 'markTeacherAttendance'])->name('admin-mark-teacher-attendance');
+        Route::post('save-teacher-attendance', [AdminController::class, 'saveTeacherAttendance'])->name('admin-save-teacher-attendance');
+        Route::get('teacher-attendance', [AdminController::class, 'teacherAttendanceHistory'])->name('admin-teacher-attendance');
+        Route::post('get-teacher-attendance-records', [AdminController::class, 'getTeacherAttendanceRecords'])->name('admin-get-teacher-attendance-records');
+        Route::post('get-teacher-attendance-detail', [AdminController::class, 'getTeacherAttendanceDetail'])->name('admin-get-teacher-attendance-detail');
+
         // Fee Management Routes
         Route::get('fees', [App\Http\Controllers\Admin\FeeController::class, 'index'])->name('admin.fees');
         Route::get('get-fees', [App\Http\Controllers\Admin\FeeController::class, 'getFees'])->name('admin.get-fees');
@@ -199,9 +212,11 @@ Route::get('/login/{school_uid?}', [App\Http\Controllers\Auth\LoginController::c
         Route::post('get-student-subject-attendance', [TeacherController::class, 'getStudentsSubjectAttendance'])->name('get-student-subject-attendance');
         Route::post('get-student-subject-attendance-teacher', [TeacherController::class, 'getStudentSubjectAttendance'])->name('get-student-subject-attendance-teacher');
         Route::post('get-student-subject-attendance-teacher-stats', [TeacherController::class, 'getStudentAttendanceStats'])->name('get-student-subject-attendance-teacher-stats');
-        
 
-
+        // Teacher views own attendance
+        Route::get('my-attendance', [TeacherController::class, 'myAttendance'])->name('teacher-my-attendance');
+        Route::post('get-my-attendance', [TeacherController::class, 'getMyAttendance'])->name('teacher-get-my-attendance');
+        Route::post('get-my-attendance-stats', [TeacherController::class, 'getMyAttendanceStats'])->name('teacher-get-my-attendance-stats');
 
     });
 

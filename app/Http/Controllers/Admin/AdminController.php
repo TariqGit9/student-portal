@@ -13,6 +13,9 @@ use App\Models\TeacherMailsOfStudent;
 use App\Models\ResultType;
 use App\Models\StudentMailsOfTeacher;
 use App\Models\SchoolInformation;
+use App\Models\SchoolSession;
+use App\Models\TeacherAttendance;
+use App\Models\TeacherAttendanceDetail;
 use Session;
 
 use App\Mail\RegisterTeacher;
@@ -1538,5 +1541,212 @@ public function getStudentMarks(Request $request)
     $teacher_controller = new TeacherController;
     $result = $teacher_controller->getStudentMarks($request);
     return $result;
+}
+
+// School Sessions
+public function schoolSessions()
+{
+    return view('admin.school-sessions');
+}
+
+public function getSchoolSessions(Request $request)
+{
+    $data = SchoolSession::where('school_id', Auth::user()->school_id)->orderBy('id', 'DESC')->get();
+
+    return DataTables::of($data)
+        ->addColumn('action', function ($data) {
+            if ($data->status == 0) {
+                $button = '<a href="#" class="btn btn-danger btn-sm toggle_block_data" title="Click to activate" data-status="1" data-id="' . $data->id . '"><i class="fa fa-times"></i></a>&nbsp;&nbsp;';
+            } else {
+                $button = '<a href="#" class="btn btn-success btn-sm toggle_block_data" title="Click to deactivate" data-status="0" data-id="' . $data->id . '"><i class="fa fa-check"></i></a>&nbsp;&nbsp;';
+            }
+            return $button;
+        })
+        ->addColumn('name', function ($data) {
+            return $data->name;
+        })
+        ->addColumn('status', function ($data) {
+            if ($data->status == 0) {
+                return '<a href="#" class="btn btn-danger btn-sm">Not Active</a>';
+            } else {
+                return '<a href="#" class="btn btn-success btn-sm">Active</a>';
+            }
+        })
+        ->rawColumns(['action', 'name', 'status'])
+        ->make(true);
+}
+
+public function addSchoolSession(Request $request)
+{
+    $school_id = Auth::user()->school_id;
+
+    if ($request->status == 1) {
+        SchoolSession::where('school_id', $school_id)->update(['status' => 0]);
+    }
+
+    SchoolSession::create([
+        'name' => $request->name,
+        'status' => $request->status,
+        'school_id' => $school_id,
+    ]);
+
+    return response()->json(['success' => true], 200);
+}
+
+public function changeSchoolSession(Request $request)
+{
+    $school_id = Auth::user()->school_id;
+
+    if ($request->status == 1) {
+        SchoolSession::where('school_id', $school_id)->update(['status' => 0]);
+    }
+
+    $session = SchoolSession::find($request->id);
+    $session->status = $request->status;
+    $session->save();
+
+    return response()->json(['success' => true], 200);
+}
+
+// Teacher Attendance
+public function markTeacherAttendance()
+{
+    $school_id = Session::get('school_id');
+    $teachers = User::where([['school_id', $school_id], ['role_id', 2], ['status', 1]])->get();
+    $school = SchoolInformation::find($school_id);
+    $school_session = $school ? $school->school_session : null;
+    return view('admin.teacher.mark-teacher-attendance', compact('teachers', 'school_session'));
+}
+
+public function saveTeacherAttendance(Request $request)
+{
+    $school_id = Session::get('school_id');
+    $school = SchoolInformation::find($school_id);
+
+    if (!$school || !$school->school_session) {
+        return response()->json([
+            'success' => false,
+            'msg' => 'School session is not set.',
+        ], 200);
+    }
+
+    $school_session_id = $school->school_session->id;
+    $data = $request->attendance;
+
+    if (!$data) {
+        return response()->json([
+            'success' => false,
+            'msg' => 'No attendance data received.',
+        ], 200);
+    }
+
+    $existing = TeacherAttendance::where([
+        ['date', $request->date],
+        ['school_id', $school_id],
+        ['school_session_id', $school_session_id],
+    ])->first();
+
+    if ($existing) {
+        return response()->json([
+            'success' => false,
+            'msg' => 'Attendance for this date has already been recorded.',
+        ], 200);
+    }
+
+    $teacher_attendance = TeacherAttendance::create([
+        'date' => $request->date,
+        'time' => $request->time,
+        'school_id' => $school_id,
+        'school_session_id' => $school_session_id,
+        'marked_by' => Auth::user()->id,
+        'ip_address' => $request->ip(),
+    ]);
+
+    foreach ($data as $info) {
+        TeacherAttendanceDetail::create([
+            'teacher_attendance_id' => $teacher_attendance->id,
+            'teacher_id' => $info['id'],
+            'attendance' => $info['attendance'],
+            'on_time' => isset($info['on_time']) ? $info['on_time'] : 0,
+            'ip_address' => $request->ip(),
+        ]);
+    }
+
+    return response()->json([
+        'success' => true,
+        'msg' => 'Teacher attendance saved successfully.',
+    ], 200);
+}
+
+public function teacherAttendanceHistory()
+{
+    return view('admin.teacher.teacher-attendance');
+}
+
+public function getTeacherAttendanceRecords(Request $request)
+{
+    $school_id = Session::get('school_id');
+    $school = SchoolInformation::find($school_id);
+    $school_session_id = $school && $school->school_session ? $school->school_session->id : null;
+
+    $query = TeacherAttendance::where([
+        ['school_id', $school_id],
+        ['school_session_id', $school_session_id],
+    ])->with('teacher_attendance_details')->orderBy('id', 'DESC');
+
+    if ($request->search_date) {
+        $make_date = date_create($request->search_date);
+        $date = date_format($make_date, "j-n-Y");
+        $query->where('date', $date);
+    }
+
+    $result = $query->get();
+
+    return DataTables::of($result)
+        ->addColumn('date', function ($data) {
+            return $data->date;
+        })
+        ->addColumn('time', function ($data) {
+            return $data->time;
+        })
+        ->addColumn('total_present', function ($data) {
+            return '<span class="badge badge-success">' . $data->teacher_attendance_details->where('attendance', 'Present')->count() . '</span>';
+        })
+        ->addColumn('total_absent', function ($data) {
+            return '<span class="badge badge-warning">' . $data->teacher_attendance_details->where('attendance', 'Absent')->count() . '</span>';
+        })
+        ->addColumn('total_leave', function ($data) {
+            return '<span class="badge badge-secondary">' . $data->teacher_attendance_details->where('attendance', 'Leave')->count() . '</span>';
+        })
+        ->addColumn('action', function ($data) {
+            return '<a href="#" class="btn btn-info btn-sm view-attendance-detail" title="View Details" data-id="' . $data->id . '"><i class="fa fa-eye"></i></a>';
+        })
+        ->rawColumns(['total_present', 'total_absent', 'total_leave', 'action'])
+        ->make(true);
+}
+
+public function getTeacherAttendanceDetail(Request $request)
+{
+    $attendance = TeacherAttendance::with('teacher_attendance_details.teacher')->find($request->id);
+
+    if (!$attendance) {
+        return response()->json(['success' => false], 200);
+    }
+
+    $details = $attendance->teacher_attendance_details->map(function ($detail) {
+        return [
+            'teacher_name' => $detail->teacher ? $detail->teacher->name : 'Deleted',
+            'avatar' => $detail->teacher ? $detail->teacher->avatar : 'default.webp',
+            'attendance' => $detail->attendance,
+            'on_time' => $detail->on_time,
+        ];
+    });
+
+    return response()->json([
+        'success' => true,
+        'date' => $attendance->date,
+        'time' => $attendance->time,
+        'details' => $details,
+    ], 200);
 }
 }

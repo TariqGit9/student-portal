@@ -5,9 +5,8 @@
 <!-- breadcrumb -->
 <div class="breadcrumb-header justify-content-between">
   <div class="my-auto">
-    <div class="d-flex align-items-center">
-      <h4 class="content-title mb-0 my-auto">{{$class->name}} Subjects</h4>
-    </div>
+    <h4 class="content-title mb-0 my-auto">Marks</h4>
+    <span class="text-muted mt-1 tx-13 mb-0">{{$class->name}}</span>
   </div>
   @if(isset($student))
   <div class="d-flex align-items-center">
@@ -19,6 +18,18 @@
   </div>
   @endif
 </div>
+@if(isset($sessions) && $sessions->count() > 0)
+<div class="mb-3">
+  <div class="d-flex align-items-center" style="gap: 10px;">
+    <span class="font-weight-bold tx-13">Session:</span>
+    <select class="form-control selectpicker" data-live-search="true" id="session_select" data-width="200px" data-style="btn-sm btn-outline-primary">
+      @foreach($sessions as $s)
+        <option value="{{$s->id}}" @if($s->id == $active_session_id) selected @endif>{{$s->name}} @if($s->status == 1) (Active) @endif</option>
+      @endforeach
+    </select>
+  </div>
+</div>
+@endif
 <div class="row">
     <div class="col-md-12 col-xl-12 col-xs-12 col-sm-12">
         <!--div-->
@@ -58,23 +69,28 @@ $(document).on('change', '#subject', function() {
 	getData(id);
 });
 
+$(document).on('change', '#session_select', function() {
+	var	id = $('#subject').val();
+	getData(id);
+});
+
 function getData(id){
-	// $('#please_wait').modal('show');
   @if(Auth::user()->role_id==3)
 	var url = "{{route('get-student-marks')}}";
- 
   var student_id = null;
+  var session_id = null;
 	@elseif(Auth::user()->role_id==2)
 	var url = "{{route('display-student-marks')}}";
   var student_id = "{{$student->id}}";
+  var session_id = $('#session_select').val();
   @elseif(Auth::user()->role_id==1)
 	var url = "{{route('display-student-marks-admin')}}";
   var student_id = "{{$student->id}}";
+  var session_id = $('#session_select').val();
 	@endif
 	axios.post(url, {
-			id: id ,student_id: student_id 
+			id: id, student_id: student_id, session_id: session_id
 		}).then(function(response) {
-			// $('#please_wait').modal('hide');
 			$('#table_data').html(response.data.success);
     });
 }
